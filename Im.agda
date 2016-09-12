@@ -117,11 +117,11 @@ module Im where
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
 
-  units-are-ℑ-connected :
+{-  units-are-ℑ-connected :
     ∀ {A : U₀}
     → (ℑ-unit-at A) is-ℑ-connected
   units-are-ℑ-connected = {!!}
-
+-}
   -- it is preserved under composition
 --  composition-preserves-ℑ-connectedness :
 --    ∀ {A B C : U₀} (f : A → B) (g : B → C)
