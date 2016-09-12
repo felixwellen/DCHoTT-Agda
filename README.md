@@ -1,5 +1,7 @@
 # DCHoTT-Agda
-Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal shape modality
+Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal shape modality. The following is proved:
+- The formal disc bundle over a group is trivial
+- The formal disc bundle over a G-manifold is locally trivial
 
 # State of the code
 Notation is not as consequent and compatible with the rest of the HoTT-World as it should be.
@@ -9,5 +11,6 @@ If you want to have a look at what's been formalized, the following file are the
 - FormalDiscBundle.agda
 - Manifolds.agda
 
-Some basic properties of left exact Modalities are not proven yet, so there is a bit of cheating in 'Im.agda'.
+Some basic properties of left exact Modalities are not proven yet, so there is a bit of cheating in 'Im.agda' i.e., the modality is postulated to commute with the loop space functor.
+Furthermore, there is a lot of stuff about pullback squares, which, to my knowledge, has not been formalized in agda before, but probably in coq.
 
