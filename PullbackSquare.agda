@@ -25,12 +25,13 @@ module PullbackSquare where
 
   -}
 
-  data pullback-square {Z A B C : U₀} (f : A → C)  (g : B → C) 
+  record pullback-square {Z A B C : U₀} (f : A → C)  (g : B → C) 
                                       (z₁ : Z → A) (z₂ : Z → B)  : U₀ where
-    commutes-by_and-the-induced-map-is-an-equivalence-by_ : 
-        (γ : (z : Z) → f(z₁ z) ≈ g(z₂ z))
-      → (induced-map-to-pullback {_} {_} {_} {_} {f} {g}  z₁ z₂ γ) is-an-equivalence
-      → pullback-square f g z₁ z₂ 
+    constructor commutes-by_and-the-induced-map-is-an-equivalence-by_
+    field
+      γ : f ∘ z₁ ⇒ g ∘ z₂
+      proof : (induced-map-to-pullback {_} {_} {_} {_} {f} {g}  z₁ z₂ γ) is-an-equivalence
+
 
 
   -- Language
