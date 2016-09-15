@@ -2,6 +2,8 @@
 Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal shape modality. The following is proved:
 - The formal disc bundle over a group is trivial
 - The formal disc bundle over a G-manifold is locally trivial
+An explanation of these notions may be found [here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf)(theorem 3.6)
+
 
 # State of the code
 Notation is not as consequent and compatible with the rest of the HoTT-World as it should be.
