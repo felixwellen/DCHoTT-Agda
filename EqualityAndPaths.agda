@@ -116,8 +116,8 @@ codomaining-has-trivial-application γ .γ refl = refl
 -- calculate with equalities
 construct-path-in-∑ : ∀ {A : U₀} {P : A → U₀} (a a′ : A) (p : P a) (p′ : P a′)
                       → (γ : a ≈ a′) (η : transport P γ p ≈ p′)
-                      → (above a is p) ≈ (above a′ is p′)
-construct-path-in-∑ a .a _ _ refl η = (λ q → (above a is q)) ⁎ η
+                      → (a , p) ≈ (a′ , p′)
+construct-path-in-∑ a .a _ _ refl η = (λ q → (a , q)) ⁎ η
 
 
 

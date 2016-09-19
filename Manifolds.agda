@@ -35,7 +35,7 @@ module Manifolds where
   underlying-map-of : 
     ∀ {A B : U₀}
     → (A ─ét→ B) → (A → B)
-  underlying-map-of (above f is _) = f
+  underlying-map-of (f , _) = f
 
   -- the following is called 'surjective' in the BoTT-Book
   _is-epimorph : 
@@ -63,7 +63,7 @@ module Manifolds where
         bottom ℑ-unit
         top ℑ-unit
         left (underlying-map-of f́)
-  pullback-square-of (above f is pullback-property) =
+  pullback-square-of (f , pullback-property) =
     commutes-by naturality-of-ℑ-unit f
       and-the-induced-map-is-an-equivalence-by pullback-property
 

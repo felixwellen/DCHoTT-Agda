@@ -77,37 +77,37 @@ module Pullback where
     fibration : A × B → U₀
     fibration (a , b) = f(a) ≈ g(b)
     as-sum : (pullback f g) ≃ ∑ fibration
-    as-sum = (λ { (a and b are-in-the-same-fiber-by γ) → above (a , b) is γ }) 
+    as-sum = (λ { (a and b are-in-the-same-fiber-by γ) → ((a , b) , γ) }) 
              is-an-equivalence-because (
                has-left-inverse
-                 (λ { (above a , b is γ) → a and b are-in-the-same-fiber-by γ })
+                 (λ { ((a , b) , γ) → a and b are-in-the-same-fiber-by γ })
                  by  (λ { (a and b are-in-the-same-fiber-by γ) → refl }) 
                and-right-inverse
-                 (λ { (above a , b is γ) → a and b are-in-the-same-fiber-by γ })
-                 by (λ { (above a , b is γ) → refl }))
+                 (λ { ((a , b) , γ) → a and b are-in-the-same-fiber-by γ })
+                 by (λ { ((a , b) , γ) → refl }))
 
     sum-of-fibers = ∑ (λ (c : C) → (fiber-of f at c) × (fiber-of g at c))
     apply-path : ∀ {c c′ : C} (a : A) (b : B) (γ : f(a) ≈ c) (η : g(b) ≈ c) → (ζ : c ≈ c′) 
                → in-the-type sum-of-fibers we-have-an-equality
-                 (above c is ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by η))) 
-                 ≈ (above c′ is ((a is-in-the-fiber-by γ • ζ) , (b is-in-the-fiber-by η • ζ)))
+                 ((c , ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by η))))
+                 ≈ (c′ , ((a is-in-the-fiber-by γ • ζ) , (b is-in-the-fiber-by η • ζ)))
     apply-path {c} {.c} a b γ η refl =
       (λ ξ →
-           above c is ((a is-in-the-fiber-by ξ) , (b is-in-the-fiber-by η)))
+           (c , ((a is-in-the-fiber-by ξ) , (b is-in-the-fiber-by η))))
         ⁎ refl-is-right-neutral γ
         •
         (λ ξ →
-           above c is
-           ((a is-in-the-fiber-by γ • refl) , (b is-in-the-fiber-by ξ)))
+           (c ,
+           ((a is-in-the-fiber-by γ • refl) , (b is-in-the-fiber-by ξ))))
         ⁎ refl-is-right-neutral η
     as-sum-of-fibers : pullback f g ≃ sum-of-fibers
     as-sum-of-fibers = (λ { (a and b are-in-the-same-fiber-by γ)
-                                → above (g b) is
-                                  ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by refl))
+                                → ((g b) ,
+                                  ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by refl)))
                             }) 
                        is-an-equivalence-because 
                        (has-left-inverse
-                         (λ { (above c is
+                         (λ { (c ,
                                  ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by η)))
                                   → a and b are-in-the-same-fiber-by γ • η ⁻¹
                               }) 
@@ -115,16 +115,16 @@ module Pullback where
                                 (λ ξ → a and b are-in-the-same-fiber-by ξ) ⁎
                                 refl-is-right-neutral γ ⁻¹ }) 
                         and-right-inverse 
-                         (λ { (above c is
+                         (λ { (c ,
                                  ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by η)))
                                   → a and b are-in-the-same-fiber-by γ • η ⁻¹
                               }) 
-                         by (λ { (above c is
+                         by (λ { (c ,
                                     ((a is-in-the-fiber-by γ) , (b is-in-the-fiber-by η)))
                                      → apply-path a b γ η (η ⁻¹) 
                                      • (λ ξ →
-                                            above g b is
-                                            ((a is-in-the-fiber-by γ • η ⁻¹) , (b is-in-the-fiber-by ξ)))
+                                            (g b ,
+                                            ((a is-in-the-fiber-by γ • η ⁻¹) , (b is-in-the-fiber-by ξ))))
                                          ⁎ ⁻¹-is-right-inversion η
                                  }))
 

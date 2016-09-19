@@ -23,13 +23,13 @@ module HalfAdjointEquivalences where
     ∀ {A B : U₀}
     → A ≃ha B → (A → B)
   underlying-map-of-the-half-adjoint
-    (above e is equivalency) = e
+    (e , equivalency) = e
 
   inverse-of-the-half-adjoint :
     ∀ {A B : U₀}
     → A ≃ha B → (B → A)
   inverse-of-the-half-adjoint
-    (above _ is (has-inverse g by _ , _ and-is-half-adjoint-by _)) =
+    (_ , (has-inverse g by _ , _ and-is-half-adjoint-by _)) =
     g
 
   left-invertibility-of-the-half-adjoint :
@@ -37,7 +37,7 @@ module HalfAdjointEquivalences where
     → (e : A ≃ha B)
     → inverse-of-the-half-adjoint e ∘ underlying-map-of-the-half-adjoint e ∼ id 
   left-invertibility-of-the-half-adjoint
-    (above _ is (has-inverse _ by left-invertible , _ and-is-half-adjoint-by _)) =
+    (_ , (has-inverse _ by left-invertible , _ and-is-half-adjoint-by _)) =
     left-invertible
 
   right-invertibility-of-the-half-adjoint :
@@ -45,7 +45,7 @@ module HalfAdjointEquivalences where
     → (e : A ≃ha B)
     → underlying-map-of-the-half-adjoint e ∘ inverse-of-the-half-adjoint e  ∼ id 
   right-invertibility-of-the-half-adjoint
-    (above _ is (has-inverse _ by _ , right-invertible and-is-half-adjoint-by _)) =
+    (_ , (has-inverse _ by _ , right-invertible and-is-half-adjoint-by _)) =
     right-invertible
 
   half-adjointness-of-the-half-adjoint :
@@ -55,7 +55,7 @@ module HalfAdjointEquivalences where
     → (underlying-map-of-the-half-adjoint e) ⁎ (left-invertibility-of-the-half-adjoint e) a
       ≈ (right-invertibility-of-the-half-adjoint e) (underlying-map-of-the-half-adjoint e a)
   half-adjointness-of-the-half-adjoint
-    (above _ is (has-inverse _ by left-invertible , right-invertible and-is-half-adjoint-by half-adjoint)) =
+    (_ , (has-inverse _ by left-invertible , right-invertible and-is-half-adjoint-by half-adjoint)) =
     half-adjoint
   
 
@@ -117,8 +117,8 @@ module HalfAdjointEquivalences where
     → (A ≃ B)
     → A ≃ha B
   (the-equivalence is-an-equivalence-because proof-of-invertibility) as-half-adjoint = 
-    above the-equivalence is 
-      equivalences-are-half-adjoint the-equivalence proof-of-invertibility
+    (the-equivalence , 
+      equivalences-are-half-adjoint the-equivalence proof-of-invertibility)
 
 
   proof-that-the-equivalence_is-half-adjoint :
@@ -132,11 +132,11 @@ module HalfAdjointEquivalences where
     ∀ {A B : U₀}
     → A ≃ha B → A ≃ B
   half-adjoint-equivalences-to-equivalences
-    (above e is (has-inverse e⁻¹ by unit , counit and-is-half-adjoint-by proof-of-half-adjointness)) =
+    (e , (has-inverse e⁻¹ by unit , counit and-is-half-adjoint-by proof-of-half-adjointness)) =
     e is-an-equivalence-because (has-left-inverse e⁻¹ by unit and-right-inverse e⁻¹ by counit ⁻¹∼)
 
   equivalence-to-half-adjoint-equivalence :
     ∀ {A B : U₀}
     → A ≃ B → A ≃ha B
   equivalence-to-half-adjoint-equivalence e =
-    above (underlying-map-of e) is proof-that-the-equivalence e is-half-adjoint
+    ((underlying-map-of e) , proof-that-the-equivalence e is-half-adjoint)

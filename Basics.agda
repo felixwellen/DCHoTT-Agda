@@ -36,13 +36,7 @@ data Bool : Set where
   true : Bool
   false : Bool
 
-infix 60 _×_
-data _×_ {i j} (A : U i) (B : U j) : U (i ⊔ j) where
-  _,_ : A → B → A × B
 
---Pi : {i j : Level} → (A : U i) → (P : A → U j) → U (i ⊔ j)
---Pi A P = (a : A) → P a
---
 Π : ∀ {i j} → {A : U i} → (P : A → U j) → U (i ⊔ j)
 Π {_} {_} {A} P = (a : A) → P a
 
@@ -50,45 +44,46 @@ data _×_ {i j} (A : U i) (B : U j) : U (i ⊔ j) where
       → (a : A) → Π P → P a
 π-Π a = λ s → s a      
 
-record ∑ {A : U₀} (P : A → U₀) : U₀ where
-  constructor above_is_
+record ∑ {i j} {A : U i} (P : A → U j) : U (i ⊔ j) where
+  constructor _,_
   field
-    the-term : A
-    the-witness : P the-term
+    a : A
+    p : P a
 
 ι-∑ : ∀ {A : U₀} {P : A → U₀}
       → (a : A) → P a → ∑ P
-ι-∑ a p = above a is p
+ι-∑ a p = (a , p)
 
 
 ∑π₁ : ∀ {A : U₀} {P : A → U₀} 
   → ∑ P → A
-∑π₁ (above the-term is _) = the-term
+∑π₁ (a , _) = a
 
 Π-to-∑ : ∀ {A : U₀} {P : A → U₀}
          → Π P → A → ∑ P
-Π-to-∑ s a = above a is s a
+Π-to-∑ s a = (a , s a)
 
-⟨_,_⟩∑ :
-  ∀ {A : U₀} {P : A → U₀}
-  → (a : A) → (p : P a) → ∑ P
-⟨ a , p ⟩∑ = above a is p
+infix 60 _×_
 
+_×_ : 
+  ∀ {i j} 
+  → (A : U i) → (B : U j) → U (i ⊔ j)
+A × B = ∑ (λ (a : A) → B)
 
 _×→_ : ∀ {A B A′ B′ : U₀} → (A → B) → (A′ → B′) → (A × A′ → B × B′)
 f ×→ g = λ { (a , b) → f a , g b }
 
-π₁ : ∀ {i j} {A : U i} {B : U j} → A × B → A
+π₁ : ∀ {i} {A : U i} {B : U i} → A × B → A
 π₁ (a , b) = a
 
-π₂ : ∀ {i j} {A : U i} {B : U j} → A × B → B
+π₂ : ∀ {i} {A : U i} {B : U i} → A × B → B
 π₂ (a , b) = b 
 
 
-π₁-from_×_ : ∀ {i j} (A : U i) (B : U j) → A × B → A
+π₁-from_×_ : ∀ {i} (A : U i) (B : U i) → A × B → A
 π₁-from A × B = π₁
 
-π₂-from_×_ : ∀ {i j} (A : U i) (B : U j) → A × B → B
+π₂-from_×_ : ∀ {i} (A : U i) (B : U i) → A × B → B
 π₂-from A × B = π₂
 
 Δ : ∀ {A : U₀}
@@ -103,7 +98,6 @@ data Zero : U₀ where
 
 data One : U₀ where 
   ∗ : One
-
 
 id : ∀ {i} {A : U i} → A → A
 id a = a

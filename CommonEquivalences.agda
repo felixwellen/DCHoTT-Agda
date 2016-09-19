@@ -64,11 +64,11 @@ module CommonEquivalences where
   module ∑-is-universal (A : U₀) (P : A → U₀) where
     map-to-cone : ∀ (Z : U₀) 
                   → (∑ P → Z) → Π (λ a → (P a → Z))
-    map-to-cone Z φ = λ a → λ p → φ (above a is p)
+    map-to-cone Z φ = λ a → λ p → φ (a , p)
   
     cone-to-map : ∀ (Z : U₀) 
                   → Π (λ a → (P a → Z)) → (∑ P → Z) 
-    cone-to-map Z f (above a is p) = f a p
+    cone-to-map Z f (a , p) = f a p
 
     equivalence : ∀ (Z : U₀) 
                   → (map-to-cone Z) is-an-equivalence
@@ -76,12 +76,6 @@ module CommonEquivalences where
                       cone-to-map Z by (λ φ → refl) 
                     and-right-inverse 
                       cone-to-map Z by (λ f → refl)
-
---  module hom-out-yoneda (A B : U₀) (f : B → A) where
---    yoneda-embedd : ∀ (Z : U₀) 
---                    → (λ (g : A → Z) → g ∘ f) is-an-equivalence
---                    → f is-an-equivalence
---    yoneda-embedd Z proof-of-equivalence = {!!}
 
   module proof-that-equivalences-induce-equivalences-on-path-spaces 
          (A B : U₀) (f-as-equivalence : A ≃ B) where

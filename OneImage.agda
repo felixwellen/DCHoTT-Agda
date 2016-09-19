@@ -20,7 +20,7 @@ module OneImage where
   the-induced-map-from-the-1-image-of_to-the-codomain :
     ∀ {A B : U₀} 
     → (f : A → B) → (1-image f → B)
-  the-induced-map-from-the-1-image-of f to-the-codomain (above b is x) = b
+  the-induced-map-from-the-1-image-of f to-the-codomain (b , x) = b
   
   ι-im₁ = the-induced-map-from-the-1-image-of_to-the-codomain
 
@@ -28,7 +28,7 @@ module OneImage where
     ∀ {A B : U₀} 
     → (f : A → B) → (A → 1-image f)
   the-induced-map-from-the-domain-to-the-1-image-of f a = 
-    ⟨ f(a) , ∣ ⟨ a , refl ⟩∑ ∣ ⟩∑
+    (f(a) , ∣ (a , refl ) ∣ )
 
   π-im₁ = the-induced-map-from-the-domain-to-the-1-image-of
 
@@ -41,7 +41,7 @@ module OneImage where
     ∀ {A B : U₀}
     → (f : A → B)
     → (ι-im₁ f) is-monomorph
-  ι-im₁-is-monomorph f (above b is b-is-in-the-image)
-                       (above b′ is b′-is-in-the-image) γ
+  ι-im₁-is-monomorph f (b , b-is-in-the-image)
+                       (b′ , b′-is-in-the-image) γ
      = let b≈b′ = b ≈⟨ γ ⟩ b′ ≈∎
        in {!apd (λ b → the-1-image-of f contains b)!}

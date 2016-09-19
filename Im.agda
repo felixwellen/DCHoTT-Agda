@@ -347,13 +347,13 @@ module Im where
   ∑-of-coreduced-types-is-coreduced E E-is-coreduced P P-is-coreduced =
     let 
         ℑπ : ℑ(∑ P) → ℑ E
-        ℑπ = apply-ℑ-to-map (λ {(above e is _) → e})
+        ℑπ = apply-ℑ-to-map (λ {(e , _) → e})
 
         ℑ-unit-E = ℑ-is-idempotent.idempotency E E-is-coreduced
         ℑ-unit-E⁻¹ = ℑ-unit-E ⁻¹≃
 
         π : ∑ P → E
-        π = λ {(above e is _) → e}
+        π = λ {(e , _) → e}
 
         π′ : ℑ (∑ P) → E
         π′ = underlying-map-of ℑ-unit-E⁻¹ ∘ ℑπ
@@ -368,22 +368,22 @@ module Im where
         -- construct a section of the bundle '∑ P → ℑ ∑ P'
         -- (which will expose '∑ P' as a retract of 'ℑ ∑ P')
         section-on-ℑ-image : (x : ∑ P) → P (π′(ℑ-unit x)) 
-        section-on-ℑ-image = λ { (above e is p) → transport P (π-is-compatible-to-π′ (above e is p)) p }
+        section-on-ℑ-image = λ { (e , p) → transport P (π-is-compatible-to-π′ (e , p)) p }
         section : (p̂ : ℑ (∑ P)) → P′ p̂
         section = ℑ-induction (λ p̂ → P-is-coreduced (π′ p̂)) section-on-ℑ-image
           
         r : ℑ (∑ P) → ∑ P
-        r x = above (π′ x) is (section x)
+        r x = ((π′ x) , (section x))
 
-        calculate1 : ∀ (x : ∑ P) → r(ℑ-unit x) ≈ (above (π′ (ℑ-unit x)) is (section-on-ℑ-image x))
-        calculate1 x = (λ z → above π′ (ℑ-unit x) is z) ⁎
+        calculate1 : ∀ (x : ∑ P) → r(ℑ-unit x) ≈ ((π′ (ℑ-unit x)) , (section-on-ℑ-image x))
+        calculate1 x = (λ z → (π′ (ℑ-unit x) , z)) ⁎
                         ℑ-compute-induction (λ p̂ → P-is-coreduced (π′ p̂)) section-on-ℑ-image
                         x
         π₂ : (x : ∑ P) → P (π x) 
-        π₂ = λ {(above _ is p) → p}
+        π₂ = λ {(_ , p) → p}
         calculate2 : ∀ (x : ∑ P)
                      → in-the-type (∑ P) we-have-an-equality
-                       (above (π′ (ℑ-unit x)) is (section-on-ℑ-image x)) ≈ (above (π x) is (π₂ x))
+                       ((π′ (ℑ-unit x)) , (section-on-ℑ-image x)) ≈ ((π x) , (π₂ x))
         calculate2 x =
           let γ = π-is-compatible-to-π′ x
           in construct-path-in-∑ (π x) (π′ (ℑ-unit x)) (π₂ x)
