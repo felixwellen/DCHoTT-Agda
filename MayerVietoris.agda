@@ -33,7 +33,7 @@ module MayerVietoris where
 
     map-from-pullback : pullback f g → pullback Δ (f ×→ g)
     map-from-pullback (x and y are-in-the-same-fiber-by γ) =
-                      f(x) and (x , y) are-in-the-same-fiber-by (×-create-equality refl γ)
+                      f x and (x , y) are-in-the-same-fiber-by (×-create-equality refl γ)
 
     calculation : ∀ (b₁ b₂ b₃ b₄ : B) (γ : b₂ ≈ b₁) (η₁ : b₂ ≈ b₃) (η₂ : b₂ ≈ b₄) 
                   → Δ ⁎ γ ⁻¹ • (×-create-equality η₁ η₂) ≈ ×-create-equality (γ ⁻¹ • η₁) (γ ⁻¹ • η₂)
@@ -176,16 +176,6 @@ module MayerVietoris where
                        g • refl
                      ≈⟨ refl-is-right-neutral g ⁻¹ ⟩
                        g
-                     ≈∎
-    cancel-h-as-path⁻¹ : ∀ (g h : G)
-      → g ≈ g • h ⁻¹ • h 
-    cancel-h-as-path⁻¹ g h = g
-                     ≈⟨ refl-is-right-neutral g ⟩
-                       g • refl
-                     ≈⟨ (λ ξ → g • ξ) ⁎ ⁻¹-is-left-inversion h ⁻¹ ⟩
-                       g • (h ⁻¹ • h)
-                     ≈⟨ •-is-associative g (h ⁻¹) h ⟩
-                       g • h ⁻¹ • h
                      ≈∎
 
     cancel-h : ∀ (g h : G) (d : D)

@@ -35,10 +35,13 @@ module OneImage where
   _is-monomorph : 
     ∀ {A B : U₀} 
     → (f : A → B) → U₀
-  f is-monomorph = Π (λ b → (fiber-of f at b) is-a-proposition)
+  f is-monomorph = (x y : _) → f x ≈ f y → x ≈ y
   
   ι-im₁-is-monomorph : 
     ∀ {A B : U₀}
     → (f : A → B)
     → (ι-im₁ f) is-monomorph
-  ι-im₁-is-monomorph = {!!}
+  ι-im₁-is-monomorph f (above b is b-is-in-the-image)
+                       (above b′ is b′-is-in-the-image) γ
+     = let b≈b′ = b ≈⟨ γ ⟩ b′ ≈∎
+       in {!apd (λ b → the-1-image-of f contains b)!}
