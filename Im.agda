@@ -18,13 +18,14 @@ module Im where
   -- except they are assumed to hold for all universes
   -- update: except the lexness-axioms
   postulate
-    _is-coreduced : ∀ {i} → U i → U i
-    coreducedness-is-a-proposition : (A : U₀) → (A is-coreduced) is-a-proposition
-
-    -- ℑ is the reflector of a reflective subuniverse
     ℑ : ∀ {i} → U i → U i
-    ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
     ℑ-unit : ∀ {i} {A : U i} → A → ℑ A
+
+  _is-coreduced : ∀ {i} → U i → U i
+  A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
+
+  postulate
+    -- ℑ is the reflector of a reflective subuniverse
     ℑ-universal : {A B : U₀}
                  → B is-coreduced → (λ (f : ℑ A → B) → f ∘ ℑ-unit) is-an-equivalence
     -- dependent inverse to the above / 'induction'
@@ -37,13 +38,13 @@ module Im where
                         → (f : (a : A) → B(ℑ-unit a))
                         → (a : A) → (ℑ-induction etality f) (ℑ-unit a) ≈ f a
     -- maybe lexness or some special case
-    ℑ-of-Ω-is-coreduced : 
+    Ω-of-ℑ-is-coreduced : 
       ∀ (A : U₀) (a : A)
       → (Ω (ℑ A) (ℑ-unit a)) is-coreduced
 
     ℑ-commutes-with-Ω : 
       ∀ (A : U₀) (a : A)
-      → ℑ-induction (λ (γ : ℑ (Ω A a)) → ℑ-of-Ω-is-coreduced A a) (λ γ → ℑ-unit ⁎ γ) is-an-equivalence
+      → ℑ-induction (λ (γ : ℑ (Ω A a)) → Ω-of-ℑ-is-coreduced A a) (λ γ → ℑ-unit ⁎ γ) is-an-equivalence
 
 
     -- (lexness if i got it right)
@@ -130,6 +131,26 @@ module Im where
 --  composition-preserves-ℑ-connectedness f g f-is-ℑ-connected g-is-ℑ-connected c =
 --    {!!}
     
+
+  module ℑ-is-idempotent (E : U₀) (E-is-coreduced : E is-coreduced) where
+  -- idempotency for ℑ 
+  -- this corresponds to the classic statement, 
+  -- that given an adjunction L -| R, (L=ℑ) 
+  -- the unit is an isomorphism on objects R(a) (=the coreduced objects).
+  -- (this is proven in borceux, handbook I, p. 114)
+    
+    -- ℑ-unit is an equivalence on coreduced types
+    ℑ-unit⁻¹ : ℑ E → E
+    ℑ-unit⁻¹ = ℑ-recursion E-is-coreduced id
+
+    left-invertible : ℑ-unit⁻¹ ∘ ℑ-unit ∼ id
+    left-invertible = ℑ-compute-recursion E-is-coreduced id
+
+
+
+  postulate
+    ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
+
   apply-ℑ-to-map :
     ∀ {A B : U₀}
     → (A → B)
@@ -202,64 +223,32 @@ module Im where
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
 
-  module ℑ-is-idempotent (E : U₀) (E-is-coreduced : E is-coreduced) where
-    -- no reference known (easy anyway)
-    ℑ-One-is-contractible : (ℑ One) is-contractible
-    ℑ-One-is-contractible = let ∗̂ = (id ∘ ℑ-unit {_} {One}) ∗
 
-                                constant-∗̂ : ∀ {A : U₀} → A → ℑ One
-                                constant-∗̂ = λ x → ∗̂
 
-                                id∘ℑ-unit∼constant-∗̂ : id ∘ ℑ-unit ∼ constant-∗̂
-                                id∘ℑ-unit∼constant-∗̂ = λ {∗ → refl}
-
-                                factored-trivial-map = ℑ-recursion (ℑ-is-coreduced One) (id ∘ ℑ-unit)
-
-                                step1 : factored-trivial-map ∼ id 
-                                step1 = ℑ-recursion-is-unique
-                                          (id ∘ ℑ-unit) (ℑ-is-coreduced One) id (λ a → refl) 
-
-                                step2 : factored-trivial-map ∼ constant-∗̂
-                                step2 = ℑ-recursion-is-unique (id ∘ ℑ-unit) (ℑ-is-coreduced One)
-                                          constant-∗̂ id∘ℑ-unit∼constant-∗̂
-
-                                step3 : id ∼ constant-∗̂
-                                step3 = compose-homotopies (reverse-homotopy step1) step2
-
-                            in reformulate-contractibilty-as-homotopy (ℑ One) ∗̂
-                                 step3
-    
-
-  -- idempotency for ℑ 
-  -- this corresponds to the classic statement, 
-  -- that given an adjunction L -| R, (L=ℑ) 
-  -- the unit is an isomorphism on objects R(a) (=the coreduced objects).
-  -- (this is proven in borceux, handbook I, p. 114)
-    
-    -- ℑ-unit is an equivalence on coreduced types
-    ℑ-unit⁻¹ : ℑ E → E
-    ℑ-unit⁻¹ = ℑ-recursion E-is-coreduced id
-
-    left-invertible : ℑ-unit⁻¹ ∘ ℑ-unit ∼ id
-    left-invertible = ℑ-compute-recursion E-is-coreduced id
-
-    right-invertible : (â : ℑ E) → â ≈ ℑ-unit (ℑ-unit⁻¹ â)
-    right-invertible = 
-                   let setup-for-uniqueness : id ∘ ℑ-unit ∼ (ℑ-unit ∘ ℑ-unit⁻¹) ∘ ℑ-unit 
-                       setup-for-uniqueness =
-                         reverse-homotopy
-                          (mapping-preserves-homotopy (λ f → ℑ-unit ∘ f) left-invertible)
-                       id-is-induced : ℑ-recursion (ℑ-is-coreduced E) ℑ-unit ∼ id
-                       id-is-induced = ℑ-recursion-is-unique ℑ-unit (ℑ-is-coreduced _) id (λ a₁ → refl)
-                   in compose-homotopies
-                        (reverse-homotopy id-is-induced)
-                        (ℑ-recursion-is-unique ℑ-unit (ℑ-is-coreduced E)
-                         (ℑ-unit ∘ ℑ-unit⁻¹) setup-for-uniqueness)
-
-    idempotency : E ≃ ℑ E
-    idempotency = ℑ-unit is-an-equivalence-because
-                (has-left-inverse ℑ-unit⁻¹ by left-invertible
-                 and-right-inverse ℑ-unit⁻¹ by right-invertible)
+  ℑ-One-is-contractible : (ℑ One) is-contractible
+  ℑ-One-is-contractible = 
+    let ∗̂ = (id ∘ ℑ-unit {_} {One}) ∗
+        constant-∗̂ : ∀ {A : U₀} → A → ℑ One
+        constant-∗̂ = λ x → ∗̂
+                                                    
+        id∘ℑ-unit∼constant-∗̂ : id ∘ ℑ-unit ∼ constant-∗̂
+        id∘ℑ-unit∼constant-∗̂ = λ {∗ → refl}
+                                                               
+        factored-trivial-map = ℑ-recursion (ℑ-is-coreduced One) (id ∘ ℑ-unit)
+                                                                      
+        step1 : factored-trivial-map ∼ id 
+        step1 = ℑ-recursion-is-unique
+              (id ∘ ℑ-unit) (ℑ-is-coreduced One) id (λ a → refl) 
+                                                         
+        step2 : factored-trivial-map ∼ constant-∗̂
+        step2 = ℑ-recursion-is-unique (id ∘ ℑ-unit) (ℑ-is-coreduced One)
+                constant-∗̂ id∘ℑ-unit∼constant-∗̂
+                                                      
+        step3 : id ∼ constant-∗̂
+        step3 = compose-homotopies (reverse-homotopy step1) step2
+                                                                                    
+    in reformulate-contractibilty-as-homotopy (ℑ One) ∗̂
+       step3
 
 
   types-equivalent-to-their-coreduction-are-coreduced :
@@ -274,7 +263,7 @@ module Im where
         the-composition-is-an-equivalence : the-composition is-an-equivalence
         the-composition-is-an-equivalence = _≃_.proof-of-invertibility
                                               (apply-ℑ-to-the-equivalence (f ⁻¹≃) ∘≃
-                                               ℑ-is-idempotent.idempotency (ℑ A) (ℑ-is-coreduced _) ∘≃ f)
+                                               (ℑ-unit is-an-equivalence-because (ℑ-is-coreduced _)) ∘≃ f)
 
         step1 : the-composition ∼ ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A)
         step1 a = (λ x → ℑf⁻¹ x) ⁎ naturality-square-for-ℑ f-as-map a ⁻¹
@@ -296,7 +285,7 @@ module Im where
   -- and tobi explained a proof to me:
   retracts-of-coreduced-types-are-coreduced A E E-is-coreduced ι r R =
     let 
-      ℑ-unit-E = ℑ-is-idempotent.idempotency E E-is-coreduced
+      ℑ-unit-E = ℑ-unit is-an-equivalence-because E-is-coreduced
       l-inverse′ = left-inverse-of-the-equivalence ℑ-unit-E
       r-inverse′ = right-inverse-of-the-equivalence ℑ-unit-E
       unit′ = unit-of-the-equivalence ℑ-unit-E
@@ -349,7 +338,7 @@ module Im where
         ℑπ : ℑ(∑ P) → ℑ E
         ℑπ = apply-ℑ-to-map (λ {(e , _) → e})
 
-        ℑ-unit-E = ℑ-is-idempotent.idempotency E E-is-coreduced
+        ℑ-unit-E = ℑ-unit is-an-equivalence-because E-is-coreduced
         ℑ-unit-E⁻¹ = ℑ-unit-E ⁻¹≃
 
         π : ∑ P → E
