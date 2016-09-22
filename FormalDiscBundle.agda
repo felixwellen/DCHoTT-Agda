@@ -13,6 +13,7 @@ module FormalDiscBundle where
   open import Im
   open import InfinityGroups
   open import MayerVietoris
+  open import EtaleMaps hiding (underlying-map-of)
 
   formal-disc-bundle : (X : U₀) → U₀
   formal-disc-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
@@ -27,15 +28,6 @@ module FormalDiscBundle where
     ∀ (X : U₀) → pullback-square-with-right ℑ-unit bottom ℑ-unit top p₁ left p₂
   formal-disc-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
 
-  -- formal disc at a point
-  --  
-  -- D ---> ∗
-  -- | ⌟    |
-  -- |      x₀
-  -- ↓      ↓
-  -- X ---> ℑ X
-  D : ∀ (X : U₀) → (x₀ : X) → U₀
-  D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
 
 
   module triviality-of-the-formel-disc-bundle-over-∞-groups (BG : U₀) (e : BG) where
@@ -152,10 +144,10 @@ module FormalDiscBundle where
   -}
 
     ψ : ℑG → ℑG′
-    ψ = ℑ-induction (λ γ → ℑ-of-Ω-is-coreduced BG e) (λ γ → ℑ-unit ⁎ γ)
+    ψ = ℑ-induction (λ γ → Ω-of-ℑ-is-coreduced BG e) (λ γ → ℑ-unit ⁎ γ)
 
     ψ-of-refl : ψ (ℑ-unit refl) ≈ ℑ-unit ⁎ refl
-    ψ-of-refl = ℑ-compute-induction (λ γ → ℑ-of-Ω-is-coreduced BG e) (λ γ → ℑ-unit ⁎ γ) refl
+    ψ-of-refl = ℑ-compute-induction (λ γ → Ω-of-ℑ-is-coreduced BG e) (λ γ → ℑ-unit ⁎ γ) refl
 
     ψ-as-equivalence : ℑG ≃ ℑG′
     ψ-as-equivalence = ψ is-an-equivalence-because (ℑ-commutes-with-Ω BG e)
@@ -203,7 +195,7 @@ module FormalDiscBundle where
     step3′ = pasting-of-pullback-squares step2c step1
 
     describe-ψ∘ℑ-unit : ψ ∘ ℑ-unit-at (Ω BG e) ⇒ (λ γ → ℑ-unit ⁎ γ)
-    describe-ψ∘ℑ-unit γ = ℑ-compute-induction (λ γ₁ → ℑ-of-Ω-is-coreduced BG e)
+    describe-ψ∘ℑ-unit γ = ℑ-compute-induction (λ γ₁ → Ω-of-ℑ-is-coreduced BG e)
                             (λ γ₁ → ℑ-unit ⁎ γ₁) γ
 
     coreduce-and-divide : G × G → ℑG′
@@ -289,7 +281,7 @@ module FormalDiscBundle where
     
     ψ-commutes-with-ℑ-units : 
       ψ ∘ ℑ-unit ⇒ (λ g → ℑ-unit ⁎ g)
-    ψ-commutes-with-ℑ-units g = ℑ-compute-induction (λ γ₁ → ℑ-of-Ω-is-coreduced BG e)
+    ψ-commutes-with-ℑ-units g = ℑ-compute-induction (λ γ₁ → Ω-of-ℑ-is-coreduced BG e)
                                                      (λ γ₁ → ℑ-unit ⁎ γ₁) g
 
     the-De-square′ : pullback-square-with-right (λ _ → ℑ-unit refl)

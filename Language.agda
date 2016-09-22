@@ -153,3 +153,23 @@ module Language where
     → γ″ ⁻¹ • γ ≈ γ′
   move-the refl left-of γ′ in-the-equation equation to-the-left-hand-side = 
     equation
+
+
+  -- logical sentences
+  record conjunction-of-two-types (A : U₀) (B : U₀) : U₀ where
+    constructor _and_
+    field
+      proof-of-the-first : A
+      proof-of-the-second : B
+
+
+  record conjunction-of-three-types (A : U₀) (B : U₀) (C : U₀) : U₀ where
+    constructor proven-by_,_and_
+    field
+      proof-of-the-first : A
+      proof-of-the-second : B
+      proof-of-the-third : C
+
+  _,_and_ :
+    (A : U₀) (B : U₀) (C : U₀) → U₀
+  A , B and C = conjunction-of-three-types A B C

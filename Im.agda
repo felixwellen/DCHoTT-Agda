@@ -21,22 +21,41 @@ module Im where
     ℑ : ∀ {i} → U i → U i
     ℑ-unit : ∀ {i} {A : U i} → A → ℑ A
 
+
+  ℑ-unit-at :
+    ∀ {i} → (A : U i)
+    → (A → ℑ A)
+  ℑ-unit-at A = ℑ-unit {_} {A}
+
   _is-coreduced : ∀ {i} → U i → U i
   A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
 
   postulate
+    -- ℑ is idempotent
+    ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
+
     -- ℑ is the reflector of a reflective subuniverse
-    ℑ-universal : {A B : U₀}
-                 → B is-coreduced → (λ (f : ℑ A → B) → f ∘ ℑ-unit) is-an-equivalence
+    ℑ-universal : 
+      ∀ {A B : U₀}
+      → B is-coreduced → (λ (f : ℑ A → B) → f ∘ ℑ-unit) is-an-equivalence
+
     -- dependent inverse to the above / 'induction'
-    ℑ-induction :  ∀ {i} {A : U i} {B : ℑ A → U i}
-                  → (∀ (a : ℑ A) → B(a) is-coreduced)
-                  → ((a : A) → B(ℑ-unit a))
-                  → ((a : ℑ A) → B(a))
-    ℑ-compute-induction :  ∀ {i} {A : U i} {B : ℑ A → U i}
-                        → (etality : ∀ (a : ℑ A) → B(a) is-coreduced)
-                        → (f : (a : A) → B(ℑ-unit a))
-                        → (a : A) → (ℑ-induction etality f) (ℑ-unit a) ≈ f a
+    ℑ-induction :  
+      ∀ {i} {A : U i} {B : ℑ A → U i}
+      → (∀ (a : ℑ A) → B(a) is-coreduced)
+      → ((a : A) → B(ℑ-unit a))
+      → ((a : ℑ A) → B(a))
+    ℑ-compute-induction :  
+      ∀ {i} {A : U i} {B : ℑ A → U i}
+      → (coreducedness : ∀ (a : ℑ A) → B(a) is-coreduced)
+      → (f : (a : A) → B(ℑ-unit a))
+      → (a : A) → (ℑ-induction coreducedness f) (ℑ-unit a) ≈ f a
+
+    the-image-of-ℑ-is-closed-under-identity-formation :
+      ∀ (A : U₀) (x x′ : ℑ A) 
+      → ℑ-unit-at (x ≈ x′) is-an-equivalence
+
+
     -- maybe lexness or some special case
     Ω-of-ℑ-is-coreduced : 
       ∀ (A : U₀) (a : A)
@@ -47,11 +66,11 @@ module Im where
       → ℑ-induction (λ (γ : ℑ (Ω A a)) → Ω-of-ℑ-is-coreduced A a) (λ γ → ℑ-unit ⁎ γ) is-an-equivalence
 
 
-    -- (lexness if i got it right)
-    -- mike's more concise condition for lexness, which he told me in toronto
-    ℑ-condition-for-lexness : ∀ {A : U₀}
-                             → (ℑ A) is-contractible 
-                             → Π {_} {_} {A × A} (λ {(x , y) → ((ℑ (x ≈ y)) is-contractible)}) 
+    -- mike's more concise condition for lexness, which he told me in toronto:
+    ℑ-condition-for-lexness : 
+      ∀ {A : U₀}
+      → (ℑ A) is-contractible 
+      → Π {_} {_} {A × A} (λ {(x , y) → ((ℑ (x ≈ y)) is-contractible)}) 
 
   -- mike's old condition for lexness
   --    ℑ-condition-for-lexness :  {A B : U₀}
@@ -65,27 +84,69 @@ module Im where
   -- 'ℑ-universal' should be derivable from 'ℑ-induction' and 'ℑ-compute-induction'
 
 
-  ℑ-unit-at :
-    ∀ {i} → (A : U i)
-    → (A → ℑ A)
-  ℑ-unit-at A = ℑ-unit {_} {A}
-
-  ℑ-recursion : ∀ {A B : U₀} 
-                → B is-coreduced 
-                → (A → B) 
-                → (ℑ A → B)
+  ℑ-recursion : 
+    ∀ {A B : U₀} 
+    → B is-coreduced 
+    → (A → B) 
+    → (ℑ A → B)
   ℑ-recursion coreducedness f = ℑ-induction (λ a → coreducedness) (λ a → f a)
 
   ℑ-compute-recursion :
-                ∀ {A B : U₀} 
-                → (coreducedness : B is-coreduced) 
-                → (f : A → B)
-                → (a : A) → (ℑ-recursion coreducedness f) (ℑ-unit a) ≈ f a
+    ∀ {A B : U₀} 
+    → (coreducedness : B is-coreduced) 
+    → (f : A → B)
+    → (a : A) → (ℑ-recursion coreducedness f) (ℑ-unit a) ≈ f a
   ℑ-compute-recursion coreducedness f = ℑ-compute-induction (λ a → coreducedness) f
 
-  ℑ-recursion-is-unique : ∀ {A B : U₀} (f : A → B) (coreducedness : B is-coreduced)
-                          → (φ : ℑ A → B) → f ∼ φ ∘ ℑ-unit 
-                          → ℑ-recursion coreducedness f ∼ φ
+  apply-ℑ-to-map :
+    ∀ {A B : U₀}
+    → (A → B)
+    → (ℑ A → ℑ B)
+  apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit {_} {B} ∘ f)
+
+  apply-ℑ : ∀ {A B : U₀}
+            → (A → B)
+            → (ℑ A → ℑ B)
+  apply-ℑ f = apply-ℑ-to-map f
+
+  naturality-square-for-ℑ : 
+    ∀ {A B : U₀}
+    → (f : A → B)
+    → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
+  naturality-square-for-ℑ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
+
+  naturality-of-ℑ-unit : 
+    ∀ {A B : U₀}
+    → (f : A → B)
+    → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
+  naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
+
+
+  -- define coreduced connectedness
+  _is-ℑ-connected : ∀ {A B : U₀} (f : A → B)
+                        → U₀ 
+  _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
+
+
+{-  units-are-ℑ-connected :
+    ∀ {A : U₀}
+    → (ℑ-unit-at A) is-ℑ-connected
+  units-are-ℑ-connected = {!!}
+-}
+  -- it is preserved under composition
+--  composition-preserves-ℑ-connectedness :
+--    ∀ {A B C : U₀} (f : A → B) (g : B → C)
+--    → (f is-ℑ-connected) → (g is-ℑ-connected)
+--    → (g ∘ f) is-ℑ-connected 
+--  composition-preserves-ℑ-connectedness f g f-is-ℑ-connected g-is-ℑ-connected c =
+--    {!!}
+    
+
+
+  ℑ-recursion-is-unique : 
+    ∀ {A B : U₀} (f : A → B) (coreducedness : B is-coreduced)
+    → (φ : ℑ A → B) → f ∼ φ ∘ ℑ-unit 
+    → ℑ-recursion coreducedness f ∼ φ
   ℑ-recursion-is-unique {A} {B} f coreducedness φ φ-factors = 
     let factor-over-unit : (A → B) → (ℑ A → B)
         factor-over-unit = _is-an-equivalence.left-inverse (ℑ-universal coreducedness)
@@ -112,25 +173,6 @@ module Im where
                (factoring-is-nice φ))
 
 
-  -- define coreduced connectedness
-  _is-ℑ-connected : ∀ {A B : U₀} (f : A → B)
-                        → U₀ 
-  _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
-
-
-{-  units-are-ℑ-connected :
-    ∀ {A : U₀}
-    → (ℑ-unit-at A) is-ℑ-connected
-  units-are-ℑ-connected = {!!}
--}
-  -- it is preserved under composition
---  composition-preserves-ℑ-connectedness :
---    ∀ {A B C : U₀} (f : A → B) (g : B → C)
---    → (f is-ℑ-connected) → (g is-ℑ-connected)
---    → (g ∘ f) is-ℑ-connected 
---  composition-preserves-ℑ-connectedness f g f-is-ℑ-connected g-is-ℑ-connected c =
---    {!!}
-    
 
   module ℑ-is-idempotent (E : U₀) (E-is-coreduced : E is-coreduced) where
   -- idempotency for ℑ 
@@ -146,31 +188,6 @@ module Im where
     left-invertible : ℑ-unit⁻¹ ∘ ℑ-unit ∼ id
     left-invertible = ℑ-compute-recursion E-is-coreduced id
 
-
-
-  postulate
-    ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
-
-  apply-ℑ-to-map :
-    ∀ {A B : U₀}
-    → (A → B)
-    → (ℑ A → ℑ B)
-  apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit {_} {B} ∘ f)
-
-  apply-ℑ : ∀ {A B : U₀}
-            → (A → B)
-            → (ℑ A → ℑ B)
-  apply-ℑ f = apply-ℑ-to-map f
-
-  naturality-square-for-ℑ : ∀ {A B : U₀}
-                           → (f : A → B)
-                           → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
-  naturality-square-for-ℑ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
-
-  naturality-of-ℑ-unit : ∀ {A B : U₀}
-                           → (f : A → B)
-                           → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
-  naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
   apply-ℑ-commutes-with-∘ : 
     ∀ {A B C : U₀}

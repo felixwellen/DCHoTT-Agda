@@ -12,32 +12,11 @@ module Manifolds where
   open import Homotopies
   open import Im
   open import FormalDiscBundle
+  open import EtaleMaps
+  open import Language
 
 
-  -- X --→ Im X
-  -- |      |
-  -- f      |
-  -- ↓      ↓
-  -- Y --→ Im Y
-  
-  _is-an-étale-map : ∀ {X Y : U₀} (f : X → Y) → U₀ 
-  f is-an-étale-map = 
-    the-square-given-by-right (apply-ℑ-to-map f) 
-      bottom ℑ-unit 
-      top ℑ-unit 
-      left f 
-      commuting-by (naturality-of-ℑ-unit f)
-      is-a-pullback-square
-
-  _─ét→_ : (A B : U₀) → U₀
-  A ─ét→ B = ∑ (λ (f : A → B) → f is-an-étale-map)
-
-  underlying-map-of : 
-    ∀ {A B : U₀}
-    → (A ─ét→ B) → (A → B)
-  underlying-map-of (f , _) = f
-
-  -- the following is called 'surjective' in the BoTT-Book
+  -- the following is called 'surjective' in the HoTT-Book
   _is-epimorph : 
     ∀ {A B : U₀}
     → (A → B) → U₀
@@ -68,12 +47,11 @@ module Manifolds where
       and-the-induced-map-is-an-equivalence-by pullback-property
 
   _is-a-manifold-by-the-covering_which-is-a-covering-of-the-∞-group-with-delooping_,_by_ : 
-    ∀ {V : U₀} (M : U₀)
-    → (V ─ét→ M) → (BG : U₀) (e : BG) → (V ─ét→ Ω BG e)
+    ∀ {W : U₀} (M : U₀)
+    → (χ : W ─ét→ M) → (BG : U₀) (e : BG) → (ξ : W ─ét→ Ω BG e)
     → U₀
   M is-a-manifold-by-the-covering χ which-is-a-covering-of-the-∞-group-with-delooping BG , e by ξ =
     underlying-map-of χ is-epimorph
-
 
   module formal-disc-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
 
