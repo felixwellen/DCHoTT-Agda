@@ -121,12 +121,11 @@ module Im where
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
 
+  -- define coreduced connectedness
+  _is-ℑ-connected : ∀ {A B : U₀} (f : A → B)
+                        → U₀ 
+  _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
-  -- define coreduced connectedness (also: ℑ-connectedness)
-  _is-ℑ-connected : 
-    ∀ {A B : U₀} (f : A → B) → U₀ 
-  _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ(fiber-of f at b) is-contractible
-  
 
 {-  units-are-ℑ-connected :
     ∀ {A : U₀}
@@ -140,7 +139,10 @@ module Im where
 --    → (g ∘ f) is-ℑ-connected 
 --  composition-preserves-ℑ-connectedness f g f-is-ℑ-connected g-is-ℑ-connected c =
 --    {!!}
-  
+    
+
+
+
 
   ℑ-recursion-is-unique : 
     ∀ {A B : U₀} (f : A → B) (coreducedness : B is-coreduced)
