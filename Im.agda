@@ -6,17 +6,19 @@ module Im where
   open import Homotopies
   open import Contractibility
   open import Equivalences
+  open import CommonEquivalences
   open import InfinityGroups
   open import FunctionExtensionality
   open import Pullback
   open import Language
-  
+    
   -- Axioms for ℑ, the infinitesimal shape modality
   -- (this may also be read as axiomatizing a general lex Modality)
   -- the axioms are taken from a n-cafe post from mike shulman
   -- "internalizing the external, or the joy of codiscreteness"
-  -- except they are assumed to hold for all universes
   -- update: except the lexness-axioms
+  -- update: Now, it is close to the definition from the HoTT-Book
+
   postulate
     ℑ : ∀ {i} → U i → U i
     ℑ-unit : ∀ {i} {A : U i} → A → ℑ A
@@ -34,11 +36,6 @@ module Im where
     -- ℑ is idempotent
     ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
 
-    -- ℑ is the reflector of a reflective subuniverse
-    ℑ-universal : 
-      ∀ {A B : U₀}
-      → B is-coreduced → (λ (f : ℑ A → B) → f ∘ ℑ-unit) is-an-equivalence
-
     -- dependent inverse to the above / 'induction'
     ℑ-induction :  
       ∀ {i} {A : U i} {B : ℑ A → U i}
@@ -51,16 +48,21 @@ module Im where
       → (f : (a : A) → B(ℑ-unit a))
       → (a : A) → (ℑ-induction coreducedness f) (ℑ-unit a) ≈ f a
 
-    the-image-of-ℑ-is-closed-under-identity-formation :
-      ∀ (A : U₀) (x x′ : ℑ A) 
-      → ℑ-unit-at (x ≈ x′) is-an-equivalence
+    -- the following means, coreduced types have coreduced identity types
+    coreduced-types-have-coreduced-identity-types :
+      ∀ (B : U₀) → (B is-coreduced) → (b b′ : B) 
+      → ℑ-unit-at (b ≈ b′) is-an-equivalence
 
 
+  Ω-of-ℑ-is-coreduced : 
+    ∀ (A : U₀) (a : A)
+    → (Ω (ℑ A) (ℑ-unit a)) is-coreduced
+  Ω-of-ℑ-is-coreduced A a = 
+    coreduced-types-have-coreduced-identity-types 
+      (ℑ A) (ℑ-is-coreduced A) (ℑ-unit a) (ℑ-unit a)
+                             
     -- maybe lexness or some special case
-    Ω-of-ℑ-is-coreduced : 
-      ∀ (A : U₀) (a : A)
-      → (Ω (ℑ A) (ℑ-unit a)) is-coreduced
-
+  postulate
     ℑ-commutes-with-Ω : 
       ∀ (A : U₀) (a : A)
       → ℑ-induction (λ (γ : ℑ (Ω A a)) → Ω-of-ℑ-is-coreduced A a) (λ γ → ℑ-unit ⁎ γ) is-an-equivalence
@@ -79,9 +81,6 @@ module Im where
   --
   
   -- End Axioms
-  -- these axioms are redundant
-  -- '_is-coreduced' may be defined as 'λ A → ℑ-unit {A} is-an-equivalence'
-  -- 'ℑ-universal' should be derivable from 'ℑ-induction' and 'ℑ-compute-induction'
 
 
   ℑ-recursion : 
@@ -122,11 +121,12 @@ module Im where
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
 
-  -- define coreduced connectedness
-  _is-ℑ-connected : ∀ {A B : U₀} (f : A → B)
-                        → U₀ 
-  _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
+  -- define coreduced connectedness (also: ℑ-connectedness)
+  _is-ℑ-connected : 
+    ∀ {A B : U₀} (f : A → B) → U₀ 
+  _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ(fiber-of f at b) is-contractible
+  
 
 {-  units-are-ℑ-connected :
     ∀ {A : U₀}
@@ -140,28 +140,25 @@ module Im where
 --    → (g ∘ f) is-ℑ-connected 
 --  composition-preserves-ℑ-connectedness f g f-is-ℑ-connected g-is-ℑ-connected c =
 --    {!!}
-    
-
+  
 
   ℑ-recursion-is-unique : 
     ∀ {A B : U₀} (f : A → B) (coreducedness : B is-coreduced)
     → (φ : ℑ A → B) → f ∼ φ ∘ ℑ-unit 
     → ℑ-recursion coreducedness f ∼ φ
   ℑ-recursion-is-unique {A} {B} f coreducedness φ φ-factors = 
-    let factor-over-unit : (A → B) → (ℑ A → B)
-        factor-over-unit = _is-an-equivalence.left-inverse (ℑ-universal coreducedness)
-        factor-over-unit′ : (A → B) → (ℑ A → B)
-        factor-over-unit′ = ℑ-recursion coreducedness
+    let
+        factor-over-unit : (A → B) → (ℑ A → B)
+        factor-over-unit = ℑ-recursion coreducedness
         factoring-is-nice : ∀ (g : ℑ A → B)
                             → factor-over-unit (g ∘ ℑ-unit) ∼ g
-        factoring-is-nice g = equality-to-homotopy
-                           (_is-an-equivalence.unit (ℑ-universal coreducedness) g)
-{-        factoring-is-nice′ : ∀ (g : ℑ A → B)
-                            → factor-over-unit′ (g ∘ ℑ-unit) ∼ g
-        factoring-is-nice′ g = 
+        factoring-is-nice g = 
           let
             true-on-contructed = ℑ-compute-recursion coreducedness (g ∘ ℑ-unit)
-          in {!ℑ-induction!} -}
+          in ℑ-induction
+               (λ x → coreduced-types-have-coreduced-identity-types 
+                        B coreducedness (factor-over-unit (g ∘ ℑ-unit) x) (g x))
+               true-on-contructed 
         induced-map = ℑ-recursion coreducedness f
         both-factor-the-same-map : induced-map ∘ ℑ-unit ∼ φ ∘ ℑ-unit
         both-factor-the-same-map = compose-homotopies (ℑ-compute-recursion coreducedness f) φ-factors
@@ -239,6 +236,31 @@ module Im where
       apply-ℑ f is-an-equivalence-because
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
+  types-equivalent-to-their-coreduction-are-coreduced :
+    ∀ (A : U₀) (f : A ≃ ℑ A)
+    → ℑ-unit-at A is-an-equivalence
+  types-equivalent-to-their-coreduction-are-coreduced A f =
+    let f⁻¹-as-map = underlying-map-of (f ⁻¹≃)
+        f-as-map = underlying-map-of f
+        ℑf⁻¹ = apply-ℑ f⁻¹-as-map
+        ℑf = apply-ℑ f-as-map
+        the-composition = ℑf⁻¹ ∘ (ℑ-unit {_} {ℑ A} ∘ f-as-map)
+        the-composition-is-an-equivalence : the-composition is-an-equivalence
+        the-composition-is-an-equivalence = _≃_.proof-of-invertibility
+                                              (apply-ℑ-to-the-equivalence (f ⁻¹≃) ∘≃
+                                               (ℑ-unit is-an-equivalence-because (ℑ-is-coreduced _)) ∘≃ f)
+
+        step1 : the-composition ∼ ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A)
+        step1 a = (λ x → ℑf⁻¹ x) ⁎ naturality-square-for-ℑ f-as-map a ⁻¹
+
+        step2 : ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A) ∼ ℑ-unit-at A
+        step2 a = _is-an-equivalence.unit
+                    (_≃_.proof-of-invertibility (apply-ℑ-to-the-equivalence f))
+                    (ℑ-unit a)
+
+    in  equivalences-are-preserved-by-homotopy the-composition (ℑ-unit-at A)
+          the-composition-is-an-equivalence (compose-homotopies step1 step2)
+
 
 
 
@@ -268,30 +290,6 @@ module Im where
        step3
 
 
-  types-equivalent-to-their-coreduction-are-coreduced :
-    ∀ (A : U₀) (f : A ≃ ℑ A)
-    → ℑ-unit-at A is-an-equivalence
-  types-equivalent-to-their-coreduction-are-coreduced A f =
-    let f⁻¹-as-map = underlying-map-of (f ⁻¹≃)
-        f-as-map = underlying-map-of f
-        ℑf⁻¹ = apply-ℑ f⁻¹-as-map
-        ℑf = apply-ℑ f-as-map
-        the-composition = ℑf⁻¹ ∘ (ℑ-unit {_} {ℑ A} ∘ f-as-map)
-        the-composition-is-an-equivalence : the-composition is-an-equivalence
-        the-composition-is-an-equivalence = _≃_.proof-of-invertibility
-                                              (apply-ℑ-to-the-equivalence (f ⁻¹≃) ∘≃
-                                               (ℑ-unit is-an-equivalence-because (ℑ-is-coreduced _)) ∘≃ f)
-
-        step1 : the-composition ∼ ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A)
-        step1 a = (λ x → ℑf⁻¹ x) ⁎ naturality-square-for-ℑ f-as-map a ⁻¹
-
-        step2 : ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A) ∼ ℑ-unit-at A
-        step2 a = _is-an-equivalence.unit
-                    (_≃_.proof-of-invertibility (apply-ℑ-to-the-equivalence f))
-                    (ℑ-unit a)
-
-    in  equivalences-are-preserved-by-homotopy the-composition (ℑ-unit-at A)
-          the-composition-is-an-equivalence (compose-homotopies step1 step2)
 
   -- the hott book told me the following is true:
   retracts-of-coreduced-types-are-coreduced : 

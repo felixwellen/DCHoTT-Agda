@@ -25,7 +25,8 @@ module Equivalences where
       unit : left-inverse left-inverse-of f
       right-inverse : B → A
       counit : right-inverse right-inverse-of f
-  
+
+  infixl 4 _≃_                                                -- \simeq
   record _≃_  {i j} (A : U i) (B : U j) : U (i ⊔ j) where
     constructor _is-an-equivalence-because_
     field 

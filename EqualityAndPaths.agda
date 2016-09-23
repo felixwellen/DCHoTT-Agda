@@ -4,9 +4,9 @@ module EqualityAndPaths where
 
 open import Basics 
 
--- this definition might lead to contradictions
--- 
-data _≈_ {i} {A : U i} (a : A) : A → U i where   -- \approx
+
+infix 5 _≈_                                         -- \approx
+data _≈_ {i} {A : U i} (a : A) : A → U i where  
   refl : a ≈ a
 
 ---- the following is just to see that equality induction follows is derivable from the definition of ≈
