@@ -120,6 +120,12 @@ module Im where
     → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
+  ℑ⇒ : ∀ {A B : U₀} {f g : A → B}
+       → (f ⇒ g) → (ℑ→ f ⇒ ℑ→ g)
+  ℑ⇒ H = ℑ-induction
+         (λ a → coreduced-types-have-coreduced-identity-types (ℑ _) (ℑ-is-coreduced _) (ℑ→ _ a) (ℑ→ _ a))
+         (λ a → naturality-square-for-ℑ _ a • ℑ-unit ⁎ (H a) • naturality-square-for-ℑ _ a ⁻¹)
+
 
   -- define coreduced connectedness
   _is-ℑ-connected :
@@ -128,13 +134,12 @@ module Im where
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
 
-  ℑ-connected-maps-are-the-preimages-of-equivalences :
-    ∀ {A B : U₀} (f : A → B)
-    → (ℑ→ f) is-an-equivalence → f is-ℑ-connected
-  ℑ-connected-maps-are-the-preimages-of-equivalences f ℑf-is-an-equivalence =
-    {!!}
-  
-{-  units-are-ℑ-connected :
+--      
+--  the-preimages-of-equivalences-are-ℑ-connected =
+--    {!!}
+
+{-
+  units-are-ℑ-connected :
     ∀ {A : U₀}
     → (ℑ-unit-at A) is-ℑ-connected
   units-are-ℑ-connected = {!!}
@@ -243,17 +248,39 @@ module Im where
       apply-ℑ f is-an-equivalence-because
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
+
+  module the-ℑ-preimages-of-equivalences-are-ℑ-connected
+    {A B : U₀} (f : A → B) (ℑf-is-an-equivalence : (ℑ→ f) is-an-equivalence) where
+
+    ℑf = ℑ→ f
+    
+    fiber-inclusion-at : ∀ (b : B) → fiber-of f at b → A
+    fiber-inclusion-at b (a is-in-the-fiber-by γ) = a
+
+    fiber-inclusion-composes-to-constant-map :
+      ∀ (b : B) → f ∘ (fiber-inclusion-at b) ⇒ (λ _ → b)
+    fiber-inclusion-composes-to-constant-map b (a is-in-the-fiber-by γ) = γ
+
+    the-image-factors-over-the-point :
+      ∀ (b : B)
+      → ℑf ∘ (ℑ→ (fiber-inclusion-at b)) ⇒ ℑ→ (λ _ → b)
+    the-image-factors-over-the-point b = (apply-ℑ-commutes-with-∘ (fiber-inclusion-at b) f ⁻¹⇒) •⇒ (ℑ⇒ (fiber-inclusion-composes-to-constant-map b))
+    
+    conclusion : f is-ℑ-connected
+    conclusion = {!!}
+
+
   types-equivalent-to-their-coreduction-are-coreduced :
     ∀ {A : U₀} (f : A ≃ ℑ A)
     → ℑ-unit-at A is-an-equivalence
   types-equivalent-to-their-coreduction-are-coreduced {A} f =
     let f⁻¹-as-map = underlying-map-of (f ⁻¹≃)
         f-as-map = underlying-map-of f
-        ℑf⁻¹ = apply-ℑ f⁻¹-as-map
-        ℑf = apply-ℑ f-as-map
+        ℑf⁻¹ = ℑ→ f⁻¹-as-map
+        ℑf = ℑ→ f-as-map
         the-composition = ℑf⁻¹ ∘ (ℑ-unit {_} {ℑ A} ∘ f-as-map)
         the-composition-is-an-equivalence : the-composition is-an-equivalence
-        the-composition-is-an-equivalence = _≃_.proof-of-invertibility
+        the-composition-is-an-equivalence = proof-of-equivalency
                                               (apply-ℑ-to-the-equivalence (f ⁻¹≃) ∘≃
                                                (ℑ-unit is-an-equivalence-because (ℑ-is-coreduced _)) ∘≃ f)
 
@@ -262,7 +289,7 @@ module Im where
 
         step2 : ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A) ∼ ℑ-unit-at A
         step2 a = _is-an-equivalence.unit
-                    (_≃_.proof-of-invertibility (apply-ℑ-to-the-equivalence f))
+                    (proof-of-equivalency (apply-ℑ-to-the-equivalence f))
                     (ℑ-unit a)
 
     in  equivalences-are-preserved-by-homotopy the-composition (ℑ-unit-at A)
@@ -435,11 +462,6 @@ module Im where
 
 
 
---  morphisms-of-coreduced-types-have-coreduced-fibers :
---    ∀ {A B : U₀} → (A is-coreduced) → (B is-coreduced)
---    → (f : A → B) 
---    → (b : B) → (fiber-of f at b) is-coreduced
---  morphisms-of-coreduced-types-have-coreduced-fibers A-is-coreduced B-is-coreduced f b = {!!}
 
   -- ∞-groups and ℑ
   module ∞-groups-and-ℑ (BG : U₀) (e : BG) where
