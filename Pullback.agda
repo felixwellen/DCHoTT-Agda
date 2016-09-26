@@ -33,7 +33,6 @@ module Pullback where
   p-homotopy : ∀ {A B C : U₀} {f : A → C} {g : B → C} → (x : pullback f g) → f(p₁ x) ≈ g(p₂ x)
   p-homotopy (a and b are-in-the-same-fiber-by γ) = γ
 
-  -- because it's needed elsewhere
   p₁-of-pullback : ∀ {A B C : U₀} (f : A → C) (g : B → C) → pullback f g → A
   p₁-of-pullback f g = p₁ {_} {_} {_} {f} {g}
 

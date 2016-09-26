@@ -452,6 +452,16 @@ module PullbackSquare where
     in commutes-by new-homotopy and-the-induced-map-is-an-equivalence-by 
        induced-map-is-an-equivalence
 
+  substitute-equivalent-cone′ :
+    ∀ {Z Z′ A B C : U₀} 
+      {f : A → C} {g : B → C}
+      {z₁ : Z → A} {z₂ : Z → B}
+      (z₁′ : Z′ → A) (z₂′ : Z′ → B)
+      (e : Z′ ≃ Z)
+    → (z₁ ∘ (underlying-map-of e) ∼ z₁′) → (z₂ ∘ (underlying-map-of e) ∼ z₂′)
+    → pullback-square-with-right f bottom g top z₁ left z₂
+    → pullback-square-with-right f bottom g top z₁′ left z₂′
+  substitute-equivalent-cone′ z₁ z₂ e = substitute-equivalent-cone z₁ z₂ (underlying-map-of e) (proof-of-equivalency e)
 
   substitute-homotopic-top-map :
     ∀ {Z A B C : U₀} 
