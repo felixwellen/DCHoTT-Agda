@@ -91,3 +91,20 @@ _∘⇒_ : ∀ {i} {A B : U i} {f g h : A → B}
       → g ⇒ h → f ⇒ g → f ⇒ h
 H-gh ∘⇒ H-fg = H-fg •∼ H-gh
 
+infixl 50 _•⇒_ 
+_•⇒_ : ∀ {i} {A B : U i} {f g h : A → B} 
+      → f ⇒ g → g ⇒ h → f ⇒ h
+H-fg •⇒ H-gh = H-fg •∼ H-gh
+
+-- reasoning
+
+infix 15 _⇒∎
+infixr 10 _⇒-⟨_⟩_
+
+_⇒∎ : ∀ {i} {A B : U i} (f : A → B)
+      → f ≈ f
+f ⇒∎ = refl 
+
+_⇒-⟨_⟩_ : ∀ {i} {A B : U i} (f : A → B) {g h : A → B}
+         → f ⇒ g → g ⇒ h → f ⇒ h
+f ⇒-⟨ reason ⟩ H = reason •⇒ H

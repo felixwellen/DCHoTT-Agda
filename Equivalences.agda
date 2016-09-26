@@ -335,3 +335,14 @@ module Equivalences where
   
 
 
+  -- reasoning
+  infix 15 _≃∎
+  infixr 10 _≃⟨_⟩_
+
+  _≃∎ : ∀ {i} (A : U i) 
+      → A ≃ A
+  a ≃∎ = id-as-equivalence
+
+  _≃⟨_⟩_ : ∀ {i} (A : U i) {B C : U i}
+         → A ≃ B → B ≃ C → A ≃ C
+  A ≃⟨ reason ⟩ e′ = e′ ∘≃ reason  
