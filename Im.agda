@@ -122,11 +122,18 @@ module Im where
 
 
   -- define coreduced connectedness
-  _is-ℑ-connected : ∀ {A B : U₀} (f : A → B)
-                        → U₀ 
+  _is-ℑ-connected :
+    ∀ {A B : U₀} (f : A → B)
+    → U₀ 
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
 
+  ℑ-connected-maps-are-the-preimages-of-equivalences :
+    ∀ {A B : U₀} (f : A → B)
+    → (ℑ→ f) is-an-equivalence → f is-ℑ-connected
+  ℑ-connected-maps-are-the-preimages-of-equivalences f ℑf-is-an-equivalence =
+    {!!}
+  
 {-  units-are-ℑ-connected :
     ∀ {A : U₀}
     → (ℑ-unit-at A) is-ℑ-connected
