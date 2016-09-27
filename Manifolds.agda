@@ -240,8 +240,8 @@ module Manifolds where
          T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a De -fiber-bundle
          T∞M-is-a-fiber-bundle =
            let
-             v́-as-surjectiveism = (v is-surjective-by M-is-a-manifold)
+             v́-as-surjection = (v is-surjective-by M-is-a-manifold)
            in
-             on V the-pullback-along v́-as-surjective-map
+             on V the-pullback-along v́-as-surjection
              is-trivial-by top-map-of v*T∞M-is-trivial
              and v*T∞M-is-trivial
