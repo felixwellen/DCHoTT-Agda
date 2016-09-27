@@ -129,9 +129,11 @@ module OneImage where
           (map-to-the-fiber b) 
     lift : (B → X)
     lift b = as-point-in-the-domain (induced-map-on-the-truncated-fiber b (e-is-surjective b))
-  
+
+{-  
     upper-triangle : f ⇒ lift ∘ e 
     upper-triangle a = {!!}
    
     lower-triangle : m ∘ lift ⇒ g
     lower-triangle b = {!!}
+-}

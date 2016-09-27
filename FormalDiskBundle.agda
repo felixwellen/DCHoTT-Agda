@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 {- read the README -}
 
-module FormalDiscBundle where 
+module FormalDiskBundle where 
   open import Basics
   open import EqualityAndPaths
   open import Homotopies

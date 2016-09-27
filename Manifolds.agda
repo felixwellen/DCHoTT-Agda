@@ -11,7 +11,7 @@ module Manifolds where
   open import Contractibility
   open import Homotopies
   open import Im
-  open import FormalDiscBundle
+  open import FormalDiskBundle
   open import EtaleMaps
   open import Language
   open import OneImage
