@@ -14,7 +14,7 @@ module Manifolds where
   open import FormalDiscBundle
   open import EtaleMaps
   open import Language
-
+  open import OneImage
 
   pullback-square-of :
     ∀ {A B : U₀}
@@ -32,14 +32,14 @@ module Manifolds where
     → (χ : W ─ét→ M) → (BG : U₀) (e : BG) → (ξ : W ─ét→ Ω BG e)
     → U₀
   M is-a-manifold-by-the-covering χ which-is-a-covering-of-the-∞-group-with-delooping BG , e by ξ =
-    underlying-map-of χ is-epimorph
+    underlying-map-of χ is-surjective
 
-  module formal-disc-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
+  module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
 
     f = underlying-map-of f́
 
     {-
-    Step 1a: formal disc bundle on the codaim as a pullback square
+    Step 1a: formal disk bundle on the codaim as a pullback square
     
     T∞ B ──→ B
      | ⌟     |
@@ -53,7 +53,7 @@ module Manifolds where
                bottom ℑ-unit 
                top p₁ 
                left p₂
-    step1a = formal-disc-bundle-as-pullback-square B
+    step1a = formal-disk-bundle-as-pullback-square B
 
     {-
     Step 1b: base change along f as pullback square
@@ -101,7 +101,7 @@ module Manifolds where
     step3 = substitute-homotopic-bottom-map 
                (pasting-of-pullback-squares 
                  step2 
-                 (formal-disc-bundle-as-pullback-square A)) 
+                 (formal-disk-bundle-as-pullback-square A)) 
                (ℑ-unit ∘ f)
                (naturality-of-ℑ-unit f ⁻¹∼)
 
@@ -160,7 +160,7 @@ module Manifolds where
     → (f : B′ → B) → (φ : E → B) → ((f * φ) → B′)
   f *→ φ = left-map-of (complete-to-pullback-square φ f)
 
-  ^ = underlying-map-of-the-epimorphism
+  ^ = underlying-map-of-the-surjectiveism
 
   record _is-a_-fiber-bundle {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
     constructor on_the-pullback-along_is-trivial-by_and_
@@ -172,7 +172,7 @@ module Manifolds where
           (^ covering * φ) is-a-product-with-projections
             projection-to-the-fiber and (^ covering *→ φ) 
 
-  module the-formal-disc-bundle-on-a-manifold-is-a-fiber-bundle 
+  module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
          (V M : U₀) (v́ : V ─ét→ M) 
          (BG : U₀) (e : BG) (ǵ : V ─ét→ Ω BG e)
          (M-is-a-manifold : M is-a-manifold-by-the-covering v́ 
@@ -204,9 +204,9 @@ module Manifolds where
          T∞V-is-trivial =
            pasting-of-pullback-squares 
              (substitute-homotopic-left-map
-               (triviality-of-the-formel-disc-bundle-over-∞-groups.as-product-square BG e) 
+               (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square BG e) 
                p₂ (λ {(g₁ and g₂ are-in-the-same-fiber-by γ) → refl}))
-             (formal-disc-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
+             (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
 
          T∞V-is-equivalent-to-v*T∞M :
            pullback-square-with-right (p-of-T∞ V)
@@ -214,7 +214,7 @@ module Manifolds where
              top _
              left _
          T∞V-is-equivalent-to-v*T∞M =
-           (formal-disc-bundles-are-preserved-by-étale-base-change.conclusion v́)
+           (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion v́)
            and (complete-to-pullback-square (p-of-T∞ M) v)
            pull-back-the-same-cospan-so-the-first-may-be-replaced-by-the-second-in-the-square
            (pullback-square-from-identity-of-morphisms (p-of-T∞ V))
@@ -232,7 +232,7 @@ module Manifolds where
              (v *→ (p-of-T∞ M))
              (deduced-equivalence-factors-the-left-map
                 (complete-to-pullback-square (p-of-T∞ M) v)
-                (formal-disc-bundles-are-preserved-by-étale-base-change.conclusion
+                (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion
                  v́)
                 ⁻¹⇒)
 
@@ -240,8 +240,8 @@ module Manifolds where
          T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a De -fiber-bundle
          T∞M-is-a-fiber-bundle =
            let
-             v́-as-epimorphism = (v is-epimorph-by M-is-a-manifold)
+             v́-as-surjectiveism = (v is-surjective-by M-is-a-manifold)
            in
-             on V the-pullback-along v́-as-epimorphism
+             on V the-pullback-along v́-as-surjective-map
              is-trivial-by top-map-of v*T∞M-is-trivial
              and v*T∞M-is-trivial

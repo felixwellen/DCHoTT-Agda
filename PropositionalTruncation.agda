@@ -23,9 +23,12 @@ module PropositionalTruncation where
               → (∥ A ∥ → B)
     ∥-∥-recursion {A} B B-is-a-proposition f (#∣ a ∣) = f(a)
 
-    ∥-∥-induction : ∀ {A : U₀} {P : ∥ A ∥ → U₀} (true-on-constructed : (a : A) → P(∣ a ∣))
-             → ((x : ∥ A ∥) → P x)
-    ∥-∥-induction true-on-constructed #∣ x ∣ = true-on-constructed x 
+    ∥-∥-induction : 
+      ∀ {A : U₀} {P : ∥ A ∥ → U₀} 
+        (proposition : (x : ∥ A ∥) → P(x) is-a-proposition) 
+        (true-on-constructed : (a : A) → P(∣ a ∣))
+        → ((x : ∥ A ∥) → P x)
+    ∥-∥-induction proposition true-on-constructed #∣ x ∣ = true-on-constructed x 
 
     {-
     fill in the following, if needed

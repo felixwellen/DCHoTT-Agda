@@ -179,7 +179,11 @@ fiber-map : ∀ {i} {X Y : U i} {y₀ : Y}
            → (f : X → Y)  → fiber-of f at y₀ → X
 fiber-map f (x is-in-the-fiber-by γ) = x
   
--- this fiber is a pullback
+as-point-in-the-domain : 
+  ∀ {A B : U₀} {f : A → B} {b : B}
+  → (fiber-of f at b) → A
+as-point-in-the-domain (a is-in-the-fiber-by _) = a
+
 _as-map-from-One : ∀ {A : U₀} → A → (One → A)
 a as-map-from-One = λ x → a 
 

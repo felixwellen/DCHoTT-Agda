@@ -15,22 +15,22 @@ module FormalDiscBundle where
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
 
-  formal-disc-bundle : (X : U₀) → U₀
-  formal-disc-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
+  formal-disk-bundle : (X : U₀) → U₀
+  formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
   T∞ : (X : U₀) → U₀
-  T∞ X = formal-disc-bundle X
+  T∞ X = formal-disk-bundle X
 
   p-of-T∞ : (X : U₀) → (T∞ X) → X
   p-of-T∞ X = p₂-of-pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
-  formal-disc-bundle-as-pullback-square :
+  formal-disk-bundle-as-pullback-square :
     ∀ (X : U₀) → pullback-square-with-right ℑ-unit bottom ℑ-unit top p₁ left p₂
-  formal-disc-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
+  formal-disk-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
 
 
 
-  module triviality-of-the-formel-disc-bundle-over-∞-groups (BG : U₀) (e : BG) where
+  module triviality-of-the-formel-disk-bundle-over-∞-groups (BG : U₀) (e : BG) where
     G = Ω BG e
 
     ℑG = ℑ G
@@ -39,8 +39,8 @@ module FormalDiscBundle where
     ℑGΔ′ : ℑG′ × ℑG′ → ℑG′
     ℑGΔ′ = ∞-group-Δ (ℑ BG) (ℑ-unit e) 
 
-    disc-to-coreduced-point : T∞ G → ℑG
-    disc-to-coreduced-point (a and b are-in-the-same-fiber-by γ) = ℑ-unit a 
+    disk-to-coreduced-point : T∞ G → ℑG
+    disk-to-coreduced-point (a and b are-in-the-same-fiber-by γ) = ℑ-unit a 
 
     forget-path : T∞ G → G × G
     forget-path (g and h are-in-the-same-fiber-by _) = (g , h)
@@ -63,9 +63,9 @@ module FormalDiscBundle where
     -- substitute the maps defined in this file
     step1″ : pullback-square-with-right Δ
              bottom (ℑ-unit-at G ×→ ℑ-unit-at G) 
-             top disc-to-coreduced-point
+             top disk-to-coreduced-point
              left forget-path
-    step1″ = substitute-equivalent-cone disc-to-coreduced-point forget-path id
+    step1″ = substitute-equivalent-cone disk-to-coreduced-point forget-path id
               id-is-an-equivalence 
               (λ {(_ and _ are-in-the-same-fiber-by _) → refl}) 
               (λ {(_ and _ are-in-the-same-fiber-by _) → refl}) 
@@ -75,7 +75,7 @@ module FormalDiscBundle where
 
     step1 : pullback-square-with-right Δ
              bottom (ℑ-unit-at G ×→ ℑ-unit-at G) 
-             top disc-to-coreduced-point
+             top disk-to-coreduced-point
              left forget-path
     step1 = equality-of-squares-preserve-the-pullback-property
                step1″ (λ { (_ and _ are-in-the-same-fiber-by γ) → ×-create-equality refl γ })
