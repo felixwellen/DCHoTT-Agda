@@ -16,25 +16,6 @@ module Manifolds where
   open import Language
 
 
-  -- the following is called 'surjective' in the HoTT-Book
-  _is-epimorph : 
-    ∀ {A B : U₀}
-    → (A → B) → U₀
-  _is-epimorph {A} {B} f = Π (λ (b : B) → ∥ fiber-of f at b ∥)
-
-  record _↠_ (A B : U₀) : U₁ where
-    constructor _is-epimorph-by_
-    field
-      morphism : A → B
-      proof-that-it-is-epimorph : morphism is-epimorph
-
-  underlying-map-of-the-epimorphism : 
-    ∀ {A B : U₀}
-    → (f : A ↠ B) → (A → B)
-  underlying-map-of-the-epimorphism
-    (morphism is-epimorph-by proof-that-it-is-epimorph) = morphism
-
-
   pullback-square-of :
     ∀ {A B : U₀}
     → (f́ : A ─ét→ B) 
