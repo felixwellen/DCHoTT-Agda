@@ -18,10 +18,17 @@ module PropositionalTruncation where
     postulate
       -1-truncated : ∀ {A : U₀} → (a a′ : ∥ A ∥) → a ≈ a′
     
-    ∥-∥-recursion : ∀ {A : U₀} (B : U₀)
-              → B is-a-proposition → (f : A → B)
-              → (∥ A ∥ → B)
+    ∥-∥-recursion : 
+      ∀ {A : U₀} (B : U₀)
+      → B is-a-proposition → (f : A → B)
+      → (∥ A ∥ → B)
     ∥-∥-recursion {A} B B-is-a-proposition f (#∣ a ∣) = f(a)
+
+    ∥-∥-compute-recursion : 
+      ∀ {A : U₀} (B : U₀)
+      → (B-is-a-proposition : B is-a-proposition) → (f : A → B)
+      → (a : A) → ∥-∥-recursion B B-is-a-proposition f (∣ a ∣) ≈ f a
+    ∥-∥-compute-recursion B B-is-a-proposition f a = refl
 
     ∥-∥-induction : 
       ∀ {A : U₀} {P : ∥ A ∥ → U₀} 

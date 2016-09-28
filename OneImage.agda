@@ -130,10 +130,18 @@ module OneImage where
     lift : (B → X)
     lift b = as-point-in-the-domain (induced-map-on-the-truncated-fiber b (e-is-surjective b))
 
-{-  
+  
     upper-triangle : f ⇒ lift ∘ e 
-    upper-triangle a = {!!}
+    upper-triangle a = as-point-in-the-domain ⁎ 
+                          (f (a) is-in-the-fiber-by _ 
+                         ≈⟨ refl ⟩ 
+                          induced-map-on-the-truncated-fiber (e a) (∣ a is-in-the-fiber-by refl ∣) 
+                         ≈⟨ (λ x → induced-map-on-the-truncated-fiber (e a) x) ⁎ 
+                             -1-truncated (∣ a is-in-the-fiber-by refl ∣) (e-is-surjective (e a)) ⟩  
+                          induced-map-on-the-truncated-fiber (e a) (e-is-surjective (e a))  
+                         ≈∎)
    
     lower-triangle : m ∘ lift ⇒ g
-    lower-triangle b = {!!}
--}
+    lower-triangle b = as-equality-in-the-codomain 
+                       (induced-map-on-the-truncated-fiber b (e-is-surjective b))
+

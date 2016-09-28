@@ -184,6 +184,12 @@ as-point-in-the-domain :
   → (fiber-of f at b) → A
 as-point-in-the-domain (a is-in-the-fiber-by _) = a
 
+as-equality-in-the-codomain :
+  ∀ {A B : U₀} {f : A → B} {b : B}
+  → (x : fiber-of f at b) → f(as-point-in-the-domain x) ≈ b
+as-equality-in-the-codomain (x is-in-the-fiber-by γ) = γ
+
+
 _as-map-from-One : ∀ {A : U₀} → A → (One → A)
 a as-map-from-One = λ x → a 
 
