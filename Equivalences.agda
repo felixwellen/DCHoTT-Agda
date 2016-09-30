@@ -173,7 +173,15 @@ module Equivalences where
   left-inverses-are-also-right-inverses f l r unit counit b = 
     f ⁎ left-and-right-inverse-are-homotopic f l r unit counit b •
       counit b ⁻¹
-  
+
+  the-inverse-is-a-right-inverse-of_by_ :
+    ∀ {A B : U₀} (f : A → B)
+    → (proof : f is-an-equivalence)
+    → id ⇒ f ∘ (inverse-of f given-by proof)
+  the-inverse-is-a-right-inverse-of_by_ f
+    (has-left-inverse l by unit and-right-inverse r by counit) =
+      left-inverses-are-also-right-inverses f l r unit counit ⁻¹⇒
+
   right-inverses-are-also-left-inverses : 
     ∀ {i} {A B : U i} (f : A → B) (l : B → A) (r : B → A)
     → l ∘ f ∼ id → id ∼ f ∘ r  

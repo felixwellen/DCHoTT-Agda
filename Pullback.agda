@@ -47,20 +47,20 @@ module Pullback where
   uniqueness-for-pullbacks (a and b are-in-the-same-fiber-by x) = refl
 
   -- the path groupoid of A acts on the elements of the pullback of f and g
-  equalitiy-action : ∀ {A B C : U₀} (f : A → C) (g : B → C)
+  equality-action : ∀ {A B C : U₀} (f : A → C) (g : B → C)
                        (a a′ : A) (η : a ≈ a′) (b : B) (γ : f(a) ≈ g(b)) 
                      → in-the-type (pullback f g) we-have-an-equality
                         (a and b are-in-the-same-fiber-by γ) ≈ 
                          (a′ and b are-in-the-same-fiber-by f ⁎ η ⁻¹ • γ)
-  equalitiy-action f g a .a refl b γ = refl
+  equality-action f g a .a refl b γ = refl
 
   -- the path groupoid of A acts on the elements of the pullback of f and g
-  equalitiy-action′ : ∀ {A B C : U₀} (f : A → C) (g : B → C)
+  equality-action′ : ∀ {A B C : U₀} (f : A → C) (g : B → C)
                        (b b′ : B) (η : b ≈ b′) (a : A) (γ : f(a) ≈ g(b)) 
                      → in-the-type (pullback f g) we-have-an-equality
                         (a and b are-in-the-same-fiber-by γ) ≈ 
                          (a and b′ are-in-the-same-fiber-by γ • g ⁎ η)
-  equalitiy-action′ f g b .b refl a γ = (λ ξ → a and b are-in-the-same-fiber-by ξ) ⁎
+  equality-action′ f g b .b refl a γ = (λ ξ → a and b are-in-the-same-fiber-by ξ) ⁎
                                           refl-is-right-neutral γ
 
   homotopy-action-as-a-map : ∀ {U V W : U₀} (u₀ : U → W) (v₀ : V → W)
@@ -183,12 +183,12 @@ module Pullback where
      ≈⟨ uniqueness-for-pullbacks (φ z) ⁻¹ ⟩
       (p₁ (φ z) and p₂ (φ z) are-in-the-same-fiber-by p-homotopy (φ z)) 
      ≈⟨
-       equalitiy-action f g (p₁ (φ z)) (z₁ z) (H1 z) (p₂ (φ z))
+       equality-action f g (p₁ (φ z)) (z₁ z) (H1 z) (p₂ (φ z))
        (p-homotopy (φ z))
       ⟩
       (z₁ z and p₂ (φ z) are-in-the-same-fiber-by f ⁎ H1 z ⁻¹ • p-homotopy (φ z))
      ≈⟨
-          equalitiy-action′ f g (p₂ (φ z)) (z₂ z) (H2 z) (z₁ z)
+          equality-action′ f g (p₂ (φ z)) (z₂ z) (H2 z) (z₁ z)
           (f ⁎ H1 z ⁻¹ • p-homotopy (φ z))
       ⟩
       (z₁ z and z₂ z are-in-the-same-fiber-by f ⁎ H1 z ⁻¹ • p-homotopy (φ z) • g ⁎ H2 z)
@@ -289,7 +289,7 @@ module Pullback where
       in  (e⁻¹ (e a′) and b are-in-the-same-fiber-by (f ⁎ e∘e⁻¹∼1 (e a′)) • γ)
         ≈⟨ (λ ξ → e⁻¹ (e a′) and b are-in-the-same-fiber-by ξ • γ) ⁎ switch-path-with-e ⟩
           (e⁻¹ (e a′) and b are-in-the-same-fiber-by (f′ ⁎ e⁻¹∘e∼1 a′) • γ)
-        ≈⟨ equalitiy-action f′ g (e⁻¹ (e a′)) a′ (e⁻¹∘e∼1 a′) b (f′ ⁎ e⁻¹∘e∼1 a′ • γ) ⟩
+        ≈⟨ equality-action f′ g (e⁻¹ (e a′)) a′ (e⁻¹∘e∼1 a′) b (f′ ⁎ e⁻¹∘e∼1 a′ • γ) ⟩
           a′ and b are-in-the-same-fiber-by f′ ⁎ e⁻¹∘e∼1 a′ ⁻¹ • (f′ ⁎ e⁻¹∘e∼1 a′ • γ)
         ≈⟨ (λ ξ → a′ and b are-in-the-same-fiber-by ξ) ⁎ cancel-paths ⟩
           (a′ and b are-in-the-same-fiber-by γ)
@@ -300,7 +300,7 @@ module Pullback where
     right-invertible
       (a and b are-in-the-same-fiber-by γ) =
           (e (e⁻¹ a) and b are-in-the-same-fiber-by (f ⁎ e∘e⁻¹∼1 a) • γ)
-        ≈⟨  equalitiy-action f g (e (e⁻¹ a)) a (e∘e⁻¹∼1 a) b
+        ≈⟨  equality-action f g (e (e⁻¹ a)) a (e∘e⁻¹∼1 a) b
             (f ⁎ e∘e⁻¹∼1 a • γ) ⟩
           (a and b are-in-the-same-fiber-by (f ⁎ e∘e⁻¹∼1 a ⁻¹) • ((f ⁎ e∘e⁻¹∼1 a) • γ))
         ≈⟨ (λ χ → a and b are-in-the-same-fiber-by χ) ⁎
@@ -457,7 +457,7 @@ module Pullback where
                                          ⁻¹-is-left-inversion γ ⁻¹
                                          • (λ η → f a and a are-in-the-same-fiber-by η ⁻¹ • γ) ⁎
                                            id-has-trivial-application γ ⁻¹
-                                         • equalitiy-action id f b (f a) γ a γ ⁻¹})
+                                         • equality-action id f b (f a) γ a γ ⁻¹})
                              and-right-inverse domain-to-id-pullback A B f
                                by (λ x → refl)
   id-pullback-as-equivalence : ∀ (A B : U₀) (f : A → B) 
@@ -489,7 +489,7 @@ module Pullback where
                                          ≈⟨ (λ η → a and f a are-in-the-same-fiber-by γ • η) ⁎
                                             id-has-trivial-application (γ ⁻¹) ⁻¹ ⟩
                                           (a and f a are-in-the-same-fiber-by γ • id ⁎ (γ ⁻¹)) 
-                                         ≈⟨ equalitiy-action′ f id b (f a) (γ ⁻¹) a γ ⁻¹ ⟩
+                                         ≈⟨ equality-action′ f id b (f a) (γ ⁻¹) a γ ⁻¹ ⟩
                                           (a and b are-in-the-same-fiber-by γ) 
                                          ≈∎ })
                              and-right-inverse domain-to-id-pullback′ A B f

@@ -64,7 +64,7 @@ module MayerVietoris where
                         (×-uniqueness-of-equality γ •
                        refl-is-right-neutral (×-create-equality (π₁ ⁎ γ) (π₂ ⁎ γ)) ⁻¹) •
                        lemma-2 b x y γ
-                 in (equalitiy-action Δ (f ×→ g) b (f x) b≈fx (x , y) γ •
+                 in (equality-action Δ (f ×→ g) b (f x) b≈fx (x , y) γ •
                        (λ η → _ and _ are-in-the-same-fiber-by η) ⁎ equality-transformation) ⁻¹
 
     right-inverse : ∀ (x : pullback f g)

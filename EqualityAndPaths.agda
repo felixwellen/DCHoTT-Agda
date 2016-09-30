@@ -9,9 +9,6 @@ infix 5 _≈_                                         -- \approx
 data _≈_ {i} {A : U i} (a : A) : A → U i where  
   refl : a ≈ a
 
----- the following is just to see that equality induction follows is derivable from the definition of ≈
---≈-induction : ∀ {i} {A : U i} {P : (x : A) → (y : A) → x ≈ y → U i} → ((a : A) → P a a refl) → ({x y : A} → (γ : x ≈ y) → P x y γ)
---≈-induction {A} {P} p (refl {a = a′}) = p a′
 
 One-contraction : (x : One) → x ≈ ∗
 One-contraction ∗ = refl
@@ -73,7 +70,7 @@ apply_to-path : {A B : Uω} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y
 apply f to-path refl = refl
 
 
-infix 70 _⁎_  -- \asterisk
+infixr 70 _⁎_  -- \asterisk
 _⁎_ : ∀ {i j} {A : U i} {B : U j} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
 _⁎_ {_} {_} {_} {_} {x} {.x} f  refl = refl {a = f(x)} 
 
@@ -162,6 +159,29 @@ in-the-type A we-have-an-equality x ≈ y = x ≈ y
 ×-uniqueness-of-equality {_} {_} {x} {.x} refl = ⁻¹-is-right-inversion (×-uniqueness x) ⁻¹ •
                                        (λ η → η • ×-uniqueness x ⁻¹) ⁎
                                        refl-is-right-neutral (×-uniqueness x)
+
+equality-action-on-∑ :
+  ∀ {A : U₀} {P : A → U₀}
+  → (a a′ : A) → (γ : a ≈ a′) → (pₐ : P a)
+  → (a , pₐ) ≈ (a′ , transport P γ pₐ)
+equality-action-on-∑ a .a refl pₐ = refl
+
+cancel-equality-action-on-∑-with-projection :
+  ∀ {A : U₀} {P : A → U₀}
+  → (a a′ : A) → (γ : a ≈ a′) → (pₐ : P a)
+  → ∑π₁ ⁎ (equality-action-on-∑ {A} {P} a a′ γ pₐ) ≈ γ
+cancel-equality-action-on-∑-with-projection a .a refl _ = refl
+
+inclusion-of-the-fiber-of_over_ :
+  ∀ {A : U₀} (P : A → U₀)
+  → (a : A) → (P a → ∑ P)
+inclusion-of-the-fiber-of P over a = λ pₐ → (a , pₐ)
+
+cancel-orthogonal-equality-in-∑ :
+  ∀ {A : U₀} {P : A → U₀}
+  → (a : A) (pₐ pₐ′ : P a) (γ : pₐ ≈ pₐ′)
+  → ∑π₁ ⁎ (inclusion-of-the-fiber-of P over a) ⁎ γ ≈ refl 
+cancel-orthogonal-equality-in-∑ a pₐ .pₐ refl = refl
 
 --the-proposition-that-something-is-a-proposition-is-a-proposition : ∀ {i} (A : U i) → A is-a-proposition is-a-proposition
 --the-proposition-that-something-is-a-proposition-is-a-proposition {i} A p q = {!!}
