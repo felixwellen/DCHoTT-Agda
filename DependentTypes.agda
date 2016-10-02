@@ -93,11 +93,6 @@ module DependentTypes where
       g a′ = F on-the-fiber-over a′
       g⁻¹ : (a′ : A′) → (E _ → E′ a′)
       g⁻¹ a′ = inverse-of (g a′) given-by (F-is-an-equivalence-on-fibers a′)
-      left-invertible-at : (a′ : A′) → g⁻¹ a′ ∘ g a′ ⇒ id
-      left-invertible-at a′ = unit (F-is-an-equivalence-on-fibers a′)
-      right-invertible-at : (a′ : A′) → id ⇒ g a′ ∘ g⁻¹ a′
-      right-invertible-at a′ =
-        the-inverse-is-a-right-inverse-of g a′ by F-is-an-equivalence-on-fibers a′
       g-on-∑ : ∑ E′ → ∑ E
       g-on-∑ (a′ , e′) = (f a′ , g a′ e′)
 
@@ -186,6 +181,8 @@ module DependentTypes where
                        induced-map (a′ , g⁻¹ a′ (transport E γ e))
                       ≈∎
       
+      
+
       conclusion : pullback-square-with-right (dependent-type E as-map)
         bottom base-change-of F
         top the-map-on-total-spaces-induced-by F
