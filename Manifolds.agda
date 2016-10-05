@@ -23,9 +23,9 @@ module Manifolds where
         bottom ℑ-unit
         top ℑ-unit
         left (underlying-map-of f́)
-  pullback-square-of (f , pullback-property) =
-    commutes-by naturality-of-ℑ-unit f
-      and-the-induced-map-is-an-equivalence-by pullback-property
+  pullback-square-of (f , (the-induced-map-is-an-equivalence-by pullback-property)) =
+    the-square-commuting-by naturality-of-ℑ-unit f
+      and-inducing-an-equivalence-by pullback-property
 
   _is-a-manifold-by-the-covering_which-is-a-covering-of-the-∞-group-with-delooping_,_by_ : 
     ∀ {W : U₀} (M : U₀)
@@ -100,8 +100,9 @@ module Manifolds where
                left (p₂-of-pullback (ℑ-unit-at A) (ℑ-unit-at A))
     step3 = substitute-homotopic-bottom-map 
                (pasting-of-pullback-squares 
+                 (formal-disk-bundle-as-pullback-square A)
                  step2 
-                 (formal-disk-bundle-as-pullback-square A)) 
+                 ) 
                (ℑ-unit ∘ f)
                (naturality-of-ℑ-unit f ⁻¹∼)
 
@@ -203,10 +204,10 @@ module Manifolds where
              left (p-of-T∞ V)
          T∞V-is-trivial =
            pasting-of-pullback-squares 
+             (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
              (substitute-homotopic-left-map
                (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square BG e) 
                p₂ (λ {(g₁ and g₂ are-in-the-same-fiber-by γ) → refl}))
-             (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
 
          T∞V-is-equivalent-to-v*T∞M :
            pullback-square-with-right (p-of-T∞ V)
@@ -227,8 +228,8 @@ module Manifolds where
          v*T∞M-is-trivial =
            substitute-homotopic-left-map
              (pasting-of-pullback-squares
-               T∞V-is-trivial
-               T∞V-is-equivalent-to-v*T∞M)
+               T∞V-is-equivalent-to-v*T∞M
+               T∞V-is-trivial)
              (v *→ (p-of-T∞ M))
              (deduced-equivalence-factors-the-left-map
                 (complete-to-pullback-square (p-of-T∞ M) v)

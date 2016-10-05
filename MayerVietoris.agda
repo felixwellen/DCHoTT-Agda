@@ -136,7 +136,7 @@ module MayerVietoris where
 
     as-pullback-square : pullback-square-with-right Δ bottom (f ×→ g) top ν left θ
     as-pullback-square =
-      commutes-by ξ and-the-induced-map-is-an-equivalence-by induced-map-is-an-equivalence
+      the-square-commuting-by ξ and-inducing-an-equivalence-by induced-map-is-an-equivalence
     
   mayer-vietoris-part-1 : ∀ {X Y B : U₀} (f : X → B) (g : Y → B)
                           → pullback Δ (f ×→ g) ≃ pullback f g
@@ -280,8 +280,8 @@ module MayerVietoris where
 
     as-pullback-square :
       pullback-square-with-right φ bottom ΔG top ν left θ
-    as-pullback-square = commutes-by φ∘ν∼ΔG∘θ 
-                         and-the-induced-map-is-an-equivalence-by
+    as-pullback-square = the-square-commuting-by φ∘ν∼ΔG∘θ 
+                         and-inducing-an-equivalence-by
                          (the-map induced-map is-an-equivalence-since-it-is-homotopic-to
                             as-map by induced-map∼as-map which-is-an-equivalence-by
                             map-is-an-equivalence)

@@ -175,7 +175,7 @@ module FormalDiskBundle where
     -}
 
     step2c : pullback-square-with-right constant-refl-e bottom ℑGΔ′ ∘ (ψ ×→ ψ) top (λ _ → ∗) left Δ
-    step2c = pasting-of-pullback-squares step2a step2b
+    step2c = pasting-of-pullback-squares step2b step2a
 
     {-
     Step 3 (combine step 1 and 2c):
@@ -192,7 +192,7 @@ module FormalDiskBundle where
               bottom ℑGΔ′ ∘ (ψ ×→ ψ) ∘ (ℑ-unit-at G ×→ ℑ-unit-at G)
               top (λ _ → ∗) 
               left forget-path 
-    step3′ = pasting-of-pullback-squares step2c step1
+    step3′ = pasting-of-pullback-squares step1 step2c
 
     describe-ψ∘ℑ-unit : ψ ∘ ℑ-unit-at (Ω BG e) ⇒ (λ γ → ℑ-unit ⁎ γ)
     describe-ψ∘ℑ-unit γ = ℑ-compute-induction (λ γ₁ → Ω-of-ℑ-is-coreduced BG e)
@@ -249,7 +249,6 @@ module FormalDiskBundle where
               top (λ _ → ∗)
               left forget-path
     step4 = pasting-of-pullback-squares 
-             remove-ℑG′
              (substitute-homotopic-bottom-map step3
               ((λ g → ℑ-unit ⁎ g) ∘ ∂G) (λ {(g , h) →
                 ℑ-unit ⁎ (g • h ⁻¹) 
@@ -257,6 +256,7 @@ module FormalDiskBundle where
                 ℑ-unit ⁎ g • ℑ-unit ⁎ (h ⁻¹) 
                ≈⟨ (λ ξ → ℑ-unit ⁎ g • ξ) ⁎ application-commutes-with-inversion ℑ-unit h ⟩ 
                 ℑ-unit ⁎ g • ℑ-unit ⁎ h ⁻¹ ≈∎}))
+             remove-ℑG′
 
     {-
   

@@ -17,7 +17,7 @@ module Pullback where
                    in (has-left-inverse to-constant-map by (λ φ → fun-ext (λ { ∗ → refl }))
                        and-right-inverse to-constant-map by (λ (a : A) → refl)))
 
-  record pullback {A B C : U₀} (f : A → C) (g : B → C) : U₀ where
+  record pullback {i} {A B C : U i} (f : A → C) (g : B → C) : U i where
     constructor _and_are-in-the-same-fiber-by_
     field
       a : A
@@ -165,7 +165,7 @@ module Pullback where
            (reverse-homotopy pullback-uniqueness.left-invertible))
 
   induced-map-to-pullback : 
-    ∀ {Z A B C : U₀} {f : A → C} {g : B → C}
+    ∀ {i} {Z A B C : U i} {f : A → C} {g : B → C}
     → (z₁ : Z → A) → (z₂ : Z → B) → (γ : f ∘ z₁ ∼ g ∘ z₂)
     → (Z → pullback f g)
   induced-map-to-pullback z₁ z₂ γ z =

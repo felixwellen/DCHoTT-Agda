@@ -25,14 +25,19 @@ module PullbackSquare where
 
   -}
 
-  record pullback-square {Z A B C : U₀} (f : A → C)  (g : B → C) 
-                                      (z₁ : Z → A) (z₂ : Z → B)  : U₀ where
-    constructor commutes-by_and-the-induced-map-is-an-equivalence-by_
+  record pullback-square {i} {Z A B C : U i} (f : A → C)  (g : B → C) 
+                                      (z₁ : Z → A) (z₂ : Z → B)  : U i where
+    constructor the-square-commuting-by_and-inducing-an-equivalence-by_
     field
       γ : f ∘ z₁ ⇒ g ∘ z₂
-      proof : (induced-map-to-pullback {_} {_} {_} {_} {f} {g}  z₁ z₂ γ) is-an-equivalence
+      proof : (induced-map-to-pullback {_} {_} {_} {_} {_} {f} {g}  z₁ z₂ γ) is-an-equivalence
 
-
+  record is-a-pullback-square {i} {Z A B C : U i} 
+    (f : A → C)  (g : B → C) 
+    (z₁ : Z → A) (z₂ : Z → B) (γ : f ∘ z₁ ⇒ g ∘ z₂) : U i where
+    constructor the-induced-map-is-an-equivalence-by_
+    field 
+      proof : (induced-map-to-pullback {_} {_} {_} {_} {_} {f} {g}  z₁ z₂ γ) is-an-equivalence
 
   -- Language
   pullback-square-with-right_bottom_top_left_ :
@@ -43,16 +48,15 @@ module PullbackSquare where
   pullback-square-with-right f bottom g top z₁ left z₂ =
     pullback-square f g z₁ z₂
 
-  the-square-given-by-right_bottom_top_left_commuting-by_is-a-pullback-square :
+  the-square-with-right_bottom_top_left_commuting-by_is-a-pullback-square :
     ∀ {Z A B C : U₀}
       (f : A → C)  (g : B → C) 
       (z₁ : Z → A) (z₂ : Z → B)
-      → f ∘ z₁ ∼ g ∘ z₂
+      → (γ : f ∘ z₁ ⇒ g ∘ z₂)
       → U₀
-  the-square-given-by-right f bottom g top z₁ left z₂ commuting-by γ is-a-pullback-square =
-    induced-map-to-pullback {_} {_} {_} {_} {f} {g} z₁ z₂ γ
-      is-an-equivalence
-
+  the-square-with-right f bottom g top z₁ left z₂ commuting-by γ is-a-pullback-square =
+    is-a-pullback-square f g z₁ z₂ γ
+    
 
   -- projections
   underlying-2-cell : 
@@ -62,7 +66,7 @@ module PullbackSquare where
       → pullback-square f g z₁ z₂
       → f ∘ z₁ ∼ g ∘ z₂
   underlying-2-cell
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by _)  = γ
+    (the-square-commuting-by γ and-inducing-an-equivalence-by _)  = γ
 
   the-induced-map-in_is-an-equivalence : 
     ∀ {Z A B C : U₀}
@@ -70,7 +74,7 @@ module PullbackSquare where
       {z₁ : Z → A} {z₂ : Z → B}
       → (□ : pullback-square f g z₁ z₂)
       → induced-map-to-pullback z₁ z₂ (underlying-2-cell □) is-an-equivalence
-  the-induced-map-in commutes-by _ and-the-induced-map-is-an-equivalence-by proof is-an-equivalence = 
+  the-induced-map-in (the-square-commuting-by _ and-inducing-an-equivalence-by proof) is-an-equivalence = 
     proof
 
   upper-left-vertex-of :
@@ -162,8 +166,8 @@ module PullbackSquare where
       → (□₂ : pullback-square f g w₁ w₂)
       → Z ≃ W
   deduce-equivalence-of-vertices {W} {Z} {_} {_} {_} {f} {g} {z₁} {z₂} {w₁} {w₂}
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by x) 
-    (commutes-by γ₁ and-the-induced-map-is-an-equivalence-by x₁) =
+    (the-square-commuting-by γ and-inducing-an-equivalence-by x) 
+    (the-square-commuting-by γ₁ and-inducing-an-equivalence-by x₁) =
     let
       φ : W ≃ pullback f g
       φ = (induced-map-to-pullback w₁ w₂ γ₁) is-an-equivalence-because x₁
@@ -181,8 +185,8 @@ module PullbackSquare where
       → (□₂ : pullback-square f g w₁ w₂)
       → w₂ ∘ (underlying-map-of (deduce-equivalence-of-vertices □₁ □₂)) ⇒ z₂ 
   deduced-equivalence-factors-the-left-map {W} {Z} {_} {_} {_} {f} {g} {z₁} {z₂} {w₁} {w₂} 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by x) 
-    (commutes-by γ₁ and-the-induced-map-is-an-equivalence-by (has-left-inverse φ⁻¹l by unit and-right-inverse φ⁻¹r by counit)) =
+    (the-square-commuting-by γ and-inducing-an-equivalence-by x) 
+    (the-square-commuting-by γ₁ and-inducing-an-equivalence-by (has-left-inverse φ⁻¹l by unit and-right-inverse φ⁻¹r by counit)) =
     let
       ψ : Z → pullback f g
       ψ = (induced-map-to-pullback z₁ z₂ γ) 
@@ -200,8 +204,8 @@ module PullbackSquare where
       χ : Z → W
       χ = underlying-map-of 
           (deduce-equivalence-of-vertices 
-            (commutes-by γ and-the-induced-map-is-an-equivalence-by x) 
-            (commutes-by γ₁ and-the-induced-map-is-an-equivalence-by (has-left-inverse φ⁻¹l by unit and-right-inverse φ⁻¹r by counit)))
+            (the-square-commuting-by γ and-inducing-an-equivalence-by x) 
+            (the-square-commuting-by γ₁ and-inducing-an-equivalence-by (has-left-inverse φ⁻¹l by unit and-right-inverse φ⁻¹r by counit)))
     in λ z → w₂ (χ z) 
            ≈⟨ w₂∘φ⁻¹l⇒p₂ (ψ z) ⟩ 
              z₂ z ≈∎
@@ -231,7 +235,7 @@ module PullbackSquare where
         φ⇒ψ : φ ⇒ ψ
         φ⇒ψ = uniqueness-of-induced-maps z₁ z₂ γ φ (λ _ → refl) (λ _ → refl) (λ z → refl-is-right-neutral (η z) ⁻¹ • H z)
 
-      in commutes-by η and-the-induced-map-is-an-equivalence-by 
+      in the-square-commuting-by η and-inducing-an-equivalence-by 
          (the-map φ is-an-equivalence-since-it-is-homotopic-to ψ by φ⇒ψ
           which-is-an-equivalence-by the-induced-map-in □ is-an-equivalence)
 
@@ -249,7 +253,7 @@ module PullbackSquare where
         step2 : id right-inverse-of induced-map-to-pullback 
                  (p₁-of-pullback _ _) (p₂-of-pullback _ _) p-homotopy
         step2 = λ {(a and b are-in-the-same-fiber-by γ) → refl}
-    in commutes-by p-homotopy and-the-induced-map-is-an-equivalence-by
+    in the-square-commuting-by p-homotopy and-inducing-an-equivalence-by
       (has-left-inverse id by step1 and-right-inverse id by step2)
 
   {- for all products A × B there is a pullback square
@@ -267,8 +271,8 @@ module PullbackSquare where
         top π₁
         left π₂
   product-square A B = 
-    commutes-by (λ x → refl) 
-    and-the-induced-map-is-an-equivalence-by
+    the-square-commuting-by (λ x → refl) 
+    and-inducing-an-equivalence-by
       products-are-special-pullbacks.induced-map-is-an-equivalence A B
 
   pullback-square-from-identity-of-morphisms : 
@@ -276,7 +280,7 @@ module PullbackSquare where
     → (f : A → B)
     → pullback-square-with-right f bottom id top id left f
   pullback-square-from-identity-of-morphisms f = 
-    commutes-by (λ z → refl) and-the-induced-map-is-an-equivalence-by 
+    the-square-commuting-by (λ z → refl) and-inducing-an-equivalence-by 
       (the-map (induced-map-to-pullback id f (λ a → refl))
        is-an-equivalence-since-it-is-homotopic-to
        (domain-to-id-pullback′ _ _ f) by (λ a → refl) 
@@ -293,9 +297,9 @@ module PullbackSquare where
     → pullback-square f g z₁ z₂
     → pullback-square g f z₂ z₁
   rotate-cospan {_} {_} {_} {_} {f} {g} {z₁} {z₂} 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by proof-of-equivalence) 
-    = commutes-by (γ ⁻¹∼) 
-      and-the-induced-map-is-an-equivalence-by 
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence) 
+    = the-square-commuting-by (γ ⁻¹∼) 
+      and-inducing-an-equivalence-by 
       switching-the-maps-factors-cones-by-an-equivalence.switching-preserves-equivalences
       f g _ z₁ z₂ γ proof-of-equivalence
 
@@ -308,7 +312,7 @@ module PullbackSquare where
     → (f′ : A → C) → f′ ∼ f
     → pullback-square f′ g z₁ z₂
   substitute-homotopic-right-map {Z} {A} {B} {C} {f} {g} {z₁} {z₂} 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by proof-of-equivalency) f′ H =
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalency) f′ H =
     let
       new-homotopy : f′ ∘ z₁ ∼ g ∘ z₂
       new-homotopy z = H (z₁ z) • γ z
@@ -338,8 +342,8 @@ module PullbackSquare where
                homotopy-invariance.e⁻¹ f f′ g H by (λ { (_ and _ are-in-the-same-fiber-by _) → refl }) which-is-an-equivalence-by
                homotopy-invariance.e⁻¹-is-an-equivalence f f′ g H))
 
-    in commutes-by new-homotopy 
-       and-the-induced-map-is-an-equivalence-by induced-map-is-an-equivalence
+    in the-square-commuting-by new-homotopy 
+       and-inducing-an-equivalence-by induced-map-is-an-equivalence
 
   substitute-homotopic-bottom-map : 
     ∀ {Z A B C : U₀} 
@@ -362,7 +366,7 @@ module PullbackSquare where
     → pullback-square (f ∘ e) g ((inverse-of e given-by e-is-an-equivalence) ∘ z₁) z₂ 
   substitute-equivalent {Z} {A} {A′} {B} {C} {f} {g} {z₁} {z₂} e
     (has-left-inverse e⁻¹l by left-invertibility and-right-inverse e⁻¹r by right-invertibility) 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by proof-of-equivalency) = 
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalency) = 
     let 
       e⁻¹l∘e∼1 = left-invertibility
       e∘e⁻¹l∼1 : e ∘ e⁻¹l ∼ id
@@ -415,8 +419,8 @@ module PullbackSquare where
           induced-between-canonicals the-composition-is-an-equivalence
           induced-map-to-canonical-pullback-is-an-equivalence
       
-    in commutes-by new-square-commutes
-       and-the-induced-map-is-an-equivalence-by
+    in the-square-commuting-by new-square-commutes
+       and-inducing-an-equivalence-by
          the-induced-map-is-an-equivalence
 
 
@@ -433,7 +437,7 @@ module PullbackSquare where
     → pullback-square-with-right f bottom g top z₁′ left z₂′
   substitute-equivalent-cone {Z} {Z′} {_} {_} {_} {f} {g} {z₁} {z₂}
     z₁′ z₂′ e e-is-an-equivalence z₁∘e∼z₁′ z₂∘e∼z₂′
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by old-induced-is-an-equivalence) =
+    (the-square-commuting-by γ and-inducing-an-equivalence-by old-induced-is-an-equivalence) =
     let 
       old-induced-map : Z → pullback f g
       old-induced-map = induced-map-to-pullback z₁ z₂ γ
@@ -449,7 +453,7 @@ module PullbackSquare where
             old-induced-map e-is-an-equivalence old-induced-is-an-equivalence) 
           (λ z → uniqueness-of-induced-maps z₁′ z₂′ new-homotopy
                    (old-induced-map ∘ e) z₁∘e∼z₁′ z₂∘e∼z₂′ (λ z → refl) z)
-    in commutes-by new-homotopy and-the-induced-map-is-an-equivalence-by 
+    in the-square-commuting-by new-homotopy and-inducing-an-equivalence-by 
        induced-map-is-an-equivalence
 
   substitute-equivalent-cone′ :
@@ -561,12 +565,12 @@ module PullbackSquare where
     {f : A → C} {g : B → C} {h : D → B}
     {z₁ : Z → A} {z₂ : Z → B}
     {w₁ : W → Z} {w₂ : W → D}
-    → pullback-square-with-right f bottom g top z₁ left z₂
-    → pullback-square-with-right z₂ bottom h top w₁ left w₂
+    → (left-square : pullback-square-with-right z₂ bottom h top w₁ left w₂)
+    → (right-square : pullback-square-with-right f bottom g top z₁ left z₂)
     → pullback-square-with-right f bottom (g ∘ h) top (z₁ ∘ w₁) left w₂
   pasting-of-pullback-squares {W} {Z} {A} {B} {C} {D} {f} {g} {h} {z₁} {z₂} {w₁} {w₂} 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by proof-of-equivalence) 
-    (commutes-by η and-the-induced-map-is-an-equivalence-by proof-of-equivalence′) 
+    (the-square-commuting-by η and-inducing-an-equivalence-by proof-of-equivalence′) 
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence) 
     =
      let
         φ : Z → pullback f g
@@ -691,8 +695,8 @@ module PullbackSquare where
              (ψ ∘ χ) (underlying-map-of θ) 
              induced-map-to-iterated-pullback-is-an-equivalence 
              (proof-of-equivalency (pasting-lemma f g h))) (λ a → refl)
-     in commutes-by composed-homotopy
-        and-the-induced-map-is-an-equivalence-by induced-equivalency
+     in the-square-commuting-by composed-homotopy
+        and-inducing-an-equivalence-by induced-equivalency
 
 
 
@@ -704,15 +708,15 @@ module PullbackSquare where
     {w₁ : W → Z} {w₂ : W → D}
     → (right-square : pullback-square-with-right f bottom g top z₁ left z₂)
     → (η : z₂ ∘ w₁ ∼ h ∘ w₂)
-    → the-square-given-by-right f bottom (g ∘ h) top (z₁ ∘ w₁) left w₂
-      commuting-by
+    → (the-square-with-right f bottom (g ∘ h) top (z₁ ∘ w₁) left w₂
+       commuting-by
         (λ w → underlying-2-cell right-square (w₁ w) • g ⁎ η w)
-      is-a-pullback-square
+       is-a-pullback-square)
     → pullback-square-with-right z₂ bottom h top w₁ left w₂
   cancel-right-pullback-square′  {W} {Z} {A} {B} {C} {D} {f} {g} {h} {z₁} {z₂} {w₁} {w₂} 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by proof-of-equivalence) 
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence) 
     η
-    outer-rectangle-is-a-pullback-square
+    (the-induced-map-is-an-equivalence-by outer-rectangle-is-a-pullback-square)
     =
      let
         φ : Z → pullback f g
@@ -808,9 +812,28 @@ module PullbackSquare where
           in 2-out-of-3.the-left-map-is-an-equivalence induced-map ψ
                ψ∘induced-map-is-an-equivalence ψ-is-an-equivalence
 
-     in commutes-by η and-the-induced-map-is-an-equivalence-by the-induced-map-is-an-equivalence
+     in the-square-commuting-by η and-inducing-an-equivalence-by the-induced-map-is-an-equivalence
 
 
+  -- define an extra operation for vertical pasting of pullback squares
+  -- which simplifies the 2-cell.
+{- (discontinued - to much work and not neccessary for the short term goals...)
+  vertical-pasting-of-pullback-squares : 
+    ∀ {W Z A B C D : U₀} 
+    {f : A → C} {g : B → C} {h : W → D}
+    {z₁ : Z → A} {z₂ : Z → B}
+    {w₁ : W → Z} {w₂ : W → D}
+    → (upper-square : pullback-square-with-right f bottom w₁ top z₁ left z₂)
+    → (lower-square : pullback-square-with-right z₂ bottom h top w₁ left w₂)
+    → pullback-square-with-right ? bottom ? top ? left ?
+  vertical-pasting-of-pullback-squares {W} {Z} {A} {B} {C} {D} {f} {g} {h} {z₁} {z₂} {w₁} {w₂} 
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence) 
+    (the-square-commuting-by η and-inducing-an-equivalence-by proof-of-equivalence′) 
+    = rotate-cospan (pasting-of-pullback-squares 
+        (rotate-cospan (the-square-commuting-by η and-inducing-an-equivalence-by proof-of-equivalence′))
+        (rotate-cospan (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence))
+        )
+-}
 
   {-
      if the big rectangle is a pullback and the
@@ -837,8 +860,8 @@ module PullbackSquare where
         top (induced-map-to-pullback-vertex right-square w₁ (h ∘ w₂) (underlying-2-cell rectangle)) 
         left w₂
   cancel-the-right-pullback-square_from_ {W} {Z} {A} {B} {C} {D} {f} {g} {h} {z₁} {z₂} {w₁} {w₂} 
-    (commutes-by γ and-the-induced-map-is-an-equivalence-by proof-of-equivalence) 
-    (commutes-by η and-the-induced-map-is-an-equivalence-by proof-of-equivalence′) 
+    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence) 
+    (the-square-commuting-by η and-inducing-an-equivalence-by proof-of-equivalence′) 
     =
       {-
        obtain a factorization by using
@@ -880,7 +903,7 @@ module PullbackSquare where
 
       left-pullback-square : pullback-square-with-right p₂ bottom h top φ left w₂
       left-pullback-square = cancel-right-pullback-square′ (complete-to-pullback-square f g) 
-                                 (λ w → refl) the-lower-rectangle-is-a-pullback
+                                 (λ w → refl) (the-induced-map-is-an-equivalence-by the-lower-rectangle-is-a-pullback)
 
       {-
        extends by the induced equivalence ψ
