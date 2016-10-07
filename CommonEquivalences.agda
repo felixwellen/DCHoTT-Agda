@@ -26,6 +26,34 @@ module CommonEquivalences where
   swap-×-as-equivalence : ∀ {A B : U₀} → A × B ≃ B × A
   swap-×-as-equivalence = swap-× is-an-equivalence-because swap-×-is-an-equivalence
 
+  module restricted-product-projections (A B : U₀) (restrict-at : A) where
+      a₀ = restrict-at
+      
+      fiber-over-a₀ = fiber-of (π₁-from A × B) at a₀
+
+      restricted-projection : fiber-over-a₀ → B
+      restricted-projection ((a , b) is-in-the-fiber-by γ) = b
+
+      inverse : B → fiber-over-a₀
+      inverse b = (a₀ , b) is-in-the-fiber-by refl
+
+      conclusion : restricted-projection is-an-equivalence
+      conclusion = has-left-inverse inverse 
+                     by (λ {((a , b) is-in-the-fiber-by γ) 
+                         →   (a₀ , b) is-in-the-fiber-by refl
+                            ≈⟨ (equality-action-on-the-fiber-of π₁ at a₀ acting-on-the-point-witnessed-by refl)
+                                (×-create-equality (γ ⁻¹) refl) ⟩ 
+                             ((a , b) is-in-the-fiber-by (π₁ ⁎ ×-create-equality (γ ⁻¹) refl ⁻¹ • refl)) 
+                            ≈⟨ (λ η → (a , b) is-in-the-fiber-by η) ⁎ 
+                                  (π₁ ⁎ ×-create-equality (γ ⁻¹) refl ⁻¹ • refl 
+                                 ≈⟨ refl-is-right-neutral _ ⁻¹ ⟩ 
+                                   π₁ ⁎ ×-create-equality (γ ⁻¹) refl ⁻¹ 
+                                 ≈⟨ _⁻¹ ⁎ ×-compute-π₁-of-equality (γ ⁻¹) refl ⟩ 
+                                   γ ⁻¹ ⁻¹ 
+                                 ≈⟨ ⁻¹-is-selfinverse _ ⟩ 
+                                   γ ≈∎) ⟩ 
+                             ((a , b) is-in-the-fiber-by γ) ≈∎}) 
+                   and-right-inverse inverse by (λ b → refl)
 
   module proof-that-right-composition-is-an-equivalence (A : U₀) (a a′ : A) where
       -- (a -η-> a′, a′ -γ-> x)  ↦ (a -η•γ-> x)

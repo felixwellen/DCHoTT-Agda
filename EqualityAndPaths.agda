@@ -154,11 +154,23 @@ in-the-type A we-have-an-equality x ≈ y = x ≈ y
                     → (a , b) ≈ (a′ , b′)
 ×-create-equality refl refl = refl
 
-×-uniqueness-of-equality : ∀ {A B : U₀} → {x y : A × B} → (γ : x ≈ y)
-                           → γ ≈ ×-uniqueness x • (×-create-equality (π₁ ⁎ γ) (π₂ ⁎ γ)) • ×-uniqueness y ⁻¹
+×-uniqueness-of-equality : 
+  ∀ {A B : U₀} → {x y : A × B} → (γ : x ≈ y)
+  → γ ≈ ×-uniqueness x • (×-create-equality (π₁ ⁎ γ) (π₂ ⁎ γ)) • ×-uniqueness y ⁻¹
 ×-uniqueness-of-equality {_} {_} {x} {.x} refl = ⁻¹-is-right-inversion (×-uniqueness x) ⁻¹ •
                                        (λ η → η • ×-uniqueness x ⁻¹) ⁎
                                        refl-is-right-neutral (×-uniqueness x)
+×-compute-π₁-of-equality : 
+  ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+  → (γ : a ≈ a′) → (η : b ≈ b′)
+  → π₁ ⁎ ×-create-equality γ η ≈ γ
+×-compute-π₁-of-equality refl refl = refl
+
+×-compute-π₂-of-equality : 
+  ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+  → (γ : a ≈ a′) → (η : b ≈ b′)
+  → π₂ ⁎ ×-create-equality γ η ≈ η
+×-compute-π₂-of-equality refl refl = refl
 
 equality-action-on-∑ :
   ∀ {A : U₀} {P : A → U₀}
@@ -209,6 +221,10 @@ as-equality-in-the-codomain :
   → (x : fiber-of f at b) → f(as-point-in-the-domain x) ≈ b
 as-equality-in-the-codomain (x is-in-the-fiber-by γ) = γ
 
+equality-action-on-the-fiber-of_at_acting-on-the-point-witnessed-by_ :
+  ∀ {A B : U₀} {a a′ : A} (f : A → B) (b : B) (γ : f(a) ≈ b)
+  → (η : a ≈ a′) → (a is-in-the-fiber-by γ) ≈ (a′ is-in-the-fiber-by (f ⁎ η ⁻¹ • γ))
+equality-action-on-the-fiber-of_at_acting-on-the-point-witnessed-by_ f b γ refl = refl
 
 _as-map-from-One : ∀ {A : U₀} → A → (One → A)
 a as-map-from-One = λ x → a 
@@ -222,8 +238,8 @@ compute-path-fibration-transport x₀ y .y refl η =
 
 
 -- equational reasoning
-infix 15 _≈∎    -- \approx \qed
-infixr 10 _≈⟨_⟩_    -- \approx \< \>
+infix 15 _≈∎    -- \approx\qed
+infixr 10 _≈⟨_⟩_    -- \approx\< \>
 
 _≈∎ : ∀ {i} {A : U i} (a : A)
       → a ≈ a
@@ -233,17 +249,6 @@ _≈⟨_⟩_ : ∀ {i} {A : U i} (a : A) {a′ a″ : A}
          → a ≈ a′ → a′ ≈ a″ → a ≈ a″
 a ≈⟨ γ ⟩ η = γ • η
 
--- not really usable
---infixr 11 _≈⟨-by-mapping_⟩_  
---data image {i} {A B : U i} (f : A → B) : U i where
---  _is-the-image-of_-by_ : (b : B) → (a : A) → (γ : b ≈ f a) → image f  
---
---_≈⟨-by-mapping_⟩_ : ∀ {i} {A B : U i} {a a′ : A} {f : A → B} {b′ : B} (b : image f) 
---                    → a ≈ a′
---                    → f a′ ≈ b′
---                    → f a ≈ b′
---_≈⟨-by-mapping_⟩_ {_} {_} {_} {_} {_} {f} {_}  
---  (.(f a) is-the-image-of a -by refl) γ η = f ⁎ γ • η
 
 -- inequality
 _≠_ : {A : U₀} (a a′ : A) → U₀  -- \neq
