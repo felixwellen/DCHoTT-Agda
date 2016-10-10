@@ -35,8 +35,8 @@ module Equivalences where
   
   
   --inclusion
-  as-equivalence : ∀ {A B : U₀} → (e : A → B) → e is-an-equivalence → A ≃ B
-  as-equivalence e proof-of-equivalency = e is-an-equivalence-because proof-of-equivalency
+  map-as-equivalence : ∀ {A B : U₀} → (e : A → B) → e is-an-equivalence → A ≃ B
+  map-as-equivalence e proof-of-equivalency = e is-an-equivalence-because proof-of-equivalency
   
   -- projections
   
