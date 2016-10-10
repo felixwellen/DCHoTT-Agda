@@ -89,6 +89,7 @@ module DependentTypes where
 
       f = base-change-of F
 
+
       g : (a′ : A′) → (E′ a′ → E _)
       g a′ = F on-the-fiber-over a′
       g⁻¹ : (a′ : A′) → (E _ → E′ a′)

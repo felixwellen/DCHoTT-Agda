@@ -56,6 +56,10 @@ module CommonEquivalences where
                              ((a , b) is-in-the-fiber-by γ) ≈∎}) 
                    and-right-inverse inverse by (λ b → refl)
 
+      as-equivalence : fiber-of π₁ at a₀ ≃ B
+      as-equivalence = restricted-projection is-an-equivalence-because conclusion
+      
+
   module proof-that-right-composition-is-an-equivalence (A : U₀) (a a′ : A) where
       -- (a -η-> a′, a′ -γ-> x)  ↦ (a -η•γ-> x)
       right-compose : ∀ {x : A} (γ : a′ ≈ x)

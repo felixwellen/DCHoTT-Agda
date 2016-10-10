@@ -246,7 +246,7 @@ module Pullback where
     -- B ---→ C
 
 
-    e-as-equivalence = as-equivalence e proof-of-equivalence
+    e-as-equivalence = map-as-equivalence e proof-of-equivalence
     e-as-half-adjoint = equivalence-to-half-adjoint-equivalence e-as-equivalence
 
     e⁻¹ = inverse-of-the-half-adjoint e-as-half-adjoint
