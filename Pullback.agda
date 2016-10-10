@@ -6,6 +6,7 @@ module Pullback where
   open import Equivalences
   open import HalfAdjointEquivalences
   open import Homotopies
+  open import Fiber
   open import Contractibility
   open import FunctionExtensionality
   open import Language

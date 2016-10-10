@@ -11,6 +11,7 @@ module Im where
   open import FunctionExtensionality
   open import Pullback
   open import PullbackSquare
+  open import Fiber
   open import Language
     
   -- Axioms for ℑ, the infinitesimal shape modality

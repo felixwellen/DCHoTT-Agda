@@ -4,6 +4,7 @@ module OneImage where
   open import Basics 
   open import EqualityAndPaths
   open import Homotopies
+  open import Fiber
   open import Equivalences
   open import Contractibility
   open import PropositionalTruncation
