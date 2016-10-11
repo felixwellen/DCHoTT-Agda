@@ -99,56 +99,20 @@ module DependentTypes where
 
   -}
 
-     open pullback-square □
+     left-fiber-square-at_ : (b : B) → _
+     left-fiber-square-at b = fiber-square-for z₂ at b
 
-     φ : Z → pullback f g
-     φ = induced-map-to-pullback z₁ z₂ γ
-     φ-is-an-equivalence : φ is-an-equivalence
-     φ-is-an-equivalence = proof
-     open _is-an-equivalence proof
-     φ⁻¹ = left-inverse
-     φ∘φ⁻¹⇒id = the-inverse-is-a-right-inverse-of φ by proof
-     z₂⇒p₂∘φ : z₂ ⇒ p₂ ∘ φ
-     z₂⇒p₂∘φ z = refl
+     right-fiber-square-at_ : (b : B) → _
+     right-fiber-square-at b = fiber-square-for f at (g b)
 
-     z₂∘φ⁻¹⇒p₂ : z₂ ∘ φ⁻¹ ⇒ p₂
-     z₂∘φ⁻¹⇒p₂ (a and b are-in-the-same-fiber-by γ) = 
-       z₂⇒p₂∘φ (φ⁻¹ (a and b are-in-the-same-fiber-by γ)) 
-       • p₂ ⁎ (φ∘φ⁻¹⇒id (a and b are-in-the-same-fiber-by γ)) ⁻¹ 
+     second-right-square-at_ : (b : B) → _
+     second-right-square-at b = pasting-of-pullback-squares (left-fiber-square-at b) □
 
-     induced-map-to-the-pullback : 
-       (b : B) → fiber-of z₂ at b → pullback f g
-     induced-map-to-the-pullback b (z is-in-the-fiber-by η) = 
-       (z₁ z) and b are-in-the-same-fiber-by (γ z • g ⁎ η)
+     equivalence-at_ : (b : B) → fiber-of z₂ at b ≃ fiber-of f at (g b)
+     equivalence-at b = deduce-equivalence-of-vertices (second-right-square-at b)
+                          (right-fiber-square-at b)
 
-
-     induced-map-on-the-fiber-at : (b : B)
-       → fiber-of z₂ at b → fiber-of f at (g b)
-     induced-map-on-the-fiber-at b (z is-in-the-fiber-by η) = 
-       (z₁ z) is-in-the-fiber-by (γ z • g ⁎ η)
-
-     inverse-at : (b : B) 
-       → fiber-of f at (g b) → fiber-of z₂ at b 
-     inverse-at b (a is-in-the-fiber-by ζ) = 
-       let z′ = (a and b are-in-the-same-fiber-by ζ)
-       in (φ⁻¹ z′) is-in-the-fiber-by z₂∘φ⁻¹⇒p₂ z′
-
-     conclusion : 
-       ∀ (b : B) 
-       → induced-map-on-the-fiber-at b is-an-equivalence
-     conclusion b = has-left-inverse inverse-at b 
-                      by (λ {(z is-in-the-fiber-by η) 
-                           
-                        →  (φ⁻¹ ((z₁ z) and b are-in-the-same-fiber-by (γ z • g ⁎ η)) 
-                           is-in-the-fiber-by z₂∘φ⁻¹⇒p₂ ((z₁ z) and b are-in-the-same-fiber-by (γ z • g ⁎ η))) 
-                         ≈⟨ {!!} ⟩ 
-                          (z is-in-the-fiber-by η) ≈∎}) 
-                    and-right-inverse inverse-at b 
-                      by (λ {(a is-in-the-fiber-by ζ) 
-                         → (a is-in-the-fiber-by ζ) 
-                         ≈⟨ {!!} ⟩ 
-                           {!!} 
-                         ≈∎ })
+     
 
   module fiberwise-equivalences-are-pullbacks {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀} 
       (F : morphism-of-dependent-types A′ A E′ E)

@@ -297,17 +297,22 @@ module PullbackSquare where
                 |       f
                 ↓       ↓
                 1 ────→ B
+  -}
 
   fiber-square-for_at_ : 
     ∀ {A B : U₀} (f : A → B) (b : B)
     → pullback-square-with-right f
-        bottom (λ {∗ → b})
+        bottom (λ _ → b)
         top ι-fiber
         left (λ (_ : fiber-of f at b) → ∗)
-  fiber-square-for f at b = 
-    the-square-commuting-by (λ {(a is-in-the-fiber-by γ) → {!!}}) 
-    and-inducing-an-equivalence-by {!!}
-  -}
+  fiber-square-for f at b =
+    let inverse : pullback f (λ _ → b) → fiber-of f at b
+        inverse = λ {(a and ∗ are-in-the-same-fiber-by η) → a is-in-the-fiber-by η}
+    in the-square-commuting-by (λ {(a is-in-the-fiber-by γ) → γ}) 
+       and-inducing-an-equivalence-by
+        (has-left-inverse inverse by (λ {(a is-in-the-fiber-by η) → refl})
+         and-right-inverse inverse by (λ {(a and ∗ are-in-the-same-fiber-by η) → refl}))
+
   -- switching the maps in the cospan
   rotate-cospan : 
     ∀ {Z A B C : U₀} 
