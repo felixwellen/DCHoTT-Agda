@@ -17,6 +17,14 @@ module Pullback where
                        to-constant-map a = λ x → a
                    in (has-left-inverse to-constant-map by (λ φ → fun-ext (λ { ∗ → refl }))
                        and-right-inverse to-constant-map by (λ (a : A) → refl)))
+{-
+ pullback f g -p₁→ A
+            |      |
+            p₂     f
+            |      |
+            v      v
+            B -g-→ C
+-}
 
   record pullback {i} {A B C : U i} (f : A → C) (g : B → C) : U i where
     constructor _and_are-in-the-same-fiber-by_

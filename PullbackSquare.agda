@@ -4,6 +4,7 @@ module PullbackSquare where
   open import Basics
   open import EqualityAndPaths
   open import Homotopies
+  open import Fiber 
   open import Equivalences
   open import CommonEquivalences
   open import HalfAdjointEquivalences
@@ -289,6 +290,24 @@ module PullbackSquare where
          which-is-an-equivalence-by (id-pullback-is-domain′ _ _ f)
          is-again-an-equivalence))
 
+  {- fibers are pullbacks
+
+    fiber-of f at b ─ι→ A
+                | ⌟     |
+                |       f
+                ↓       ↓
+                1 ────→ B
+
+  fiber-square-for_at_ : 
+    ∀ {A B : U₀} (f : A → B) (b : B)
+    → pullback-square-with-right f
+        bottom (λ {∗ → b})
+        top ι-fiber
+        left (λ (_ : fiber-of f at b) → ∗)
+  fiber-square-for f at b = 
+    the-square-commuting-by (λ {(a is-in-the-fiber-by γ) → {!!}}) 
+    and-inducing-an-equivalence-by {!!}
+  -}
   -- switching the maps in the cospan
   rotate-cospan : 
     ∀ {Z A B C : U₀} 

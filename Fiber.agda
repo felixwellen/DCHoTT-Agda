@@ -21,6 +21,8 @@ module Fiber where
     ∀ {A B : U₀} {f : A → B} {b : B}
     → (fiber-of f at b) → A
   as-point-in-the-domain (a is-in-the-fiber-by _) = a
+
+  ι-fiber = as-point-in-the-domain
   
   as-equality-in-the-codomain :
     ∀ {A B : U₀} {f : A → B} {b : B}

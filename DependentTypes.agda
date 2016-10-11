@@ -4,6 +4,7 @@ module DependentTypes where
   open import Basics 
   open import EqualityAndPaths
   open import Homotopies
+  open import Fiber
   open import Equivalences
   open import HalfAdjointEquivalences
   open import Pullback
@@ -79,7 +80,75 @@ module DependentTypes where
               })
 
      and-right-inverse (λ a → f a , (a is-in-the-fiber-by refl)) by (λ x → refl))
-    
+
+
+  module pullbacks-are-fiberwise-equivalences 
+        {Z A B C : U₀}
+        {f : A → C}  {g : B → C}
+        {z₁ : Z → A} {z₂ : Z → B}
+        (□ : pullback-square f g z₁ z₂) where
+      
+  {-
+
+        Z -z₁→ A
+        |      |
+        z₂     f
+        |      |
+        v      v
+        B -g-→ C
+
+  -}
+
+     open pullback-square □
+
+     φ : Z → pullback f g
+     φ = induced-map-to-pullback z₁ z₂ γ
+     φ-is-an-equivalence : φ is-an-equivalence
+     φ-is-an-equivalence = proof
+     open _is-an-equivalence proof
+     φ⁻¹ = left-inverse
+     φ∘φ⁻¹⇒id = the-inverse-is-a-right-inverse-of φ by proof
+     z₂⇒p₂∘φ : z₂ ⇒ p₂ ∘ φ
+     z₂⇒p₂∘φ z = refl
+
+     z₂∘φ⁻¹⇒p₂ : z₂ ∘ φ⁻¹ ⇒ p₂
+     z₂∘φ⁻¹⇒p₂ (a and b are-in-the-same-fiber-by γ) = 
+       z₂⇒p₂∘φ (φ⁻¹ (a and b are-in-the-same-fiber-by γ)) 
+       • p₂ ⁎ (φ∘φ⁻¹⇒id (a and b are-in-the-same-fiber-by γ)) ⁻¹ 
+
+     induced-map-to-the-pullback : 
+       (b : B) → fiber-of z₂ at b → pullback f g
+     induced-map-to-the-pullback b (z is-in-the-fiber-by η) = 
+       (z₁ z) and b are-in-the-same-fiber-by (γ z • g ⁎ η)
+
+
+     induced-map-on-the-fiber-at : (b : B)
+       → fiber-of z₂ at b → fiber-of f at (g b)
+     induced-map-on-the-fiber-at b (z is-in-the-fiber-by η) = 
+       (z₁ z) is-in-the-fiber-by (γ z • g ⁎ η)
+
+     inverse-at : (b : B) 
+       → fiber-of f at (g b) → fiber-of z₂ at b 
+     inverse-at b (a is-in-the-fiber-by ζ) = 
+       let z′ = (a and b are-in-the-same-fiber-by ζ)
+       in (φ⁻¹ z′) is-in-the-fiber-by z₂∘φ⁻¹⇒p₂ z′
+
+     conclusion : 
+       ∀ (b : B) 
+       → induced-map-on-the-fiber-at b is-an-equivalence
+     conclusion b = has-left-inverse inverse-at b 
+                      by (λ {(z is-in-the-fiber-by η) 
+                           
+                        →  (φ⁻¹ ((z₁ z) and b are-in-the-same-fiber-by (γ z • g ⁎ η)) 
+                           is-in-the-fiber-by z₂∘φ⁻¹⇒p₂ ((z₁ z) and b are-in-the-same-fiber-by (γ z • g ⁎ η))) 
+                         ≈⟨ {!!} ⟩ 
+                          (z is-in-the-fiber-by η) ≈∎}) 
+                    and-right-inverse inverse-at b 
+                      by (λ {(a is-in-the-fiber-by ζ) 
+                         → (a is-in-the-fiber-by ζ) 
+                         ≈⟨ {!!} ⟩ 
+                           {!!} 
+                         ≈∎ })
 
   module fiberwise-equivalences-are-pullbacks {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀} 
       (F : morphism-of-dependent-types A′ A E′ E)
@@ -197,8 +266,8 @@ module DependentTypes where
          top the-map-on-total-spaces-induced-by F
          left (dependent-type E′ as-map)
       fiberwise-equivalences-are-pullbacks = 
-        commutes-by f∘p′⇒p∘g-on-∑ 
-        and-the-induced-map-is-an-equivalence-by
+        the-square-commuting-by f∘p′⇒p∘g-on-∑ 
+        and-inducing-an-equivalence-by
           (has-left-inverse induced-map⁻¹ by left-invertible
            and-right-inverse induced-map⁻¹ by right-invertible)
 
