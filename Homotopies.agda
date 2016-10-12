@@ -6,10 +6,10 @@ open import EqualityAndPaths public
 module Homotopies where 
 
 -- homotopy
-_∼_ : ∀ {i} {A B : U i} → (f g : A → B) → U i
-_∼_ {i} {A} {B} f g = (a : A) → f a ≈ g a
+_∼_ : ∀ {i j} {A : U i} {B : U j} → (f g : A → B) → U (i ⊔ j)
+_∼_ {i} {j} {A} {B} f g = (a : A) → f a ≈ g a
 
-_⇒_ : ∀ {i} {A B : U i} → (f g : A → B) → U i
+_⇒_ : ∀ {i j} {A : U i} {B : U j} → (f g : A → B) → U (i ⊔ j)
 f ⇒ g = f ∼ g
 
 -- homotopies are natural as morphisms of the induced 

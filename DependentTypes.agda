@@ -9,6 +9,9 @@ module DependentTypes where
   open import HalfAdjointEquivalences
   open import Pullback
   open import PullbackSquare
+  -- univalence is needed to transform pullback-squares to
+  -- morphisms over U₀
+  open import Univalence
 
   
   record morphism-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
@@ -105,6 +108,17 @@ module DependentTypes where
      right-fiber-square-at_ : (b : B) → _
      right-fiber-square-at b = fiber-square-for f at (g b)
 
+  {-
+    paste in the following diagram to get an equivalence on the fibers
+
+     Fz₂──→Z -z₁→ A←────Fg
+     |⌟    |⌟     |     ⌞|
+     |     z₂     f      |
+     |     |      |      |
+     ↓     ↓      ↓      ↓
+     1 ─b─→B ─g─→ C←g(b)─1 
+
+  -}
      second-right-square-at_ : (b : B) → _
      second-right-square-at b = pasting-of-pullback-squares (left-fiber-square-at b) □
 
@@ -112,7 +126,8 @@ module DependentTypes where
      equivalence-at b = deduce-equivalence-of-vertices (second-right-square-at b)
                           (right-fiber-square-at b)
 
-     
+     as-triangle-over-the-universe : dependent-replacement z₂ ⇒ dependent-replacement f ∘ g
+     as-triangle-over-the-universe b = univalence (equivalence-at b)
 
   module fiberwise-equivalences-are-pullbacks {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀} 
       (F : morphism-of-dependent-types A′ A E′ E)
