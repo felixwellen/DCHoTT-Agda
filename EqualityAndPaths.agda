@@ -187,7 +187,7 @@ module EqualityAndPaths where
   inclusion-of-the-fiber-of_over_ :
     ∀ {A : U₀} (P : A → U₀)
     → (a : A) → (P a → ∑ P)
-  inclusion-of-the-fiber-of P over a = λ pₐ → (a , pₐ)
+  inclusion-of-the-fiber-of_over_ P a pₐ = (a , pₐ)
   
   cancel-orthogonal-equality-in-∑ :
     ∀ {A : U₀} {P : A → U₀}

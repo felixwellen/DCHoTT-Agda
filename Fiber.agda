@@ -5,6 +5,7 @@ module Fiber where
   open import Basics 
   open import EqualityAndPaths
   open import Homotopies
+  open import Equivalences
 
   data fiber-of {i} {X Y : U i} (f : X → Y) (y₀ : Y) : U i where
     _is-in-the-fiber-by_ : (x : X) → f(x) ≈ y₀ → fiber-of f y₀
@@ -42,3 +43,40 @@ module Fiber where
     → (φ : Z → A) (γ : f ∘ φ ⇒ (λ _ → b))
     → (Z → fiber-of f at b)
   induced-map-to-the-fiber f b φ γ z = (φ z) is-in-the-fiber-by γ z
+
+  fiber-of-a-∑ :
+    ∀ {A : U₀} {P : A → U₀}
+    → (a : A) → fiber-of ∑π₁-from P at a ≃ P a
+  fiber-of-a-∑ {A} {P} a = 
+    let 
+      map : fiber-of ∑π₁-from P at a → P a
+      map = λ {((a′ , pₐ) is-in-the-fiber-by γ) → transport P γ pₐ}
+      inverse : P a → fiber-of ∑π₁-from P at a 
+      inverse pₐ = (a , pₐ) is-in-the-fiber-by refl
+    in map is-an-equivalence-because 
+       (has-left-inverse inverse 
+         by (λ {((a′ , pₐ) is-in-the-fiber-by γ) 
+           →  ((a , transport P γ pₐ) is-in-the-fiber-by refl)
+             ≈⟨ (equality-action-on-the-fiber-of ∑π₁-from P at a
+                   acting-on-the-point-witnessed-by refl)
+                  (equality-action-on-∑ a a′ (γ ⁻¹) (transport P γ pₐ)) ⟩ 
+              ((a′ , transport P (γ ⁻¹) (transport P γ pₐ)) is-in-the-fiber-by 
+                 (∑π₁ ⁎ equality-action-on-∑ a a′ (γ ⁻¹) (transport P γ pₐ) ⁻¹ • refl))
+             ≈⟨ (λ η → (a′ , transport P (γ ⁻¹) (transport P γ pₐ)) is-in-the-fiber-by η ⁻¹ • refl) ⁎ 
+                       cancel-equality-action-on-∑-with-projection a a′ (γ ⁻¹) (transport P γ pₐ)  ⟩ 
+              ((a′ , transport P (γ ⁻¹) (transport P γ pₐ)) is-in-the-fiber-by ((γ ⁻¹) ⁻¹ • refl))
+             ≈⟨  (λ η → (a′ , transport P (γ ⁻¹) (transport P γ pₐ)) is-in-the-fiber-by η) ⁎ 
+                     (refl-is-right-neutral (γ ⁻¹ ⁻¹) ⁻¹ • ⁻¹-is-selfinverse γ) ⟩ 
+              ((a′ , transport P (γ ⁻¹) (transport P γ pₐ)) is-in-the-fiber-by γ)
+             ≈⟨ (equality-action-on-the-fiber-of ∑π₁-from P at a
+                   acting-on-the-point-witnessed-by γ) ((inclusion-of-the-fiber-of P over a′) ⁎ 
+                   transport-invertibility-backwards P γ pₐ) ⟩ 
+              ((a′ , pₐ) is-in-the-fiber-by ((∑π₁-from P) ⁎ (inclusion-of-the-fiber-of P over a′) ⁎ 
+                    transport-invertibility-backwards P γ pₐ ⁻¹ • γ)) 
+             ≈⟨ (λ η → (a′ , pₐ) is-in-the-fiber-by η ⁻¹ • γ) ⁎ 
+                cancel-orthogonal-equality-in-∑ {A} {P} a′ 
+                  (transport P (γ ⁻¹) (transport P γ pₐ)) pₐ (transport-invertibility-backwards P γ pₐ) ⟩ 
+              ((a′ , pₐ) is-in-the-fiber-by γ)
+             ≈∎}) 
+        and-right-inverse inverse by (λ _ → refl))
+

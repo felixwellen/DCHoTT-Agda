@@ -15,6 +15,7 @@ module OneImage where
     → (A → B) → U₀
   _is-surjective {A} {B} f = Π (λ (b : B) → ∥ fiber-of f at b ∥)
 
+
   record _↠_ (A B : U₀) : U₁ where
     constructor _is-surjective-by_
     field
@@ -31,6 +32,18 @@ module OneImage where
     ∀ {A B : U₀} 
     → (f : A → B) → (B → U₀)
   the-1-image-of f contains b = ∥ ∑ (λ a → f(a) ≈ b) ∥
+
+  to-point-in-truncated-fiber : 
+    ∀ {A B : U₀} {f : A → B} {b : B}
+    → ∥ ∑ (λ a → f(a) ≈ b) ∥ → ∥ fiber-of f at b ∥
+  to-point-in-truncated-fiber {_} {_} {f} {b} = 
+    ∥-∥-recursion (∥ fiber-of f at b ∥) (∥-∥-is-truncation _) (λ {(a , γ) → ∣ a is-in-the-fiber-by γ ∣ }) 
+
+  from-point-in-truncated-fiber : 
+    ∀ {A B : U₀} {f : A → B} {b : B}
+    → ∥ fiber-of f at b ∥ → ∥ ∑ (λ a → f(a) ≈ b) ∥
+  from-point-in-truncated-fiber =
+    ∥-∥-recursion (∥ _ ∥) (∥-∥-is-truncation _) (λ {(a is-in-the-fiber-by γ) → ∣ (a , γ) ∣ }) 
 
   1-image :
     ∀ {A B : U₀} 
@@ -54,6 +67,34 @@ module OneImage where
 
   π-im₁ = the-induced-map-from-the-domain-to-the-1-image-of
 
+  {-
+
+    A ─f─→ B
+     \    ↗ 
+      π  ι    => (fiber-of f → fiber-of π)
+       ↘/
+       im₁
+  -}
+
+  π-im₁-is-surjective : 
+    ∀ {A B : U₀} (f : A → B) 
+    → (π-im₁ f is-surjective)
+  π-im₁-is-surjective f (b , p) =
+    let
+      truncated-fiber-of-π = ∥ fiber-of (π-im₁ f) at (b , p) ∥
+      map-on-fibers : fiber-of f at b → truncated-fiber-of-π
+      map-on-fibers = λ {(a is-in-the-fiber-by γ) 
+                      → ∣ (a is-in-the-fiber-by (
+                         (f(a) , ∣ (a , refl) ∣ ) 
+                        ≈⟨ equality-action-on-∑ (f a) b γ (∣ (a , refl) ∣)  ⟩ 
+                         (b , transport (λ b → ∥ ∑ (λ a → f(a) ≈ b) ∥) γ (∣ (a , refl) ∣)) 
+                        ≈⟨ (λ p′ → (b , p′)) ⁎ -1-truncated _ p  ⟩ 
+                         (b , p) 
+                        ≈∎)) ∣ }
+    in ∥-∥-recursion 
+         truncated-fiber-of-π (∥-∥-is-truncation _) map-on-fibers (to-point-in-truncated-fiber p)
+    
+
   _is-injective : 
     ∀ {A B : U₀} 
     → (f : A → B) → U₀
@@ -63,7 +104,18 @@ module OneImage where
     ∀ {A B : U₀} 
     → (f : A → B) → U₀
   f is-injective′ = Π (λ b → (fiber-of f at b) is-a-proposition)
-
+{-
+  ι-im₁-is-injective : 
+    ∀ {A B : U₀} (f : A → B)
+    → ι-im₁ f is-injective′ 
+  ι-im₁-is-injective f b₀ ((b , p) is-in-the-fiber-by γ) ((b′ , p′) is-in-the-fiber-by γ′) =
+    {!((b , p) is-in-the-fiber-by γ)
+    ≈⟨ ? ⟩
+     ((b₀ , ?) is-in-the-fiber-by ?)
+    ≈⟨ ? ⟩
+     ((b′ , p′) is-in-the-fiber-by γ′)
+    ≈∎!}
+-}
 {-
   compatibility :
     ∀ {A B : U₀} 

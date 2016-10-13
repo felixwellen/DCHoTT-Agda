@@ -45,7 +45,7 @@ module DependentTypes where
     ∀ {A : U₀} 
     → (E : A → U₀)
     → (∑ E → A) 
-  dependent-type_as-map E = ∑π₁ 
+  dependent-type E as-map = ∑π₁ 
 
   the-map-on-total-spaces-induced-by_ :
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}

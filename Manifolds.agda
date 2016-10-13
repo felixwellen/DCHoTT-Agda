@@ -15,6 +15,7 @@ module Manifolds where
   open import EtaleMaps
   open import Language
   open import OneImage
+  open import FiberBundle
 
   pullback-square-of :
     ∀ {A B : U₀}
@@ -130,48 +131,8 @@ module Manifolds where
                                   conclusion
 
 
-  _is-locally-trivial-over_by_with-fiber_ :
-    ∀ {E M : U₀}
-    → (φ : E → M) → (V : U₀) → (v : V ─ét→ M) → (D : U₀) → U₀
-  φ is-locally-trivial-over V by v with-fiber D =
-    pullback-square-with-right (λ (d : D) → ∗) bottom (λ (v₁ : V) → ∗)
-      top π₂ left π₁
 
-  -- product property expressed by pullback square
-  _is-a-product-with-projections_and_ :
-    ∀ {A B : U₀} (Z : U₀) (z₁ : Z → A) (z₂ : Z → B)
-    → U₀
-  Z is-a-product-with-projections z₁ and z₂ =
-    pullback-square-with-right (λ a → ∗)
-        bottom (λ b → ∗)
-        top z₁
-        left z₂
 
-  _is-a-product-of_and_ :
-    (Z A B : U₀) → U₀
-  Z is-a-product-of A and B =
-    ∑ (λ (z₁ : Z → A) →
-    ∑ (λ (z₂ : Z → B) → Z is-a-product-with-projections z₁ and z₂))
-
-  _*_ : ∀ {E B B′ : U₀}
-    → (f : B′ → B) → (φ : E → B) → U₀
-  f * φ = upper-left-vertex-of (complete-to-pullback-square φ f)
-  
-  _*→_ : ∀ {E B B′ : U₀}
-    → (f : B′ → B) → (φ : E → B) → ((f * φ) → B′)
-  f *→ φ = left-map-of (complete-to-pullback-square φ f)
-
-  ^ = underlying-map-of-the-surjectiveism
-
-  record _is-a_-fiber-bundle {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
-    constructor on_the-pullback-along_is-trivial-by_and_
-    field
-      V : U₀
-      covering : V ↠ B
-      projection-to-the-fiber : (^ covering * φ) → F
-      the-pullback-is-a-product :
-          (^ covering * φ) is-a-product-with-projections
-            projection-to-the-fiber and (^ covering *→ φ) 
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
          (V M : U₀) (v́ : V ─ét→ M) 
@@ -246,3 +207,10 @@ module Manifolds where
              on V the-pullback-along v́-as-surjection
              is-trivial-by top-map-of v*T∞M-is-trivial
              and v*T∞M-is-trivial
+
+  module the-formal-disk-bundle-over-a-manifold-is-associated 
+         (V M : U₀) (v́ : V ─ét→ M) 
+         (BG : U₀) (e : BG) (ǵ : V ─ét→ Ω BG e)
+         (M-is-a-manifold : M is-a-manifold-by-the-covering v́ 
+                            which-is-a-covering-of-the-∞-group-with-delooping BG , e
+                            by ǵ) where

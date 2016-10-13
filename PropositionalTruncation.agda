@@ -37,6 +37,10 @@ module PropositionalTruncation where
         → ((x : ∥ A ∥) → P x)
     ∥-∥-induction proposition true-on-constructed #∣ x ∣ = true-on-constructed x 
 
+    ∥-∥-is-truncation : 
+      ∀ (A : U₀) → ∥ A ∥ is-a-proposition
+    ∥-∥-is-truncation A = λ a a′ → -1-truncated a a′
+
     {-
     fill in the following, if needed
     postulate
