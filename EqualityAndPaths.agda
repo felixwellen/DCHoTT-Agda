@@ -28,14 +28,14 @@ module EqualityAndPaths where
   refl • γ = γ
   
   
-  refl-is-right-neutral : {A : Uω} {x y : A} (γ : x ≈ y) → γ ≈ γ • refl
+  refl-is-right-neutral : ∀ {i} {A : U i} {x y : A} (γ : x ≈ y) → γ ≈ γ • refl
   refl-is-right-neutral refl = refl
   
-  refl-is-left-neutral : {A : Uω} {x y : A} (γ : x ≈ y) → γ ≈ refl • γ
+  refl-is-left-neutral : ∀ {i} {A : U i} {x y : A} (γ : x ≈ y) → γ ≈ refl • γ
   refl-is-left-neutral refl = refl
   
   
-  •-is-associative : {A : Uω} {w x y z : A} (γ : w ≈ x) (γ′ : x ≈ y) (γ″ : y ≈ z) → γ • (γ′ • γ″) ≈ γ • γ′ • γ″
+  •-is-associative : ∀ {i} {A : U i} {w x y z : A} (γ : w ≈ x) (γ′ : x ≈ y) (γ″ : y ≈ z) → γ • (γ′ • γ″) ≈ γ • γ′ • γ″
   •-is-associative refl refl refl = refl
   
   ∘-is-associative : ∀ {i} {A B C D : U i} → (f : A → B) → (g : B → C) → (h : C → D) → h ∘ (g ∘ f) ≈ (h ∘ g) ∘ f
@@ -49,16 +49,16 @@ module EqualityAndPaths where
   refl ⁻¹ = refl
   
   
-  ⁻¹-is-right-inversion : {A : Uω} {x y : A}  (γ : x ≈ y) → γ • γ ⁻¹ ≈ refl
+  ⁻¹-is-right-inversion : ∀ {i} {A : U i} {x y : A}  (γ : x ≈ y) → γ • γ ⁻¹ ≈ refl
   ⁻¹-is-right-inversion refl = refl
   
-  ⁻¹-is-left-inversion : {A : Uω} {x y : A}  (γ : x ≈ y) → γ ⁻¹ • γ ≈ refl
+  ⁻¹-is-left-inversion : ∀ {i} {A : U i} {x y : A}  (γ : x ≈ y) → γ ⁻¹ • γ ≈ refl
   ⁻¹-is-left-inversion refl = refl
   
-  ⁻¹-of-product : {A : Uω} {x y z : A}  (γ : x ≈ y) (η : y ≈ z) → (γ • η) ⁻¹ ≈ η ⁻¹ • γ ⁻¹
+  ⁻¹-of-product : ∀ {i} {A : U i} {x y z : A}  (γ : x ≈ y) (η : y ≈ z) → (γ • η) ⁻¹ ≈ η ⁻¹ • γ ⁻¹
   ⁻¹-of-product refl refl = refl
   
-  ⁻¹-is-selfinverse : {A : Uω} {x y : A}  (γ : x ≈ y) → (γ ⁻¹) ⁻¹ ≈ γ
+  ⁻¹-is-selfinverse : ∀ {i} {A : U i} {x y : A}  (γ : x ≈ y) → (γ ⁻¹) ⁻¹ ≈ γ
   ⁻¹-is-selfinverse refl = refl
   
   invert-both-sides : ∀ {A : U₀} {a a′ : A} {γ γ′ : a ≈ a′}
@@ -173,24 +173,24 @@ module EqualityAndPaths where
   ×-compute-π₂-of-equality refl refl = refl
   
   equality-action-on-∑ :
-    ∀ {A : U₀} {P : A → U₀}
+    ∀ {i} {j} {A : U i} {P : A → U j}
     → (a a′ : A) → (γ : a ≈ a′) → (pₐ : P a)
     → (a , pₐ) ≈ (a′ , transport P γ pₐ)
   equality-action-on-∑ a .a refl pₐ = refl
   
   cancel-equality-action-on-∑-with-projection :
-    ∀ {A : U₀} {P : A → U₀}
+    ∀ {i j} {A : U i} {P : A → U j}
     → (a a′ : A) → (γ : a ≈ a′) → (pₐ : P a)
-    → ∑π₁ ⁎ (equality-action-on-∑ {A} {P} a a′ γ pₐ) ≈ γ
+    → ∑π₁ ⁎ (equality-action-on-∑ {_} {_} {A} {P} a a′ γ pₐ) ≈ γ
   cancel-equality-action-on-∑-with-projection a .a refl _ = refl
   
   inclusion-of-the-fiber-of_over_ :
-    ∀ {A : U₀} (P : A → U₀)
+    ∀ {i j} {A : U i} (P : A → U j)
     → (a : A) → (P a → ∑ P)
   inclusion-of-the-fiber-of_over_ P a pₐ = (a , pₐ)
   
   cancel-orthogonal-equality-in-∑ :
-    ∀ {A : U₀} {P : A → U₀}
+    ∀ {i j} {A : U i} {P : A → U j}
     → (a : A) (pₐ pₐ′ : P a) (γ : pₐ ≈ pₐ′)
     → ∑π₁ ⁎ (inclusion-of-the-fiber-of P over a) ⁎ γ ≈ refl 
   cancel-orthogonal-equality-in-∑ a pₐ .pₐ refl = refl

@@ -263,7 +263,7 @@ module Equivalences where
                            = (((H-fh-1 right-whisker g) •∼ (h left-whisker H-gf-1)) right-whisker f) •∼ (H-fh-1 ⁻¹∼)
   
   infix 80 _⁻¹≃
-  _⁻¹≃ : ∀ {A B : U₀} → A ≃ B → B ≃ A
+  _⁻¹≃ : ∀ {i} {A B : U i} → A ≃ B → B ≃ A
   (the-equivalence is-an-equivalence-because reason) ⁻¹≃ with reason
   ... | (has-left-inverse
           left-inverse by unit

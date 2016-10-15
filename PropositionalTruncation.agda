@@ -6,20 +6,20 @@ module PropositionalTruncation where
 
   module _ where
     private
-      data #∥_∥ (A : U₀) : U₀ where
+      data #∥_∥ {i} (A : U i) : U i where
         #∣_∣ : A → #∥ A ∥
-    ∥_∥ : (A : U₀) → U₀
+    ∥_∥ : ∀ {i} (A : U i) → U i
     ∥ A ∥ = #∥ A ∥
 
     ∣_∣ : 
-      ∀ {A : U₀} → A → ∥ A ∥
+      ∀ {i} {A : U i} → A → ∥ A ∥
     ∣ a ∣ = #∣ a ∣
 
     postulate
-      -1-truncated : ∀ {A : U₀} → (a a′ : ∥ A ∥) → a ≈ a′
+      -1-truncated : ∀ {i} {A : U i} → (a a′ : ∥ A ∥) → a ≈ a′
     
     ∥-∥-recursion : 
-      ∀ {A : U₀} (B : U₀)
+      ∀ {i j} {A : U i} (B : U j)
       → B is-a-proposition → (f : A → B)
       → (∥ A ∥ → B)
     ∥-∥-recursion {A} B B-is-a-proposition f (#∣ a ∣) = f(a)
@@ -38,7 +38,7 @@ module PropositionalTruncation where
     ∥-∥-induction proposition true-on-constructed #∣ x ∣ = true-on-constructed x 
 
     ∥-∥-is-truncation : 
-      ∀ (A : U₀) → ∥ A ∥ is-a-proposition
+      ∀ {i} (A : U i) → ∥ A ∥ is-a-proposition
     ∥-∥-is-truncation A = λ a a′ → -1-truncated a a′
 
     {-

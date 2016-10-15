@@ -84,6 +84,19 @@ module DependentTypes where
 
      and-right-inverse (λ a → f a , (a is-in-the-fiber-by refl)) by (λ x → refl))
 
+  ∑-over-One-is-trivial :
+    ∀ (P : One → U₀)
+    → ∑ P ≈ P(∗)
+  ∑-over-One-is-trivial P = univalence
+    ((λ {(∗ , p) → p }) is-an-equivalence-because
+      (has-left-inverse (λ p → ∗ , p) by (λ {(∗ , p) → refl})
+       and-right-inverse (λ p → ∗ , p) by (λ p → refl)))
+
+  replacement-over-One-is-constant :
+    ∀ {A : U₀} (f : A → One)
+    → (dependent-replacement f) ∗ ≈ A
+  replacement-over-One-is-constant f = ∑-over-One-is-trivial (dependent-replacement f) ⁻¹
+                                       • univalence (replacement-is-equivalent f)
 
   module pullbacks-are-fiberwise-equivalences 
         {Z A B C : U₀}

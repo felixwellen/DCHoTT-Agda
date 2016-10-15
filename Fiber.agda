@@ -7,11 +7,11 @@ module Fiber where
   open import Homotopies
   open import Equivalences
 
-  data fiber-of {i} {X Y : U i} (f : X → Y) (y₀ : Y) : U i where
+  data fiber-of {i j} {X : U i} {Y : U j} (f : X → Y) (y₀ : Y) : U (i ⊔ j) where
     _is-in-the-fiber-by_ : (x : X) → f(x) ≈ y₀ → fiber-of f y₀
 
-  fiber-of_at_ : ∀ {i} {X Y : U i} 
-                 → (f : X → Y) → (y₀ : Y) → U i
+  fiber-of_at_ : ∀ {i} {j} {X : U i} {Y : U j}
+                 → (f : X → Y) → (y₀ : Y) → U (i ⊔ j)
   fiber-of f at y₀ = fiber-of f y₀
   
   fiber-map : ∀ {i} {X Y : U i} {y₀ : Y} 
@@ -19,19 +19,19 @@ module Fiber where
   fiber-map f (x is-in-the-fiber-by _) = x
     
   as-point-in-the-domain : 
-    ∀ {A B : U₀} {f : A → B} {b : B}
+    ∀ {i} {A B : U i} {f : A → B} {b : B}
     → (fiber-of f at b) → A
   as-point-in-the-domain (a is-in-the-fiber-by _) = a
 
   ι-fiber = as-point-in-the-domain
   
   as-equality-in-the-codomain :
-    ∀ {A B : U₀} {f : A → B} {b : B}
+    ∀ {i} {A B : U i} {f : A → B} {b : B}
     → (x : fiber-of f at b) → f(as-point-in-the-domain x) ≈ b
   as-equality-in-the-codomain (x is-in-the-fiber-by γ) = γ
   
   equality-action-on-the-fiber-of_at_acting-on-the-point-witnessed-by_ :
-    ∀ {A B : U₀} {a a′ : A} (f : A → B) (b : B) (γ : f(a) ≈ b)
+    ∀ {i j} {A : U i} {B : U j} {a a′ : A} (f : A → B) (b : B) (γ : f(a) ≈ b)
     → (η : a ≈ a′) → (a is-in-the-fiber-by γ) ≈ (a′ is-in-the-fiber-by (f ⁎ η ⁻¹ • γ))
   equality-action-on-the-fiber-of_at_acting-on-the-point-witnessed-by_ f b γ refl = refl
   
@@ -45,9 +45,10 @@ module Fiber where
   induced-map-to-the-fiber f b φ γ z = (φ z) is-in-the-fiber-by γ z
 
   fiber-of-a-∑ :
-    ∀ {A : U₀} {P : A → U₀}
+    ∀ {i} {j} {A : U i} {P : A → U j}
     → (a : A) → fiber-of ∑π₁-from P at a ≃ P a
-  fiber-of-a-∑ {A} {P} a = 
+  fiber-of-a-∑ {_} {_} {A} {P} a =
+    -- was tired when proving this, it is probably easier
     let 
       map : fiber-of ∑π₁-from P at a → P a
       map = λ {((a′ , pₐ) is-in-the-fiber-by γ) → transport P γ pₐ}
@@ -74,7 +75,7 @@ module Fiber where
               ((a′ , pₐ) is-in-the-fiber-by ((∑π₁-from P) ⁎ (inclusion-of-the-fiber-of P over a′) ⁎ 
                     transport-invertibility-backwards P γ pₐ ⁻¹ • γ)) 
              ≈⟨ (λ η → (a′ , pₐ) is-in-the-fiber-by η ⁻¹ • γ) ⁎ 
-                cancel-orthogonal-equality-in-∑ {A} {P} a′ 
+                cancel-orthogonal-equality-in-∑ {_} {_} {A} {P} a′ 
                   (transport P (γ ⁻¹) (transport P γ pₐ)) pₐ (transport-invertibility-backwards P γ pₐ) ⟩ 
               ((a′ , pₐ) is-in-the-fiber-by γ)
              ≈∎}) 

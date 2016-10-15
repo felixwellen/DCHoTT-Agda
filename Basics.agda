@@ -50,17 +50,17 @@ record ∑ {i j} {A : U i} (P : A → U j) : U (i ⊔ j) where
     a : A
     p : P a
 
-ι-∑ : ∀ {A : U₀} {P : A → U₀}
+ι-∑ : ∀ {i} {j} {A : U i} {P : A → U j}
       → (a : A) → P a → ∑ P
 ι-∑ a p = (a , p)
 
 
-∑π₁ : ∀ {A : U₀} {P : A → U₀} 
+∑π₁ : ∀ {i} {j} {A : U i} {P : A → U j} 
   → ∑ P → A
 ∑π₁ (a , _) = a
 
 ∑π₁-from_ :
-  ∀ {A : U₀} (P : A → U₀)
+  ∀ {i} {j} {A : U i} (P : A → U j)
   → ∑ P → A
 ∑π₁-from P = ∑π₁
 
@@ -122,3 +122,5 @@ swap ∗₂ = ∗₁
 
 ¬_ : U₀ → U₀
 ¬ A = A → Zero
+
+

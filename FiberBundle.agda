@@ -39,7 +39,7 @@ module FiberBundle where
     → (f : B′ → B) → (φ : E → B) → ((f * φ) → B′)
   f *→ φ = left-map-of (complete-to-pullback-square φ f)
 
-  ^ = underlying-map-of-the-surjectiveism
+  ^ = underlying-map-of-the-1-epimorphism
 
 
   {- 
@@ -75,7 +75,7 @@ module FiberBundle where
     → pullback-square-with-right φ
        bottom (covering-as-map φ-as-bundle)
        top _
-       left (((covering-as-map φ-as-bundle) *→ φ))
+       left ((covering-as-map φ-as-bundle) *→ φ)
   covering-pullback-square {_} {_} {_} {φ} φ-as-bundle = 
     complete-to-pullback-square φ (covering-as-map φ-as-bundle) 
 
@@ -147,6 +147,64 @@ module FiberBundle where
              covering-square
 
          {-
-           conclude that 'v*φ' factors over the point
-         -}
+           compose with 
+           
+               1─────→ U
+                \     ↗
+                 ↘   / χ
+                BAut(F)
 
+           to get a epi/mono-square:
+
+             V ──1─→ BAut F
+             |         |
+       (epi) v         χ (mono)
+             ↡         ↓
+             B ───φ──→ U
+           
+        -}
+
+         χ : BAut F → U₀
+         χ = ι-BAut F
+
+         the-square-commutes : χ ∘ (λ (_ : V) → (F , ∣ (∗ , refl) ∣ )) ⇒ (dependent-replacement φ) ∘ v
+         the-square-commutes x = χ (F , ∣ ∗ , refl ∣)
+                                ≈⟨ refl ⟩
+                                 F
+                                ≈⟨ replacement-over-One-is-constant (λ (x₁ : F) → ∗) ⁻¹ ⟩
+                                 dependent-replacement (λ (x₁ : F) → ∗) ∗
+                                ≈⟨ left-triangle x ⁻¹ ⟩
+                                 dependent-replacement v*φ x
+                                ≈⟨ right-triangle x ⟩
+                                 (dependent-replacement φ ∘ v) x ≈∎
+        {-
+        
+        get the diagonal
+
+        -}
+
+         
+
+         diagonal : B → BAut F
+         diagonal = 1-mono/1-epi-lifting.lift
+                     χ (dependent-replacement φ) (λ x → (F , ∣ (∗ , refl) ∣ )) v
+                     ι-BAut-is-1-mono (proof-that covering is-1-epi)
+                     the-square-commutes
+
+
+       {-
+         the diagonal is a morphism over U₀
+
+            B ───→ BAut F
+             \    /
+              \  /
+               U₀
+
+       -}
+
+         as-U₀-morphism :
+           dependent-replacement φ ⇒ χ ∘ diagonal
+         as-U₀-morphism = 1-mono/1-epi-lifting.lower-triangle χ (dependent-replacement φ)
+                            (λ x → F , ∣ ∗ , refl ∣) v ι-BAut-is-1-mono
+                            proof-that covering is-1-epi
+                            the-square-commutes ⁻¹⇒

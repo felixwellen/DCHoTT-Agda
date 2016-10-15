@@ -8,35 +8,41 @@ module OneImage where
   open import Equivalences
   open import Contractibility
   open import PropositionalTruncation
+  open import Univalence
 
   -- the following is called 'surjective' in the HoTT-Book
-  _is-surjective : 
-    ∀ {A B : U₀}
-    → (A → B) → U₀
-  _is-surjective {A} {B} f = Π (λ (b : B) → ∥ fiber-of f at b ∥)
-
+  _is-1-epi : 
+    ∀ {i} {j} {A : U i} {B : U j}
+    → (A → B) → U (i ⊔ j)
+  _is-1-epi {_} {_} {A} {B} f = Π (λ (b : B) → ∥ fiber-of f at b ∥)
 
   record _↠_ (A B : U₀) : U₁ where
-    constructor _is-surjective-by_
+    constructor _is-1-epi-by_
     field
       morphism : A → B
-      proof-that-it-is-surjective : morphism is-surjective
+      proof-that-it-is-1-epi : morphism is-1-epi
 
-  underlying-map-of-the-surjectiveism : 
+  underlying-map-of-the-1-epimorphism : 
     ∀ {A B : U₀}
     → (f : A ↠ B) → (A → B)
-  underlying-map-of-the-surjectiveism
-    (morphism is-surjective-by proof-that-it-is-surjective) = morphism
+  underlying-map-of-the-1-epimorphism
+    (morphism is-1-epi-by proof-that-it-is-1-epi) = morphism
+
+  proof-that_is-1-epi :
+    ∀ {A B : U₀}
+    → (f : A ↠ B) → (underlying-map-of-the-1-epimorphism f) is-1-epi
+  proof-that (_ is-1-epi-by proof) is-1-epi = proof
+    
 
   the-1-image-of_contains : 
-    ∀ {A B : U₀} 
-    → (f : A → B) → (B → U₀)
+    ∀ {i j} {A : U i} {B : U j} 
+    → (f : A → B) → (B → U (i ⊔ j))
   the-1-image-of f contains b = ∥ ∑ (λ a → f(a) ≈ b) ∥
 
   to-point-in-truncated-fiber : 
-    ∀ {A B : U₀} {f : A → B} {b : B}
+    ∀ {i} {j} {A : U i} {B : U j} {f : A → B} {b : B}
     → ∥ ∑ (λ a → f(a) ≈ b) ∥ → ∥ fiber-of f at b ∥
-  to-point-in-truncated-fiber {_} {_} {f} {b} = 
+  to-point-in-truncated-fiber {_} {_} {_} {_} {f} {b} = 
     ∥-∥-recursion (∥ fiber-of f at b ∥) (∥-∥-is-truncation _) (λ {(a , γ) → ∣ a is-in-the-fiber-by γ ∣ }) 
 
   from-point-in-truncated-fiber : 
@@ -46,21 +52,21 @@ module OneImage where
     ∥-∥-recursion (∥ _ ∥) (∥-∥-is-truncation _) (λ {(a is-in-the-fiber-by γ) → ∣ (a , γ) ∣ }) 
 
   1-image :
-    ∀ {A B : U₀} 
-    → (f : A → B) → U₀
+    ∀ {i j} {A : U i} {B : U j} 
+    → (f : A → B) → U (i ⊔ j)
   1-image f = ∑ (λ b → the-1-image-of f contains b)
 
   im₁ = 1-image
 
   the-induced-map-from-the-1-image-of_to-the-codomain :
-    ∀ {A B : U₀} 
+    ∀ {i j} {A : U i} {B : U j} 
     → (f : A → B) → (1-image f → B)
   the-induced-map-from-the-1-image-of f to-the-codomain (b , x) = b
   
   ι-im₁ = the-induced-map-from-the-1-image-of_to-the-codomain
 
   the-induced-map-from-the-domain-to-the-1-image-of :
-    ∀ {A B : U₀} 
+    ∀ {i} {j} {A : U i} {B : U j} 
     → (f : A → B) → (A → 1-image f)
   the-induced-map-from-the-domain-to-the-1-image-of f a = 
     (f(a) , ∣ (a , refl ) ∣ )
@@ -76,10 +82,10 @@ module OneImage where
        im₁
   -}
 
-  π-im₁-is-surjective : 
-    ∀ {A B : U₀} (f : A → B) 
-    → (π-im₁ f is-surjective)
-  π-im₁-is-surjective f (b , p) =
+  π-im₁-is-1-epi : 
+    ∀ {i j}  {A : U i} {B : U j} (f : A → B) 
+    → (π-im₁ f is-1-epi)
+  π-im₁-is-1-epi f (b , p) = 
     let
       truncated-fiber-of-π = ∥ fiber-of (π-im₁ f) at (b , p) ∥
       map-on-fibers : fiber-of f at b → truncated-fiber-of-π
@@ -95,56 +101,42 @@ module OneImage where
          truncated-fiber-of-π (∥-∥-is-truncation _) map-on-fibers (to-point-in-truncated-fiber p)
     
 
-  _is-injective : 
-    ∀ {A B : U₀} 
-    → (f : A → B) → U₀
-  f is-injective = (x y : _) → f x ≈ f y → x ≈ y
+  _is-1-mono′ : 
+    ∀ {i} {A B : U i} 
+    → (f : A → B) → U i
+  f is-1-mono′ = (x y : _) → f x ≈ f y → x ≈ y
 
-  _is-injective′ : 
-    ∀ {A B : U₀} 
-    → (f : A → B) → U₀
-  f is-injective′ = Π (λ b → (fiber-of f at b) is-a-proposition)
-{-
-  ι-im₁-is-injective : 
-    ∀ {A B : U₀} (f : A → B)
-    → ι-im₁ f is-injective′ 
-  ι-im₁-is-injective f b₀ ((b , p) is-in-the-fiber-by γ) ((b′ , p′) is-in-the-fiber-by γ′) =
-    {!((b , p) is-in-the-fiber-by γ)
-    ≈⟨ ? ⟩
-     ((b₀ , ?) is-in-the-fiber-by ?)
-    ≈⟨ ? ⟩
-     ((b′ , p′) is-in-the-fiber-by γ′)
-    ≈∎!}
--}
+  _is-1-mono : 
+    ∀ {i} {j} {A : U i} {B : U j} 
+    → (f : A → B) → U (i ⊔ j)
+  f is-1-mono = Π (λ b → (fiber-of f at b) is-a-proposition)
+
+  ι-im₁-is-1-mono : 
+    ∀ {i} {j} {A : U i} {B : U j} (f : A → B)
+    → ι-im₁ f is-1-mono 
+  ι-im₁-is-1-mono f b = (the-proposition (λ (A : _) → A is-a-proposition)
+                            is-equivalence-invariant-by-univalence (fiber-of-a-∑ b ⁻¹≃))
+                             (∥-∥-is-truncation (∑ (λ a → f a ≈ b)))
+
 {-
   compatibility :
     ∀ {A B : U₀} 
     → (f : A → B)
-    → f is-injective → f is-injective′
-  compatibility f f-is-injective b (a is-in-the-fiber-by γ) (a′ is-in-the-fiber-by η) = {!f-is-injective a a′ (γ • η ⁻¹)!}
+    → f is-1-mono → f is-1-mono′
+  compatibility f f-is-1-mono b (a is-in-the-fiber-by γ) (a′ is-in-the-fiber-by η) = {!f-is-1-mono a a′ (γ • η ⁻¹)!}
 -}  
 
-  a-injectiveism-factoring-over-the-point-is-trivial :
+  a-1-monoism-factoring-over-the-point-is-trivial :
     ∀ {A B : U₀} (f : A → B)
-    → (f is-injective)
+    → (f is-1-mono′)
     → ∑ (λ b → f ⇒ (λ _ → b))
     → A is-a-proposition
-  a-injectiveism-factoring-over-the-point-is-trivial f f-is-mono (b , H) =
+  a-1-monoism-factoring-over-the-point-is-trivial f f-is-mono (b , H) =
     λ a a′ → f-is-mono a a′ (H a • H a′ ⁻¹)
-{-
-  ι-im₁-is-injective : 
-    ∀ {A B : U₀}
-    → (f : A → B)
-    → (ι-im₁ f) is-injective
-  ι-im₁-is-injective f (b , b-is-in-the-image)
-                       (b′ , b′-is-in-the-image) γ
-     = let b≈b′ = b ≈⟨ γ ⟩ b′ ≈∎
-       in {!apd (λ b → the-1-image-of f contains b)!}
--}
 
 
 {-
-   injective/surjective lifting
+   1-mono/1-epi lifting
    
    given a commutative square:
      
@@ -154,23 +146,24 @@ module OneImage where
      ↓      ↓
      B ─g─→ Y
    
-   with m injective and e surjective there should be a 
-   diagonal lift...
+   with m 1-mono and e 1-epi there is a 
+   diagonal lift
 -}
 
-  module injective/surjective-lifting
-         {A B X Y : U₀} 
+  module 1-mono/1-epi-lifting
+         {i}
+         {A B : U₀} {X Y : U i}
          (m : X → Y) (g : B → Y)
          (f : A → X) (e : A → B)
-         (m-is-injective : m is-injective′) (e-is-surjective : e is-surjective)
+         (m-is-1-mono : m is-1-mono) (e-is-1-epi : e is-1-epi)
          (H : m ∘ f ⇒ g ∘ e)
          where
     {- idea: take a 'b : B' and map it to x in the 
              propositional truncation of the fiber 
              over b, given by the assumption that 
-             e is surjective. map x to the fiber over
+             e is 1-epi. map x to the fiber over
              g(b), which is possible because m is 
-             injective.
+             1-mono.
     -}
     map-to-the-fiber : (b : B) → fiber-of e at b → fiber-of m at g(b)
     map-to-the-fiber b = λ {(a is-in-the-fiber-by γ) → f(a) is-in-the-fiber-by (H a • g ⁎ γ)}
@@ -178,10 +171,10 @@ module OneImage where
     induced-map-on-the-truncated-fiber b = 
         ∥-∥-recursion 
           (fiber-of m at g(b)) 
-          (m-is-injective (g b)) 
+          (m-is-1-mono (g b)) 
           (map-to-the-fiber b) 
     lift : (B → X)
-    lift b = as-point-in-the-domain (induced-map-on-the-truncated-fiber b (e-is-surjective b))
+    lift b = as-point-in-the-domain (induced-map-on-the-truncated-fiber b (e-is-1-epi b))
 
   
     upper-triangle : f ⇒ lift ∘ e 
@@ -190,11 +183,11 @@ module OneImage where
                          ≈⟨ refl ⟩ 
                           induced-map-on-the-truncated-fiber (e a) (∣ a is-in-the-fiber-by refl ∣) 
                          ≈⟨ (λ x → induced-map-on-the-truncated-fiber (e a) x) ⁎ 
-                             -1-truncated (∣ a is-in-the-fiber-by refl ∣) (e-is-surjective (e a)) ⟩  
-                          induced-map-on-the-truncated-fiber (e a) (e-is-surjective (e a))  
+                             -1-truncated (∣ a is-in-the-fiber-by refl ∣) (e-is-1-epi (e a)) ⟩  
+                          induced-map-on-the-truncated-fiber (e a) (e-is-1-epi (e a))  
                          ≈∎)
    
     lower-triangle : m ∘ lift ⇒ g
     lower-triangle b = as-equality-in-the-codomain 
-                       (induced-map-on-the-truncated-fiber b (e-is-surjective b))
+                       (induced-map-on-the-truncated-fiber b (e-is-1-epi b))
 

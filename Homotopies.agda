@@ -58,15 +58,15 @@ naturality-for-units f g unit a = (refl-is-right-neutral (unit (g (f a))) •
                                      • (λ η → (g ∘ f) ⁎ unit a • η) ⁎ ⁻¹-is-right-inversion (unit a)
                                      • refl-is-right-neutral ((g ∘ f) ⁎ unit a) ⁻¹) ⁻¹
 
-reverse-homotopy : ∀ {i} {A B : U i} {f g : A → B} → f ∼ g → g ∼ f
-reverse-homotopy {i} {A} {B} {f} {g} H = λ (a : A) → H a ⁻¹
+reverse-homotopy : ∀ {i j} {A : U i} {B : U j} {f g : A → B} → f ∼ g → g ∼ f
+reverse-homotopy {_} {_} {A} {B} {f} {g} H = λ (a : A) → H a ⁻¹
 
 infix 60 _⁻¹∼
-_⁻¹∼ : ∀ {i} {A B : U i} {f g : A → B} → f ∼ g → g ∼ f
+_⁻¹∼ : ∀ {i j} {A : U i} {B : U j} {f g : A → B} → f ∼ g → g ∼ f
 H ⁻¹∼ = reverse-homotopy H
 
 infix 60 _⁻¹⇒
-_⁻¹⇒ : ∀ {i} {A B : U i} {f g : A → B} → f ⇒ g → g ⇒ f
+_⁻¹⇒ : ∀ {i j} {A : U i} {B : U j} {f g : A → B} → f ⇒ g → g ⇒ f
 H ⁻¹⇒ = reverse-homotopy H
 
 -- needs FunExt
