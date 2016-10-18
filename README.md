@@ -2,6 +2,7 @@
 Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal shape modality. The following is proved:
 - The formal disk bundle over a group is trivial
 - The formal disk bundle over a G-manifold is locally trivial. 
+- All F - fiber bundles are associated to an Aut(F) principal bundle.
 An explanation of these notions may be found [here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf) (theorem 3.6, 1) and some part of 2) )
 
 
@@ -12,6 +13,7 @@ This is still witnessed by some stupid definitions for the basic stuff like equi
 If you want to have a look at what has been formalized, the following files are probably the right places:
 - FormalDiskBundle.agda
 - Manifolds.agda
+- FiberBundle.agda
 
 Some basic properties of left exact Modalities are not proven yet, so there is a bit of cheating in 'Im.agda' i.e., the modality is postulated to commute with the loop space functor, which could be reduced to simpler assumptions.
 Furthermore, there is a lot of stuff about pullback squares, which, to my knowledge, has not been formalized in agda before, but probably in coq.
