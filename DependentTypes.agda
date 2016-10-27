@@ -98,6 +98,12 @@ module DependentTypes where
   replacement-over-One-is-constant f = ∑-over-One-is-trivial (dependent-replacement f) ⁻¹
                                        • univalence (replacement-is-equivalent f)
 
+  pullback-of_along-dependent-tpye :
+    ∀ {A : U₀} (P : A → U₀)
+    → (E : A → U₀)
+    → (∑ P → U₀)
+  pullback-of P along-dependent-tpye E (a , pₐ) = E a
+
   module pullbacks-are-fiberwise-equivalences 
         {Z A B C : U₀}
         {f : A → C}  {g : B → C}
@@ -262,13 +268,3 @@ module DependentTypes where
         and-inducing-an-equivalence-by
           (has-left-inverse induced-map⁻¹ by left-invertible
            and-right-inverse induced-map⁻¹ by right-invertible)
-
-{-
-      pullbacks-are-fiberwise-equivalences :
-        ∀ {Z A B C : U₀}
-          {f : A → C}  {g : B → C}
-          {z₁ : Z → A} {z₂ : Z → B}
-        → (□ : pullback-square f g z₁ z₂)
-        → 
-      pullbacks-are-fiberwise-equivalences = ?
--}
