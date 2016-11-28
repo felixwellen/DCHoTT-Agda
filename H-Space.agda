@@ -6,17 +6,77 @@ module H-Space where
   open import Homotopies
   open import Language
   open import Equivalences
+  open import InfinityGroups
 
-  record H-Space-structure-on_ (X : U₀) : U₀ where
-    constructor H-Space-with-neutral-element_and-operation_left-neutral-by_and-right-neutral-by_
+  record invertible-H-Space-structure-on_ (X : U₀) : U₀ where
+    constructor
+      H-Space-with-neutral-element_and-operation_left-neutral-by_,-right-neutral-by_,-left-invertible-by_and-right-invertible-by_
     field
       e : X
       μ : X × X → X
       left-neutral : ∀ (x : X) → μ (e , x) ≈ x
       right-neutral : ∀ (x : X) → μ (x , e) ≈ x
+      left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
+      right-invertible : ∀ (x₀ : X) → (λ x → μ (x₀ , x)) is-an-equivalence
 
-  
 
-  module the-curried-operations-are-pointwise-equivalences
-         (X : U₀) (H-Space-structure-on-X : H-Space-structure-on X) where
-    open H-Space-structure-on-X
+  module loop-spaces-are-invertible-H-Spaces (BG : U₀) (e : BG) where
+
+    right-compose-with :
+      ∀ {x y z : BG} → 
+      (γ : y ≈ z) → (x ≈ y → x ≈ z)
+    right-compose-with γ = λ η → η • γ
+
+    right-compose-right-invertible :
+      ∀ {x y z : BG}  
+      → (γ : x ≈ y)
+      → (η : z ≈ y) → (right-compose-with γ) (right-compose-with (γ ⁻¹) η) ≈ η
+    right-compose-right-invertible refl refl = refl
+
+    right-compose-left-invertible :
+      ∀ {x y z : BG}  
+      → (γ : x ≈ y)
+      → (η : z ≈ x) → (right-compose-with (γ ⁻¹)) (right-compose-with γ η) ≈ η
+    right-compose-left-invertible refl refl = refl
+
+    right-composing-is-an-equivalence :
+      ∀ (γ : Ω BG e) → (right-compose-with γ) is-an-equivalence
+    right-composing-is-an-equivalence γ =
+      has-left-inverse right-compose-with (γ ⁻¹) by right-compose-left-invertible γ
+      and-right-inverse right-compose-with (γ ⁻¹) by (λ (η : Ω BG e) → right-compose-right-invertible γ η ⁻¹)
+
+
+    left-compose-with :
+      ∀ {x y z : BG} → 
+      (γ : x ≈ y) → (y ≈ z → x ≈ z)
+    left-compose-with γ = λ η → γ • η
+
+    left-compose-right-invertible :
+      ∀ {x y z : BG}  
+      → (γ : x ≈ y)
+      → (η : x ≈ z) → (left-compose-with γ) (left-compose-with (γ ⁻¹) η) ≈ η
+    left-compose-right-invertible refl refl = refl
+
+    left-compose-left-invertible :
+      ∀ {x y z : BG}  
+      → (γ : x ≈ y)
+      → (η : y ≈ z) → (left-compose-with (γ ⁻¹)) (left-compose-with γ η) ≈ η
+    left-compose-left-invertible refl refl = refl
+
+    left-composing-is-an-equivalence :
+      ∀ (γ : Ω BG e) → (left-compose-with γ) is-an-equivalence
+    left-composing-is-an-equivalence γ =
+      has-left-inverse left-compose-with (γ ⁻¹) by left-compose-left-invertible γ
+      and-right-inverse left-compose-with (γ ⁻¹) by (λ (η : Ω BG e) → left-compose-right-invertible γ η ⁻¹)
+
+
+    as-H-Space : invertible-H-Space-structure-on (Ω BG e)
+    as-H-Space = record { e = refl;
+                          μ = λ {(γ , η) → γ • η};
+                          left-neutral = refl-is-left-neutral;
+                          right-neutral = refl-is-right-neutral ⁻¹⇒;
+                          left-invertible = right-composing-is-an-equivalence;
+                          right-invertible = left-composing-is-an-equivalence} 
+
+
+    
