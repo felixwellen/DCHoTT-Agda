@@ -13,7 +13,8 @@ module Im where
   open import PullbackSquare
   open import Fiber
   open import Language
-    
+  open import H-Space  
+
   -- Axioms for ℑ, the infinitesimal shape modality
   -- (this may also be read as axiomatizing a general lex Modality)
   -- the axioms are taken from a n-cafe post from mike shulman
@@ -109,10 +110,6 @@ module Im where
 
   ℑ→ = apply-ℑ
 
-  ℑ-is-ℑ-unit-U₀ :
-    ∀ (A : U₀)
-    → ℑ A ≈ ℑ-unit A
-  ℑ-is-ℑ-unit-U₀ A = ?
 
   naturality-square-for-ℑ : 
     ∀ {A B : U₀}
@@ -481,3 +478,24 @@ module Im where
                          (λ ξ → ℑ-unit ⁎ g • ξ) ⁎ application-commutes-with-inversion ℑ-unit h ⁻¹ 
                          • application-commutes-with-concatenation ℑ-unit g (h ⁻¹) ⁻¹
 
+
+  module ℑ-preserves-products (A B : U₀) where
+    
+
+  module ℑ-preserves-H-Spaces
+         (X : U₀)
+         (H-Space-structure-on-X : invertible-H-Space-structure-on X)
+       where
+     
+    open invertible-H-Space-structure-on_ H-Space-structure-on-X
+    ℑX = ℑ X
+  
+    coreduced : (ℑX × ℑX) is-coreduced
+    coreduced = ∑-of-coreduced-types-is-coreduced 
+                           (ℑ X) (ℑ-is-coreduced X) (λ _ → ℑ X) (λ _ → ℑ-is-coreduced X)
+
+    φ : ℑX × ℑX → ℑ(X × X)
+    φ = {!ℑ-recursion!}
+
+    ℑμ : ℑX × ℑX → ℑX
+    ℑμ = ℑ→ μ ∘ φ 
