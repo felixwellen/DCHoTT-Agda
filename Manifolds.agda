@@ -33,7 +33,7 @@ module Manifolds where
     → (χ : W ─ét→ M) → (BG : U₀) (e : BG) → (ξ : W ─ét→ Ω BG e)
     → U₀
   M is-a-manifold-by-the-covering χ which-is-a-covering-of-the-∞-group-with-delooping BG , e by ξ =
-    underlying-map-of χ is-surjective
+    underlying-map-of χ is-1-epi
 
   module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
 
@@ -202,7 +202,7 @@ module Manifolds where
          T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a De -fiber-bundle
          T∞M-is-a-fiber-bundle =
            let
-             v́-as-surjection = (v is-surjective-by M-is-a-manifold)
+             v́-as-surjection = (v is-1-epi-by M-is-a-manifold)
            in
              on V the-pullback-along v́-as-surjection
              is-trivial-by top-map-of v*T∞M-is-trivial

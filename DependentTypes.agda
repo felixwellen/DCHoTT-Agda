@@ -104,6 +104,10 @@ module DependentTypes where
     → (∑ P → U₀)
   pullback-of P along-dependent-tpye E (a , pₐ) = E a
 
+  -- ∑ formal-disk-at a = ∑ formal-disk-at (a , pₐ) = ∑ (ι(a′ , pₐ′) ≈ ι(a , pₐ))
+  -- pullback = fibration of products bzw. 
+  -- (type of pullbacks over base A) = (A -> type of products)
+
   module pullbacks-are-fiberwise-equivalences 
         {Z A B C : U₀}
         {f : A → C}  {g : B → C}

@@ -15,6 +15,22 @@ module FormalDiskBundle where
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
 
+
+  _is-infinitesimally-close-to_ :
+    ∀ {X : U₀} 
+    → (x x′ : X) → U₀
+  x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
+
+  -- T∞ as dependent type
+  formal-disk-at_ :
+    ∀ {X : U₀}
+    → (x : X) → (X → U₀)
+  formal-disk-at_ x x′ = x′ is-infinitesimally-close-to x
+
+  T∞′ : ∀ (X : U₀) 
+    → (X → U₀)
+  T∞′ X x = ∑ (formal-disk-at x)
+
   formal-disk-bundle : (X : U₀) → U₀
   formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
 

@@ -109,6 +109,11 @@ module Im where
 
   ℑ→ = apply-ℑ
 
+  ℑ-is-ℑ-unit-U₀ :
+    ∀ (A : U₀)
+    → ℑ A ≈ ℑ-unit A
+  ℑ-is-ℑ-unit-U₀ A = ?
+
   naturality-square-for-ℑ : 
     ∀ {A B : U₀}
     → (f : A → B)
