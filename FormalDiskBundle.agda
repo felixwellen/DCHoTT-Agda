@@ -15,6 +15,21 @@ module FormalDiskBundle where
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
 
+
+  _is-infinitesimally-close-to_ :
+    ∀ {A : U₀} (a a′ : A)
+    → U₀
+  a is-infinitesimally-close-to a′ = ℑ-unit a ≈ ℑ-unit a′
+
+  formal-disk-at_ :
+    ∀ {A : U₀} (a₀ : A)
+    → (A → U₀)
+  formal-disk-at a₀ = λ a → a is-infinitesimally-close-to a₀
+
+  T∞′ :
+    ∀ (A : U₀) → (A → U₀)
+  T∞′ A a = ∑ (formal-disk-at a)
+
   formal-disk-bundle : (X : U₀) → U₀
   formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
@@ -106,14 +121,8 @@ module FormalDiskBundle where
     ν = lemma-on-pullbacks-of-Δ.ν (ℑ BG) (ℑ-unit e) One constant-refl-e 
     θ = lemma-on-pullbacks-of-Δ.θ (ℑ BG) (ℑ-unit e) One constant-refl-e 
 
-    ν∼constant∗ : ν ∼ (λ x → ∗)
-    ν∼constant∗ (∗ , g) = refl
-
     constant-∗ : ℑG′ → One
     constant-∗ x = ∗
-
-    θ∼Δ : θ ∼ (λ { (x , g) → (g , g)})
-    θ∼Δ (∗ , g) = ×-create-equality refl refl
 
     step2a′ : pullback-square-with-right constant-refl-e 
               bottom ℑGΔ′
@@ -237,11 +246,11 @@ module FormalDiskBundle where
                 (λ (x : One) → ℑ-unit ⁎ (refl {a = e})) 
                 id-as-equivalence 
                 (ψ-as-equivalence ⁻¹≃) (λ ∗ → ℑ-unit refl 
-                                               ≈⟨ ψ⁻¹l∘ψ⇒id (ℑ-unit refl) ⁻¹ ⟩ 
-                                               ψ⁻¹l (ψ (ℑ-unit refl))
-                                               ≈⟨ ψ⁻¹l ⁎ ψ-of-refl ⟩
-                                               ψ⁻¹l refl
-                                               ≈∎))
+                                             ≈⟨ ψ⁻¹l∘ψ⇒id (ℑ-unit refl) ⁻¹ ⟩ 
+                                              ψ⁻¹l (ψ (ℑ-unit refl))
+                                             ≈⟨ ψ⁻¹l ⁎ ψ-of-refl ⟩
+                                              ψ⁻¹l refl
+                                             ≈∎))
 
     
     step4 : pullback-square-with-right (λ _ → ℑ-unit refl)
