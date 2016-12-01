@@ -17,18 +17,19 @@ module FormalDiskBundle where
 
 
   _is-infinitesimally-close-to_ :
-    ∀ {A : U₀} (a a′ : A)
-    → U₀
-  a is-infinitesimally-close-to a′ = ℑ-unit a ≈ ℑ-unit a′
+    ∀ {X : U₀} 
+    → (x x′ : X) → U₀
+  x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
 
+  -- T∞ as dependent type
   formal-disk-at_ :
-    ∀ {A : U₀} (a₀ : A)
-    → (A → U₀)
-  formal-disk-at a₀ = λ a → a is-infinitesimally-close-to a₀
+    ∀ {X : U₀}
+    → (x : X) → (X → U₀)
+  formal-disk-at_ x x′ = x′ is-infinitesimally-close-to x
 
-  T∞′ :
-    ∀ (A : U₀) → (A → U₀)
-  T∞′ A a = ∑ (formal-disk-at a)
+  T∞′ : ∀ (X : U₀) 
+    → (X → U₀)
+  T∞′ X x = ∑ (formal-disk-at x)
 
   formal-disk-bundle : (X : U₀) → U₀
   formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)

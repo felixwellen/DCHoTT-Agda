@@ -2,6 +2,9 @@
 
 {-
 Renaming candidates
+U => Type
+V => U
+G => V
 One => Point/∗
 above-is => symbole ( , ) oder so
 Equivalences als Half adjoint implementieren
