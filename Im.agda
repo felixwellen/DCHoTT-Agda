@@ -110,7 +110,6 @@ module Im where
 
   ℑ→ = apply-ℑ
 
-
   naturality-square-for-ℑ : 
     ∀ {A B : U₀}
     → (f : A → B)
@@ -479,10 +478,8 @@ module Im where
                          • application-commutes-with-concatenation ℑ-unit g (h ⁻¹) ⁻¹
 
 
-  module ℑ-preserves-products (A B : U₀) where
-    
 
-  module ℑ-preserves-H-Spaces
+  module ℑ-preserves-invertible-H-Spaces
          (X : U₀)
          (H-Space-structure-on-X : invertible-H-Space-structure-on X)
        where
@@ -494,8 +491,37 @@ module Im where
     coreduced = ∑-of-coreduced-types-is-coreduced 
                            (ℑ X) (ℑ-is-coreduced X) (λ _ → ℑ X) (λ _ → ℑ-is-coreduced X)
 
-    φ : ℑX × ℑX → ℑ(X × X)
-    φ = {!ℑ-recursion!}
+    curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
+    curry f = λ a → (λ b → f (a , b))
+    
+    ψ : X → (X → ℑ(X × X))
+    ψ = curry (ℑ-unit-at (X × X))
 
+    ψ′ : ℑX → (ℑX → ℑ(X × X))
+    ψ′ = ℑ-recursion
+           (Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → X × X))
+           (λ (x : X) → ℑ-recursion (ℑ-is-coreduced (X × X)) (ψ x))
+    
+    uncurry : ∀ {A B C : U₀} → (A → (B → C)) → (A × B → C)
+    uncurry f (a , b) = f a b
+
+    φ : ℑX × ℑX → ℑ(X × X)
+    φ = uncurry ψ′
+
+    -- operations of the image H-Space
     ℑμ : ℑX × ℑX → ℑX
     ℑμ = ℑ→ μ ∘ φ 
+
+    ℑe : ℑX
+    ℑe = ℑ-unit e
+
+    -- relations of the image H-Space
+    ℑleft-neutral : ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ x
+    ℑleft-neutral = ℑ-induction
+                      (λ (x : ℑX) → coreduced-types-have-coreduced-identity-types
+                                    (ℑ X) (ℑ-is-coreduced X) (ℑμ (ℑe , x)) x)
+                      (λ x → {!!} • ℑ-unit ⁎ left-neutral x)
+
+
+    ℑright-neutral : ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ x
+    ℑright-neutral = ?
