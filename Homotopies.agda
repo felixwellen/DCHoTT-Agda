@@ -12,6 +12,12 @@ _∼_ {i} {j} {A} {B} f g = (a : A) → f a ≈ g a
 _⇒_ : ∀ {i j} {A : U i} {B : U j} → (f g : A → B) → U (i ⊔ j)
 f ⇒ g = f ∼ g
 
+
+refl⇒ : ∀ {i} {A B : U i} {f : A → B} → f ⇒ f
+refl⇒ a = refl 
+
+id⇒ = refl⇒ 
+
 -- homotopies are natural as morphisms of the induced 
 -- functors of path groupoids 
 -- f(a) ∼ Ha ∼ g(a)
@@ -75,11 +81,22 @@ H ⁻¹⇒ = reverse-homotopy H
 
 -- 2-categorical stuff
 _right-whisker_ : ∀ {i} {A B C : U i} {f g : A → B} 
-                      → f ∼ g → (h : B → C) → h ∘ f ∼ h ∘ g
+                      → f ∼ g → (h : B → C) → h ∘ f ⇒ h ∘ g
 _right-whisker_ {i} {A} {B} {C} {f} {g} H h = λ (a : A) → h ⁎ H a
 _left-whisker_ : ∀ {i} {A B C : U i} {f g : B → C} 
-                      →  (h : A → B) → f ∼ g → f ∘ h ∼ g ∘ h
+                      →  (h : A → B) → f ⇒ g → f ∘ h ⇒ g ∘ h
 _left-whisker_ {i} {A} {B} {C} {f} {g} h H = λ (a : A) → H (h a)
+
+pre-whisker_to_ :
+  ∀ {i} {A B C : U i} {f g : B → C} 
+  →  (h : A → B) → f ⇒ g → f ∘ h ⇒ g ∘ h
+pre-whisker_to_ = _left-whisker_
+
+post-whisker_to_ :
+  ∀ {i} {A B C : U i} {f g : A → B} 
+  → f ∼ g → (h : B → C) → h ∘ f ⇒ h ∘ g
+post-whisker_to_ = _right-whisker_
+
 
 infixl 50 _•∼_ 
 _•∼_ : ∀ {i} {A B : U i} {f g h : A → B} 
@@ -102,8 +119,8 @@ infix 15 _⇒∎
 infixr 10 _⇒-⟨_⟩_
 
 _⇒∎ : ∀ {i} {A B : U i} (f : A → B)
-      → f ≈ f
-f ⇒∎ = refl 
+      → f ⇒ f
+f ⇒∎ = refl⇒ 
 
 _⇒-⟨_⟩_ : ∀ {i} {A B : U i} (f : A → B) {g h : A → B}
          → f ⇒ g → g ⇒ h → f ⇒ h
