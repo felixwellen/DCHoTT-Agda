@@ -516,7 +516,7 @@ module Im where
     ℑe = ℑ-unit e
 
     -- relations of the image H-Space
-    ℑleft-neutral : ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ x
+{-    ℑleft-neutral : ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ x
     ℑleft-neutral = ℑ-induction
                       (λ (x : ℑX) → coreduced-types-have-coreduced-identity-types
                                     (ℑ X) (ℑ-is-coreduced X) (ℑμ (ℑe , x)) x)
@@ -524,4 +524,5 @@ module Im where
 
 
     ℑright-neutral : ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ x
-    ℑright-neutral = ?
+    ℑright-neutral = {!!}
+-}
