@@ -213,7 +213,7 @@ module Im where
                   • (λ x → apply-ℑ g x) ⁎ naturality-square-for-ℑ f a ⁻¹)
 
   applying-ℑ-preserves-id : ∀ (A : U₀)
-                            → apply-ℑ (id {_} {A}) ∼ id {_} {ℑ A}
+                            → apply-ℑ (id {_} {A}) ⇒ id {_} {ℑ A}
   applying-ℑ-preserves-id A =
     ℑ-recursion-is-unique (ℑ-unit ∘ id {_} {A}) (ℑ-is-coreduced A) id (λ _ → refl)
 
@@ -516,12 +516,45 @@ module Im where
     ℑe = ℑ-unit e
 
     -- relations of the image H-Space
+
+    {-
+
+       first, get a 2-cell where the question mark is
+
+      /───X        ℑX×ℑX←─(ℑe,1)  
+      |   |          |        \
+      | (e,1)        φ    ?    \
+      |   ↓          ↓          \
+      1  X×X ───→ ℑ(X×X)←ℑ→(e,1)─ℑX
+      |   |          |          /
+      |   μ         ℑ→μ        /
+      |   ↓          ↓        /
+      \───X ──────→ ℑX─────ℑ→1  
+
+    -}
+
+{-
     ℑleft-neutral : ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ x
     ℑleft-neutral = ℑ-induction
                       (λ (x : ℑX) → coreduced-types-have-coreduced-identity-types
                                     (ℑ X) (ℑ-is-coreduced X) (ℑμ (ℑe , x)) x)
                       (λ x → {!!} • ℑ-unit ⁎ left-neutral x)
+-}
 
+    relate-the-left-neutral-elements :
+      ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ ℑ→ μ (φ (ℑe , x))
+    relate-the-left-neutral-elements x = refl
 
+    relate-the-right-neutral-elements :
+      ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ ℑ→ μ (φ (x , ℑe))
+    relate-the-right-neutral-elements x = refl
+{-
     ℑright-neutral : ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ x
-    ℑright-neutral = ?
+    ℑright-neutral = (λ x → ℑμ (x , ℑe))
+                    ⇒-⟨ relate-the-right-neutral-elements ⟩
+                     (λ x → ℑ→ μ (φ (x , ℑe)))
+                    ⇒-⟨ {!naturality-of-ℑ-unit μ!} ⟩ 
+                     {!λ x → ℑ→ μ ?!}
+                    ⇒-⟨ ℑ⇒ right-neutral •⇒ applying-ℑ-preserves-id X ⟩
+                     id ⇒∎
+-}
