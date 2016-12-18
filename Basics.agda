@@ -78,6 +78,9 @@ A × B = ∑ (λ (a : A) → B)
 _×→_ : ∀ {A B A′ B′ : U₀} → (A → B) → (A′ → B′) → (A × A′ → B × B′)
 f ×→ g = λ { (a , b) → f a , g b }
 
+_,→_ : ∀ {X A B : U₀} → (X → A) → (X → B) → (X → A × B)
+f ,→ g = λ x → (f x , g x)
+
 π₁ : ∀ {i} {A : U i} {B : U i} → A × B → A
 π₁ (a , b) = a
 

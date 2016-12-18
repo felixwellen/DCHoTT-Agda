@@ -497,16 +497,22 @@ module Im where
     ψ : X → (X → ℑ(X × X))
     ψ = curry (ℑ-unit-at (X × X))
 
-    ψ′ : ℑX → (ℑX → ℑ(X × X))
-    ψ′ = ℑ-recursion
-           (Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → X × X))
-           (λ (x : X) → ℑ-recursion (ℑ-is-coreduced (X × X)) (ψ x))
+    ℑX→ℑ-X×X-is-coreduced : (ℑ X → ℑ (X × X)) is-coreduced
+    ℑX→ℑ-X×X-is-coreduced = Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → X × X)
+
+    ψ′ : X → (ℑX → ℑ(X × X))
+    ψ′ x = ℑ-recursion (ℑ-is-coreduced (X × X)) (ψ x)
+
+    ψ′′ : ℑX → (ℑX → ℑ(X × X))
+    ψ′′ = ℑ-recursion
+           (ℑX→ℑ-X×X-is-coreduced)
+           ψ′
     
     uncurry : ∀ {A B C : U₀} → (A → (B → C)) → (A × B → C)
     uncurry f (a , b) = f a b
 
     φ : ℑX × ℑX → ℑ(X × X)
-    φ = uncurry ψ′
+    φ = uncurry ψ′′
 
     -- operations of the image H-Space
     ℑμ : ℑX × ℑX → ℑX
@@ -531,30 +537,60 @@ module Im where
       |   ↓          ↓        /
       \───X ──────→ ℑX─────ℑ→1  
 
+
+      this is essentially done by showing that ℑ commutes with
+      constructing pairs
     -}
 
-{-
+    ℑ-commutes-with-pair-construction :
+      ∀ (x x′ : X)
+      → φ (ℑ-unit x , ℑ-unit x′) ≈ ℑ-unit (x , x′) 
+    ℑ-commutes-with-pair-construction x x′ =
+       φ (ℑ-unit x , ℑ-unit x′)
+      ≈⟨ (λ f → f (ℑ-unit x′)) ⁎
+           ℑ-compute-recursion ℑX→ℑ-X×X-is-coreduced ψ′ x ⟩
+       ψ′ x (ℑ-unit x′)
+      ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced (X × X)) (ψ x) x′ ⟩
+       ψ x x′
+      ≈⟨ refl ⟩
+       ℑ-unit (x , x′)
+      ≈∎
+
+    ℑright-neutral′ : ∀ (x : X) → ℑμ (ℑ-unit x , ℑe) ≈ ℑ-unit x
+    ℑright-neutral′ x = ℑμ (ℑ-unit x , ℑe)
+                    ≈⟨ refl ⟩
+                     ℑ→ μ (φ (ℑ-unit x , ℑe))
+                    ≈⟨ ℑ→ μ ⁎ ℑ-commutes-with-pair-construction x e ⟩ 
+                     ℑ→ μ (ℑ-unit (x , e))
+                    ≈⟨ naturality-of-ℑ-unit μ (x , e) ⟩
+                     ℑ-unit (μ (x , e))
+                    ≈⟨ ℑ-unit ⁎ right-neutral x ⟩
+                     ℑ-unit x
+                    ≈∎
+
+    ℑright-neutral : ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ x
+    ℑright-neutral = ℑ-induction
+                       (λ (x : ℑX) →
+                          coreduced-types-have-coreduced-identity-types ℑX (ℑ-is-coreduced _)
+                          (ℑμ (x , ℑe)) x)
+                       ℑright-neutral′
+
+
+    ℑleft-neutral′ : ∀ (x : X) → ℑμ (ℑe , ℑ-unit x ) ≈ ℑ-unit x
+    ℑleft-neutral′ x = ℑμ (ℑe , ℑ-unit x )
+                    ≈⟨ refl ⟩
+                     ℑ→ μ (φ (ℑe , ℑ-unit x ))
+                    ≈⟨ ℑ→ μ ⁎ ℑ-commutes-with-pair-construction e x ⟩ 
+                     ℑ→ μ (ℑ-unit (e , x))
+                    ≈⟨ naturality-of-ℑ-unit μ (e , x) ⟩
+                     ℑ-unit (μ (e , x))
+                    ≈⟨ ℑ-unit ⁎ left-neutral x ⟩
+                     ℑ-unit x
+                    ≈∎
+
     ℑleft-neutral : ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ x
     ℑleft-neutral = ℑ-induction
-                      (λ (x : ℑX) → coreduced-types-have-coreduced-identity-types
-                                    (ℑ X) (ℑ-is-coreduced X) (ℑμ (ℑe , x)) x)
-                      (λ x → {!!} • ℑ-unit ⁎ left-neutral x)
--}
-
-    relate-the-left-neutral-elements :
-      ∀ (x : ℑX) → ℑμ (ℑe , x) ≈ ℑ→ μ (φ (ℑe , x))
-    relate-the-left-neutral-elements x = refl
-
-    relate-the-right-neutral-elements :
-      ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ ℑ→ μ (φ (x , ℑe))
-    relate-the-right-neutral-elements x = refl
-{-
-    ℑright-neutral : ∀ (x : ℑX) → ℑμ (x , ℑe) ≈ x
-    ℑright-neutral = (λ x → ℑμ (x , ℑe))
-                    ⇒-⟨ relate-the-right-neutral-elements ⟩
-                     (λ x → ℑ→ μ (φ (x , ℑe)))
-                    ⇒-⟨ {!naturality-of-ℑ-unit μ!} ⟩ 
-                     {!λ x → ℑ→ μ ?!}
-                    ⇒-⟨ ℑ⇒ right-neutral •⇒ applying-ℑ-preserves-id X ⟩
-                     id ⇒∎
--}
+                       (λ (x : ℑX) →
+                          coreduced-types-have-coreduced-identity-types ℑX (ℑ-is-coreduced _)
+                          (ℑμ (ℑe , x)) x)
+                       ℑleft-neutral′
