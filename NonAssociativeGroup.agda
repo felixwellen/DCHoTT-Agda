@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
-module H-Space where 
+module NonAssociativeGroup where 
   open import Basics 
   open import EqualityAndPaths
   open import Homotopies
@@ -8,9 +8,9 @@ module H-Space where
   open import Equivalences
   open import InfinityGroups
 
-  record invertible-H-Space-structure-on_ (X : U₀) : U₀ where
+  record non-associative-group-structure-on_ (X : U₀) : U₀ where
     constructor
-      H-Space-with-neutral-element_and-operation_left-neutral-by_,-right-neutral-by_,-left-invertible-by_and-right-invertible-by_
+      non-associative-group-with-neutral-element_and-operation_left-neutral-by_,-right-neutral-by_,-left-invertible-by_and-right-invertible-by_
     field
       e : X
       μ : X × X → X
@@ -20,7 +20,10 @@ module H-Space where
       right-invertible : ∀ (x₀ : X) → (λ x → μ (x₀ , x)) is-an-equivalence
 
 
-  module loop-spaces-are-invertible-H-Spaces (BG : U₀) (e : BG) where
+--  construct-inversion-map :
+--    ∀ ()
+
+  module loop-spaces-are-non-associative-groups (BG : U₀) (e : BG) where
 
     right-compose-with :
       ∀ {x y z : BG} → 
@@ -70,8 +73,8 @@ module H-Space where
       and-right-inverse left-compose-with (γ ⁻¹) by (λ (η : Ω BG e) → left-compose-right-invertible γ η ⁻¹)
 
 
-    as-H-Space : invertible-H-Space-structure-on (Ω BG e)
-    as-H-Space = record { e = refl;
+    as-non-associative-group : non-associative-group-structure-on (Ω BG e)
+    as-non-associative-group = record { e = refl;
                           μ = λ {(γ , η) → γ • η};
                           left-neutral = refl-is-left-neutral;
                           right-neutral = refl-is-right-neutral ⁻¹⇒;
