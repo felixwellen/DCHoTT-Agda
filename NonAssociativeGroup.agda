@@ -16,6 +16,9 @@ module NonAssociativeGroup where
       μ : X × X → X
       left-neutral : ∀ (x : X) → μ (e , x) ≈ x
       right-neutral : ∀ (x : X) → μ (x , e) ≈ x
+      -- the following means, that for all a,b in X, there is an contractbile space
+      -- of x'es such that: xa=b
+      -- therefore, 'invertible' should may also be u 'cancellable'
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
       right-invertible : ∀ (x₀ : X) → (λ x → μ (x₀ , x)) is-an-equivalence
 

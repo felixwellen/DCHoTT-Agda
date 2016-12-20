@@ -13,7 +13,8 @@ module Im where
   open import PullbackSquare
   open import Fiber
   open import Language
-  open import H-Space  
+  open import Univalence                     -- for now, just convenience
+  open import NonAssociativeGroup
 
   -- Axioms for ℑ, the infinitesimal shape modality
   -- (this may also be read as axiomatizing a general lex Modality)
@@ -251,7 +252,7 @@ module Im where
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
 
-  module the-ℑ-preimages-of-equivalences-are-ℑ-connected
+  module the-ℑ-preimages-of-equivalences-are-ℑ-connected -- not yet complete
     {A B : U₀} (f : A → B) (ℑf-is-an-equivalence : (ℑ→ f) is-an-equivalence) where
 
     ℑf = ℑ→ f
@@ -358,7 +359,10 @@ module Im where
   -- from the book "7.7 Modalities"
   -- (specialized to ℑ)
 
-  module Π-of-coreduced-types-is-coreduced {A : U₀} (P : A → U₀) where
+  module Π-of-coreduced-types-is-coreduced
+    {A : U₀} (P : A → U₀)
+    (P-is-coreduced : (a : A) → (P a) is-coreduced) where
+    
     inverse : ℑ(Π(λ a → ℑ(P a))) → Π(λ a → ℑ(P a))
     inverse f̂ a = 
                   let ℑπₐ : ℑ(Π(λ a → ℑ(P a))) → ℑ(P a)
@@ -367,8 +371,8 @@ module Im where
                   in ℑπₐ f̂
 
 
-    coreducedness : ℑ-unit-at (Π(λ a → ℑ(P a))) is-an-equivalence
-    coreducedness = retracts-of-coreduced-types-are-coreduced 
+    coreducedness′ : Π(λ a → ℑ(P a)) is-coreduced
+    coreducedness′ = retracts-of-coreduced-types-are-coreduced 
                (Π (λ a → ℑ (P a))) (ℑ (Π (λ a → ℑ (P a)))) (ℑ-is-coreduced (Π(λ a → ℑ (P a))))
                ℑ-unit inverse (λ f →
                                    fun-ext
@@ -376,7 +380,13 @@ module Im where
                                       ℑ-is-idempotent.ℑ-unit⁻¹ (ℑ (P a)) (ℑ-is-coreduced (P a)) ⁎
                                       naturality-square-for-ℑ (π-Π a) f
                                       • ℑ-is-idempotent.left-invertible (ℑ (P a)) (ℑ-is-coreduced (P a)) (f a)))
-                                                                                                
+    
+    coreducedness : Π(λ a → P a) is-coreduced
+    coreducedness = transport
+                      (λ (X : U₀) → X is-coreduced)
+                      (Π ⁎ fun-ext (λ (a : A) → univalence (ℑ-unit-at (P a) is-an-equivalence-because (P-is-coreduced a)) ⁻¹))
+                      coreducedness′
+                      
 
   -- from the book, thm 7.7.4
   ∑-of-coreduced-types-is-coreduced : 
@@ -434,6 +444,8 @@ module Im where
     in retracts-of-coreduced-types-are-coreduced (∑ P) (ℑ (∑ P)) (ℑ-is-coreduced _)
          ℑ-unit r ℑ∑P-is-a-retract
 
+
+
   cancel-ℑ-of-∑ : 
     ∀ (E : U₀)
     → (E is-coreduced) → (P : E → U₀)
@@ -464,7 +476,11 @@ module Im where
            ≃∎)
 
 
-
+  to-show-that_is-coreduced,-it-suffices-to-show-that_is-coreduced-since-it-is-equivalent-by_ :
+    ∀ (A B : U₀)
+    → (A ≃ B) → (B is-coreduced → A is-coreduced)
+  to-show-that A is-coreduced,-it-suffices-to-show-that B is-coreduced-since-it-is-equivalent-by φ =
+    transport _is-coreduced (univalence (φ ⁻¹≃))
 
   -- ∞-groups and ℑ
   module ∞-groups-and-ℑ (BG : U₀) (e : BG) where
@@ -479,12 +495,12 @@ module Im where
 
 
 
-  module ℑ-preserves-invertible-H-Spaces
+  module ℑ-preserves-non-associative-groups
          (X : U₀)
-         (H-Space-structure-on-X : invertible-H-Space-structure-on X)
+         (non-associative-group-structure-on-X : non-associative-group-structure-on X)
        where
      
-    open invertible-H-Space-structure-on_ H-Space-structure-on-X
+    open non-associative-group-structure-on_ non-associative-group-structure-on-X
     ℑX = ℑ X
   
     coreduced : (ℑX × ℑX) is-coreduced
@@ -498,7 +514,7 @@ module Im where
     ψ = curry (ℑ-unit-at (X × X))
 
     ℑX→ℑ-X×X-is-coreduced : (ℑ X → ℑ (X × X)) is-coreduced
-    ℑX→ℑ-X×X-is-coreduced = Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → X × X)
+    ℑX→ℑ-X×X-is-coreduced = Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → ℑ (X × X)) (λ _ → ℑ-is-coreduced _)
 
     ψ′ : X → (ℑX → ℑ(X × X))
     ψ′ x = ℑ-recursion (ℑ-is-coreduced (X × X)) (ψ x)
@@ -594,3 +610,49 @@ module Im where
                           coreduced-types-have-coreduced-identity-types ℑX (ℑ-is-coreduced _)
                           (ℑμ (ℑe , x)) x)
                        ℑleft-neutral′
+
+
+    {-
+
+      ℑ preserves inversion
+
+    -}
+
+    homotopies-in-coreduced-types-are-coreduced :
+      ∀ {A B : U₀} {f g : ℑ A → ℑ B} → (f ⇒ g) is-coreduced
+    homotopies-in-coreduced-types-are-coreduced {A} {B} {_} {_} =
+      Π-of-coreduced-types-is-coreduced.coreducedness _
+        (λ (a : ℑ A) →
+          coreduced-types-have-coreduced-identity-types (ℑ B) (ℑ-is-coreduced _) _ _)
+
+    coreduced-types-have-a-coreduced-equivalence-proposition :
+      ∀ {A B : U₀}
+      → (f : ℑ A → ℑ B) → (f is-an-equivalence) is-coreduced
+    coreduced-types-have-a-coreduced-equivalence-proposition {A} {B} f =
+       (to-show-that (f is-an-equivalence) is-coreduced,-it-suffices-to-show-that (∑ _)
+        is-coreduced-since-it-is-equivalent-by (equivalence-proposition-as-sum-type f))
+        (∑-of-coreduced-types-is-coreduced
+          ((ℑ B → ℑ A) × (ℑ B → ℑ A))
+          (∑-of-coreduced-types-is-coreduced _ (Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → ℑ _) (λ _ → ℑ-is-coreduced _)) _ 
+            (λ i → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ _ → ℑ-is-coreduced _)))
+          (λ {(g , h) → (g ∘ f ⇒ id) × (id ⇒ f ∘ h)})
+          (λ {(g , h) →  ∑-of-coreduced-types-is-coreduced
+                         (g ∘ f ⇒ id)
+                           homotopies-in-coreduced-types-are-coreduced
+                         (λ _ → id ⇒ f ∘ h)
+                           (λ _ → homotopies-in-coreduced-types-are-coreduced)}))
+
+    ℑ-of-curried-equivalence :
+      ∀ (x₀ : X)
+      → ℑ→ (λ (x : X) → μ (x , x₀)) ⇒ λ (x : ℑX) → ℑμ (x , ℑ-unit x₀)
+    ℑ-of-curried-equivalence x₀ x =
+      ℑ→ (λ x₁ → μ (x₁ , x₀)) x
+     ≈⟨ {!!} ⟩
+       {!!}
+     ≈⟨ {!!} ⟩
+      ℑμ (x , ℑ-unit x₀)
+     ≈∎
+
+    ℑleft-invertible′ :
+      ∀ (x₀ : X) → (λ (x : ℑX) → ℑμ (x , ℑ-unit x₀)) is-an-equivalence
+    ℑleft-invertible′ x₀ = {!applying-ℑ-preserves-equivalences (λ (x : X) → μ (x , x₀)) (left-invertible x₀) !}

@@ -33,7 +33,7 @@ module Equivalences where
       the-equivalence : A → B
       proof-of-invertibility : the-equivalence is-an-equivalence
   
-  
+
   --inclusion
   map-as-equivalence : ∀ {A B : U₀} → (e : A → B) → e is-an-equivalence → A ≃ B
   map-as-equivalence e proof-of-equivalency = e is-an-equivalence-because proof-of-equivalency
@@ -82,6 +82,16 @@ module Equivalences where
   inverse-of f given-by 
     (has-left-inverse left-inverse by _ and-right-inverse _ by _) = 
     left-inverse
+  
+  equivalence-proposition-as-sum-type :
+    ∀ {A B : U₀} (f : A → B)
+    → f is-an-equivalence ≃ ∑ (λ {(g , h) → (g ∘ f ⇒ id) × (id ⇒ f ∘ h)})
+  equivalence-proposition-as-sum-type f =
+    (λ {(has-left-inverse g by unit and-right-inverse h by counit) → ((g , h) , (unit , counit))})
+      is-an-equivalence-because (has-left-inverse ((λ {((g , h) , (unit , counit)) →
+                                   has-left-inverse g by unit and-right-inverse h by counit})) by (λ a → refl)
+                                 and-right-inverse ((λ {((g , h) , (unit , counit)) →
+                                   has-left-inverse g by unit and-right-inverse h by counit})) by (λ a → refl))
   
   -- easy examples
   id-is-an-equivalence : ∀ {i} {A : U i} → id {i} {A} is-an-equivalence
