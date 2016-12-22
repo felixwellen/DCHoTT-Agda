@@ -26,6 +26,24 @@ module NonAssociativeGroup where
 --  construct-inversion-map :
 --    ∀ ()
 
+  module opposite-group {X : U₀} (group-structure-on-X : non-associative-group-structure-on X) where
+    open non-associative-group-structure-on_ group-structure-on-X
+
+    e′ = e
+    
+    μ′ : X × X → X
+    μ′ (x , x′) = μ (x′ , x)
+
+    structure : non-associative-group-structure-on X
+    structure = record {
+                       e = e;
+                       μ = μ′;
+                       left-neutral = right-neutral;
+                       right-neutral = left-neutral;
+                       left-invertible = right-invertible;
+                       right-invertible = left-invertible}
+
+
   module loop-spaces-are-non-associative-groups (BG : U₀) (e : BG) where
 
     right-compose-with :
