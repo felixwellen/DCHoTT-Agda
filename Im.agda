@@ -642,17 +642,34 @@ module Im where
                          (λ _ → id ⇒ f ∘ h)
                            (λ _ → homotopies-in-coreduced-types-are-coreduced)}))
 
-    ℑ-of-curried-equivalence :
+
+    ℑ-of-curried-equivalence′ :
       ∀ (x₀ : X)
-      → ℑ→ (λ (x : X) → μ (x , x₀)) ⇒ λ (x : ℑX) → ℑμ (x , ℑ-unit x₀)
-    ℑ-of-curried-equivalence x₀ x =
-      ℑ→ (λ x₁ → μ (x₁ , x₀)) x
-     ≈⟨ {!!} ⟩
-       {!!}
-     ≈⟨ {!!} ⟩
-      ℑμ (x , ℑ-unit x₀)
+      → (x : X) → ℑ→ (λ (x : X) → μ (x , x₀)) (ℑ-unit x) ≈ ℑμ (ℑ-unit x , ℑ-unit x₀)
+    ℑ-of-curried-equivalence′ x₀ x =
+      ℑ→ (λ x → μ (x , x₀)) (ℑ-unit x)
+     ≈⟨ apply-ℑ-commutes-with-∘ (λ x → (x , x₀)) μ (ℑ-unit x) ⟩
+       (ℑ→ μ ∘ ℑ→ (λ x → (x , x₀))) (ℑ-unit x)
+     ≈⟨ (ℑ→ μ) ⁎ naturality-of-ℑ-unit (λ x → (x , x₀)) x ⟩
+      ℑ→ μ (ℑ-unit (x , x₀))
+     ≈⟨ (ℑ→ μ) ⁎ ℑ-commutes-with-pair-construction x x₀ ⁻¹ ⟩ 
+      ℑμ (ℑ-unit x , ℑ-unit x₀)
      ≈∎
 
-    ℑleft-invertible′ :
+    ℑ-of-curried-equivalence :
+      ∀ (x₀ : X)
+      → ℑ→ (λ (x : X) → μ (x , x₀)) ⇒ λ x → ℑμ (x , ℑ-unit x₀)
+    ℑ-of-curried-equivalence x₀ =
+      ℑ-induction
+        (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
+        (ℑ-of-curried-equivalence′ x₀)
+
+    ℑleft-invertible :
       ∀ (x₀ : X) → (λ (x : ℑX) → ℑμ (x , ℑ-unit x₀)) is-an-equivalence
-    ℑleft-invertible′ x₀ = {!applying-ℑ-preserves-equivalences (λ (x : X) → μ (x , x₀)) (left-invertible x₀) !}
+    ℑleft-invertible x₀ = equivalences-are-preserved-by-homotopy
+                             (ℑ→ (λ (x : X) → μ (x , x₀)))
+                             (λ (x : ℑX) → ℑμ (x , ℑ-unit x₀))
+                             (applying-ℑ-preserves-equivalences
+                                (λ (x : X) → μ (x , x₀))
+                                (left-invertible x₀))
+                             (ℑ-of-curried-equivalence x₀) 
