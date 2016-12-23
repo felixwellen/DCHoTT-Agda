@@ -98,9 +98,9 @@ f ,→ g = λ x → (f x , g x)
     → A → A × A
 Δ a = (a , a)
 
-swap-×-factors : ∀ {A B : U₀}
-                 → A × B → B × A
-swap-×-factors (a , b) = (b , a)
+swap : ∀ {A B : U₀}
+       → A × B → B × A
+swap (a , b) = (b , a)
 
 data Zero : U₀ where
 
@@ -117,10 +117,6 @@ g ∘ f = λ x → g(f(x))
 data Two : U₀ where
   ∗₁ : Two
   ∗₂ : Two
-
-swap : Two → Two
-swap ∗₁ = ∗₂
-swap ∗₂ = ∗₁
 
 
 ¬_ : U₀ → U₀

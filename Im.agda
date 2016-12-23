@@ -592,6 +592,7 @@ module Im where
                        ℑright-neutral′
 
 
+    -- analogous...
     ℑleft-neutral′ : ∀ (x : X) → ℑμ (ℑe , ℑ-unit x ) ≈ ℑ-unit x
     ℑleft-neutral′ x = ℑμ (ℑe , ℑ-unit x )
                     ≈⟨ refl ⟩
@@ -643,10 +644,10 @@ module Im where
                            (λ _ → homotopies-in-coreduced-types-are-coreduced)}))
 
 
-    ℑ-of-curried-equivalence′ :
+    ℑ-of-left-abstracted-μ′ :
       ∀ (x₀ : X)
       → (x : X) → ℑ→ (λ (x : X) → μ (x , x₀)) (ℑ-unit x) ≈ ℑμ (ℑ-unit x , ℑ-unit x₀)
-    ℑ-of-curried-equivalence′ x₀ x =
+    ℑ-of-left-abstracted-μ′ x₀ x =
       ℑ→ (λ x → μ (x , x₀)) (ℑ-unit x)
      ≈⟨ apply-ℑ-commutes-with-∘ (λ x → (x , x₀)) μ (ℑ-unit x) ⟩
        (ℑ→ μ ∘ ℑ→ (λ x → (x , x₀))) (ℑ-unit x)
@@ -656,20 +657,69 @@ module Im where
       ℑμ (ℑ-unit x , ℑ-unit x₀)
      ≈∎
 
-    ℑ-of-curried-equivalence :
+    ℑ-of-left-abstracted-μ :
       ∀ (x₀ : X)
       → ℑ→ (λ (x : X) → μ (x , x₀)) ⇒ λ x → ℑμ (x , ℑ-unit x₀)
-    ℑ-of-curried-equivalence x₀ =
+    ℑ-of-left-abstracted-μ x₀ =
       ℑ-induction
         (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
-        (ℑ-of-curried-equivalence′ x₀)
+        (ℑ-of-left-abstracted-μ′ x₀)
 
     ℑleft-invertible :
-      ∀ (x₀ : X) → (λ (x : ℑX) → ℑμ (x , ℑ-unit x₀)) is-an-equivalence
-    ℑleft-invertible x₀ = equivalences-are-preserved-by-homotopy
+      ∀ (x₀ : ℑX) → (λ (x : ℑX) → ℑμ (x , x₀)) is-an-equivalence
+    ℑleft-invertible = ℑ-induction
+                         (λ x₀ → coreduced-types-have-a-coreduced-equivalence-proposition (λ (x : ℑX) → ℑμ (x , x₀))) 
+                         (λ (x₀ : X) →
+                             equivalences-are-preserved-by-homotopy
                              (ℑ→ (λ (x : X) → μ (x , x₀)))
                              (λ (x : ℑX) → ℑμ (x , ℑ-unit x₀))
                              (applying-ℑ-preserves-equivalences
                                 (λ (x : X) → μ (x , x₀))
                                 (left-invertible x₀))
-                             (ℑ-of-curried-equivalence x₀) 
+                             (ℑ-of-left-abstracted-μ x₀))
+
+    ℑ-of-right-abstracted-μ′ :
+      ∀ (x₀ : X)
+      → (x : X) → ℑ→ (λ (x : X) → μ (x₀ , x)) (ℑ-unit x) ≈ ℑμ (ℑ-unit x₀ , ℑ-unit x)
+    ℑ-of-right-abstracted-μ′ x₀ x =
+      ℑ→ (λ x → μ (x₀ , x)) (ℑ-unit x)
+     ≈⟨ apply-ℑ-commutes-with-∘ (λ x → (x₀ , x)) μ (ℑ-unit x) ⟩
+       (ℑ→ μ ∘ ℑ→ (λ x → (x₀ , x))) (ℑ-unit x)
+     ≈⟨ (ℑ→ μ) ⁎ naturality-of-ℑ-unit (λ x → (x₀ , x)) x ⟩
+      ℑ→ μ (ℑ-unit (x₀ , x))
+     ≈⟨ (ℑ→ μ) ⁎ ℑ-commutes-with-pair-construction x₀ x ⁻¹ ⟩ 
+      ℑμ (ℑ-unit x₀ , ℑ-unit x)
+     ≈∎
+
+    ℑ-of-right-abstracted-μ :
+      ∀ (x₀ : X)
+      → ℑ→ (λ (x : X) → μ (x₀ , x)) ⇒ λ x → ℑμ (ℑ-unit x₀ , x)
+    ℑ-of-right-abstracted-μ x₀ =
+      ℑ-induction
+        (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
+        (ℑ-of-right-abstracted-μ′ x₀)
+
+    ℑright-invertible :
+      ∀ (x₀ : ℑX) → (λ (x : ℑX) → ℑμ (x₀ , x)) is-an-equivalence
+    ℑright-invertible = ℑ-induction
+                         (λ x₀ → coreduced-types-have-a-coreduced-equivalence-proposition (λ (x : ℑX) → ℑμ (x₀ , x))) 
+                         (λ (x₀ : X) →
+                             equivalences-are-preserved-by-homotopy
+                             (ℑ→ (λ (x : X) → μ (x₀ , x)))
+                             (λ (x : ℑX) → ℑμ (ℑ-unit x₀ , x))
+                             (applying-ℑ-preserves-equivalences
+                                (λ (x : X) → μ (x₀ , x))
+                                (right-invertible x₀))
+                             (ℑ-of-right-abstracted-μ x₀))
+
+
+
+    structure-of-image : non-associative-group-structure-on ℑX
+    structure-of-image = record {
+                                  e = ℑe;
+                                  μ = ℑμ;
+                                  left-neutral = ℑleft-neutral;
+                                  right-neutral = ℑright-neutral;
+                                  left-invertible = ℑleft-invertible;
+                                  right-invertible = ℑright-invertible
+                                }

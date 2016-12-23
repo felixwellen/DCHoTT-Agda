@@ -10,7 +10,7 @@ module NonAssociativeGroup where
 
   record non-associative-group-structure-on_ (X : U₀) : U₀ where
     constructor
-      non-associative-group-with-neutral-element_and-operation_left-neutral-by_,-right-neutral-by_,-left-invertible-by_and-right-invertible-by_
+      structure-given-by-e=_,μ=_,neutral-by_and_,invertible-by_and_
     field
       e : X
       μ : X × X → X
@@ -22,9 +22,11 @@ module NonAssociativeGroup where
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
       right-invertible : ∀ (x₀ : X) → (λ x → μ (x₀ , x)) is-an-equivalence
 
+  module inversion (G : U₀) (structure : non-associative-group-structure-on G) where
+    open non-associative-group-structure-on_ structure
 
---  construct-inversion-map :
---    ∀ ()
+    left-inversion : G → G
+    left-inversion x = {!(left-invertible x) e!}
 
   module opposite-group {X : U₀} (group-structure-on-X : non-associative-group-structure-on X) where
     open non-associative-group-structure-on_ group-structure-on-X
@@ -102,5 +104,10 @@ module NonAssociativeGroup where
                           left-invertible = right-composing-is-an-equivalence;
                           right-invertible = left-composing-is-an-equivalence} 
 
+
+    
+
+  module description-of-∂-pullback {G : U₀} (structure : non-associative-group-structure-on G) where
+    open non-associative-group-structure-on_ structure
 
     

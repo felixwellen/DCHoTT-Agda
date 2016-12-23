@@ -205,17 +205,6 @@ module Equivalences where
   id-as-equivalence : ∀ {i} {A : U i} → A ≃ A
   id-as-equivalence = id is-an-equivalence-because id-is-an-equivalence
   
-  swap-squared-is-id : (x : Two) → swap (swap x) ≈ x
-  swap-squared-is-id ∗₁ = refl
-  swap-squared-is-id ∗₂ = refl
-  
-  swap-selfinverse : swap left-inverse-of swap
-  swap-selfinverse = swap-squared-is-id 
-  swap-is-equivalence : swap is-an-equivalence
-  swap-is-equivalence = has-left-inverse swap by swap-squared-is-id
-                        and-right-inverse swap by reverse-homotopy swap-squared-is-id
-  
-  
   
   
   -- towards univalence..

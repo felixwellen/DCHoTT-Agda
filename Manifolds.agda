@@ -20,7 +20,7 @@ module Manifolds where
   pullback-square-of :
     ∀ {A B : U₀}
     → (f́ : A ─ét→ B) 
-    → pullback-square-with-right (apply-ℑ-to-map (underlying-map-of f́))
+    → pullback-square-with-right (ℑ→ (underlying-map-of f́))
         bottom ℑ-unit
         top ℑ-unit
         left (underlying-map-of f́)
