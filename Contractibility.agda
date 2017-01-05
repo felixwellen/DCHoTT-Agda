@@ -19,6 +19,11 @@ module Contractibility where
   contractible-types-are-propositions A (contracts-to center by contraction) x y =
                                       contraction x ⁻¹ • contraction y
 
+
+-- example
+  One-is-contractible : One is-contractible
+  One-is-contractible = contracts-to ∗ by (λ {∗ → refl})
+
   reformulate-contractibilty-as-homotopy :
     ∀ (A : U₀) (a₀ : A)
     → id ∼ (λ a → a₀) → A is-contractible
@@ -54,6 +59,29 @@ module Contractibility where
            contraction a • η 
           ≈∎)
 
+
+  module contractible-fibers-characterize-equivalences {A B : U₀} (f : A → B) where
+    open import Fiber
+    open _is-contractible
+    
+    from-fiber-condition :
+      (∀ (b : B) → (fiber-of f at b) is-contractible) → f is-an-equivalence
+    from-fiber-condition proof-of-contractibility =
+      let
+        f⁻¹ : B → A
+        f⁻¹ b = ι-fiber (center (proof-of-contractibility b))
+      in has-left-inverse f⁻¹
+           by (λ a → ι-fiber ⁎
+                       contraction (proof-of-contractibility (f a))
+                       (a is-in-the-fiber-by refl))
+         and-right-inverse f⁻¹
+           by (λ b → as-equality-in-the-codomain (center (proof-of-contractibility b))
+                       ⁻¹)
+
+  
+  
+
+{-
   -- the following is a dead end
   -- the aim was to prove '(A → A) ≃ A' implies 'A is contractible'
   -- which is not true in general
@@ -83,7 +111,5 @@ module Contractibility where
     a₀ = φ $≃ id
     a₁ = φ $≃ (λ a → a₀)
 
+-}
 
--- example
-  One-is-contractible : One is-contractible
-  One-is-contractible = contracts-to ∗ by (λ {∗ → refl})
