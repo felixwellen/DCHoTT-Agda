@@ -713,7 +713,6 @@ module Im where
                              (ℑ-of-right-abstracted-μ x₀))
 
 
-
     structure-of-image : non-associative-group-structure-on ℑX
     structure-of-image = record {
                                   e = ℑe;

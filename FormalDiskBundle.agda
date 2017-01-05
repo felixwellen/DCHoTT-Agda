@@ -17,8 +17,7 @@ module FormalDiskBundle where
 
 
   _is-infinitesimally-close-to_ :
-    ∀ {X : U₀} 
-    → (x x′ : X) → U₀
+    {X : U₀} → (x x′ : X) → U₀
   x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
 
   -- T∞ as dependent type
