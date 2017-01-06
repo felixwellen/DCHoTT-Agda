@@ -60,26 +60,6 @@ module Contractibility where
           ≈∎)
 
 
-  module contractible-fibers-characterize-equivalences {A B : U₀} (f : A → B) where
-    open import Fiber
-    open _is-contractible
-    
-    from-fiber-condition :
-      (∀ (b : B) → (fiber-of f at b) is-contractible) → f is-an-equivalence
-    from-fiber-condition proof-of-contractibility =
-      let
-        f⁻¹ : B → A
-        f⁻¹ b = ι-fiber (center (proof-of-contractibility b))
-      in has-left-inverse f⁻¹
-           by (λ a → ι-fiber ⁎
-                       contraction (proof-of-contractibility (f a))
-                       (a is-in-the-fiber-by refl))
-         and-right-inverse f⁻¹
-           by (λ b → as-equality-in-the-codomain (center (proof-of-contractibility b))
-                       ⁻¹)
-
-  
-  
 
 {-
   -- the following is a dead end
