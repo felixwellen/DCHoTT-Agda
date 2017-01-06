@@ -44,6 +44,13 @@ module Fiber where
     → (Z → fiber-of f at b)
   induced-map-to-the-fiber f b φ γ z = (φ z) is-in-the-fiber-by γ z
 
+  fiber-as-sum :
+    ∀ {A B : U₀} {f : A → B} {b : B}
+    → fiber-of f at b ≃ ∑ (λ a → f(a) ≈ b)
+  fiber-as-sum = (λ {(a is-in-the-fiber-by γ) → (a , γ)}) is-an-equivalence-because
+                 (has-left-inverse (λ {(a , γ) → a is-in-the-fiber-by γ}) by (λ {(a is-in-the-fiber-by γ) → refl})
+                  and-right-inverse (λ { (a , γ) → a is-in-the-fiber-by γ }) by (λ {(a , γ) → refl}))
+
   fiber-of-a-∑ :
     ∀ {i} {j} {A : U i} {P : A → U j}
     → (a : A) → fiber-of ∑π₁-from P at a ≃ P a

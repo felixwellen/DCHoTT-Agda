@@ -22,9 +22,9 @@ module Equivalences where
     constructor has-left-inverse_by_and-right-inverse_by_
     field
       left-inverse : B → A
-      unit : left-inverse left-inverse-of f
+      unit : left-inverse ∘ f ⇒ id
       right-inverse : B → A
-      counit : right-inverse right-inverse-of f
+      counit : id ⇒ f ∘ right-inverse 
 
   infixl 4 _≃_                                                -- \simeq
   record _≃_  {i j} (A : U i) (B : U j) : U (i ⊔ j) where
@@ -82,7 +82,24 @@ module Equivalences where
   inverse-of f given-by 
     (has-left-inverse left-inverse by _ and-right-inverse _ by _) = 
     left-inverse
-  
+
+  right-inverse-of_given-by_ :
+    ∀ {A B : U₀}
+    → (f : A → B) → f is-an-equivalence
+    → (B → A)
+  right-inverse-of f given-by 
+    (has-left-inverse _ by _ and-right-inverse right-inverse by _) = 
+    right-inverse
+
+  counit-of_given-by_ :
+    ∀ {A B : U₀}
+    → (f : A → B) → (_ : f is-an-equivalence)
+    → (id ⇒ _)
+  counit-of f given-by 
+    (has-left-inverse _ by _ and-right-inverse _ by counit) = 
+     counit
+
+
   equivalence-proposition-as-sum-type :
     ∀ {A B : U₀} (f : A → B)
     → f is-an-equivalence ≃ ∑ (λ {(g , h) → (g ∘ f ⇒ id) × (id ⇒ f ∘ h)})

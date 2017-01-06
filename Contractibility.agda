@@ -24,6 +24,15 @@ module Contractibility where
   One-is-contractible : One is-contractible
   One-is-contractible = contracts-to ∗ by (λ {∗ → refl})
 
+  types-equivalent-to-contractibles-are-contractible :
+    ∀ {A B : U₀}
+    → A ≃ B → B is-contractible → A is-contractible
+  types-equivalent-to-contractibles-are-contractible
+    (e is-an-equivalence-because (has-left-inverse e⁻¹l by unit and-right-inverse e⁻¹r by counit))
+    (contracts-to center-of-B by contraction-of-B) =
+      contracts-to e⁻¹l center-of-B by
+        (λ a → e⁻¹l ⁎ contraction-of-B (e a) • unit a)
+
   reformulate-contractibilty-as-homotopy :
     ∀ (A : U₀) (a₀ : A)
     → id ∼ (λ a → a₀) → A is-contractible

@@ -5,7 +5,6 @@ module EquivalenceCharacterization where
   open import EqualityAndPaths
   open import Homotopies
   open import Equivalences
-  open import Language
   open import Contractibility
 
   module contractible-fibers-characterize-equivalences {A B : U₀} (f : A → B) where
@@ -27,9 +26,35 @@ module EquivalenceCharacterization where
                        (center (proof-of-contractibility b))
                        ⁻¹)
 
+    open import PullbackSquare
+
+    fiber-square : (b : B) → _
+    fiber-square b = fiber-square-for f at b
+
+    square-with-equivalences :
+      ∀ (a : A) (b : B) (γ : b ≈ f a)
+      → f is-an-equivalence
+      → pullback-square-with-right (λ (_ : One) → b)
+          bottom f
+          top id
+          left (λ (_ : One) → a)
+    square-with-equivalences a b γ f-is-an-equivalence =
+      pullback-square-from-equivalence-of-maps
+        (λ _ → b) (λ _ → a) id-as-equivalence (f is-an-equivalence-because f-is-an-equivalence)
+        (λ a → γ)
+
+    fibers-are-contractible :
+      f is-an-equivalence
+      → (b : B) → (fiber-of f at b) is-contractible
+    fibers-are-contractible f-is-an-equivalence b =
+      let
+        f⁻¹ = right-inverse-of f given-by f-is-an-equivalence
+        counit = counit-of f given-by f-is-an-equivalence
+      in types-equivalent-to-contractibles-are-contractible
+        (deduce-equivalence-of-vertices (rotate-cospan (fiber-square b))
+         (square-with-equivalences (f⁻¹ b) b (counit b) f-is-an-equivalence))
+        One-is-contractible
 
     to-fiber-condition :
       f is-an-equivalence → (∀ (b : B) → (fiber-of f at b) is-contractible) 
-    to-fiber-condition (has-left-inverse _ by unit and-right-inverse f⁻¹ by counit) b =
-      contracts-to f⁻¹ b is-in-the-fiber-by counit b ⁻¹
-      by (λ {(a′ is-in-the-fiber-by γ) → {!!}})
+    to-fiber-condition f-is-an-equivalence b = fibers-are-contractible f-is-an-equivalence b

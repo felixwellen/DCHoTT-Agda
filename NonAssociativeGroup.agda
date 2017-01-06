@@ -7,6 +7,9 @@ module NonAssociativeGroup where
   open import Language
   open import Equivalences
   open import InfinityGroups
+  open import Contractibility
+  open import Fiber
+  open import EquivalenceCharacterization
 
   record non-associative-group-structure-on_ (X : U₀) : U₀ where
     constructor
@@ -18,15 +21,55 @@ module NonAssociativeGroup where
       right-neutral : ∀ (x : X) → μ (x , e) ≈ x
       -- the following means, that for all a,b in X, there is an contractbile space
       -- of x'es such that: xa=b
-      -- therefore, 'invertible' should may also be u 'cancellable'
+      -- therefore, 'invertible' may also be called 'cancellable'
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
       right-invertible : ∀ (x₀ : X) → (λ x → μ (x₀ , x)) is-an-equivalence
+
+
+
+    open _is-contractible
+
+    -- 'unique' meaning unique up to contractible choice
+    uniqueness-of-left-translations :
+      (a : X) → (b : X) → (∑ (λ x → μ (x , a) ≈ b)) is-contractible
+    uniqueness-of-left-translations a b = types-equivalent-to-contractibles-are-contractible
+                                            (fiber-as-sum ⁻¹≃)
+                                            (contractible-fibers-characterize-equivalences.to-fiber-condition
+                                             (λ x → μ (x , a)) (left-invertible a) b)
+    uniqueness-of-right-translations :
+      (a : X) → (b : X) → (∑ (λ x → μ (a , x) ≈ b)) is-contractible
+    uniqueness-of-right-translations a b = types-equivalent-to-contractibles-are-contractible
+                                            (fiber-as-sum ⁻¹≃)
+                                            (contractible-fibers-characterize-equivalences.to-fiber-condition
+                                             (λ x → μ (a , x)) (right-invertible a) b)
+
+    -- solve equation of the form xa=b
+    find-left-translation : X → X → X
+    find-left-translation a b = ∑π₁ (center (uniqueness-of-left-translations a b))
+
+    find-right-translation : X → X → X
+    find-right-translation a b = ∑π₁ (center (uniqueness-of-right-translations a b))
+
+    
+
+
+
+
+  -- G-affine types, just some name for something which seems to be
+  -- the kind of type having its formal disk bundle trivialized by right translation
+
+--  record _-affine-type {X : U₀} (structure : non-associative-group-structure-on X) : U₀ where
+--    field
+--      translation : 
+
+
+  
 
   module inversion (G : U₀) (structure : non-associative-group-structure-on G) where
     open non-associative-group-structure-on_ structure
 
-    left-inversion : G → G
-    left-inversion x = {!(left-invertible x) e!}
+--    left-inversion : G → G
+--    left-inversion x = {!(left-invertible x) e!}
 
   module opposite-group {X : U₀} (group-structure-on-X : non-associative-group-structure-on X) where
     open non-associative-group-structure-on_ group-structure-on-X
