@@ -3,7 +3,8 @@ Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal sh
 - The formal disk bundle over a group is trivial
 - The formal disk bundle over a G-manifold is locally trivial. 
 - All F - fiber bundles are associated to an Aut(F) principal bundle.
-<br>An explanation of these notions may be found [here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf) (theorem 3.6, 1) and some part of 2) )
+
+An explanation of these notions may be found [here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf) (theorem 3.6, 1) and some part of 2) )
 
 
 # State of the code
