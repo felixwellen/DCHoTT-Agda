@@ -35,7 +35,7 @@ module Contractibility where
 
   reformulate-contractibilty-as-homotopy :
     ∀ (A : U₀) (a₀ : A)
-    → id ∼ (λ a → a₀) → A is-contractible
+    → id ⇒ (λ a → a₀) → A is-contractible
   reformulate-contractibilty-as-homotopy A a₀ H =
     contracts-to a₀ by (λ a → H a ⁻¹)
 

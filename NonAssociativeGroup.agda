@@ -10,6 +10,8 @@ module NonAssociativeGroup where
   open import Contractibility
   open import Fiber
   open import EquivalenceCharacterization
+  open import Pullback
+  open import PullbackSquare
 
   record non-associative-group-structure-on_ (X : U₀) : U₀ where
     constructor
@@ -44,13 +46,25 @@ module NonAssociativeGroup where
                                              (λ x → μ (a , x)) (right-invertible a) b)
 
     -- solve equation of the form xa=b
-    find-left-translation : X → X → X
-    find-left-translation a b = ∑π₁ (center (uniqueness-of-left-translations a b))
+    left-translation-difference : X → X → X
+    left-translation-difference a b = ∑π₁ (center (uniqueness-of-left-translations a b))
 
-    find-right-translation : X → X → X
-    find-right-translation a b = ∑π₁ (center (uniqueness-of-right-translations a b))
+    left-difference-is-a-solution :
+      ∀ (a b : X)
+      → μ (left-translation-difference a b , a) ≈ b
+    left-difference-is-a-solution a b = ∑π₂ (center (uniqueness-of-left-translations a b))
 
-    
+    right-translation-difference : X → X → X
+    right-translation-difference a b = ∑π₁ (center (uniqueness-of-right-translations a b))
+
+    two-solutions-are-equal :
+      ∀ {a b : X} (x y : X)
+      → μ (x , a) ≈ b → μ (y , a) ≈ b
+      → x ≈ y
+    two-solutions-are-equal {a} {b} x y γ η =
+      let
+        c = contraction (uniqueness-of-left-translations a b)
+      in ∑π₁ ⁎ (c (x , γ) ⁻¹ • c (y , η))
 
 
 
@@ -150,7 +164,39 @@ module NonAssociativeGroup where
 
     
 
-  module description-of-∂-pullback {G : U₀} (structure : non-associative-group-structure-on G) where
+  module description-of-∂-pullback {G D : U₀} (structure : non-associative-group-structure-on G) (φ : D → G) where
     open non-associative-group-structure-on_ structure
 
+    ∂ : G × G → G
+    ∂ (g , h) = left-translation-difference g h
+
+    left-translate-by-φ : G × D → G × G
+    left-translate-by-φ (g , d) = (g , μ (φ(d) , g))
+
+    ∂∘left-translate-by-φ⇒φ∘π₂ : ∂ ∘ left-translate-by-φ ⇒ φ ∘ π₂
+    ∂∘left-translate-by-φ⇒φ∘π₂ (g , d) = ∂ (g , μ (φ d , g))
+                                        ≈⟨ refl ⟩
+                                         left-translation-difference g (μ (φ(d) , g))
+                                        ≈⟨ two-solutions-are-equal (left-translation-difference g (μ (φ(d) , g))) (φ(d)) (left-difference-is-a-solution _ _) refl ⟩
+                                         φ(d) ≈∎
+
+
+    ψ : G × D → pullback ∂ φ 
+    ψ (g , d) = (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
+    
+    ψ⁻¹ : pullback ∂ φ  → G × D
+    ψ⁻¹ ((g , h) and d are-in-the-same-fiber-by γ) = (g , d)
+    
+--    result : pullback-square-with-right ∂ bottom φ top left-translate-by-φ left π₂
+--    result = the-square-commuting-by ∂∘left-translate-by-φ⇒φ∘π₂ 
+--             and-inducing-an-equivalence-by
+--               (the-map _ is-an-equivalence-since-it-is-homotopic-to ψ by (λ _ → refl)
+--                which-is-an-equivalence-by
+--                  (has-left-inverse ψ⁻¹ by (λ _ → refl)
+--                   and-right-inverse ψ⁻¹
+--                   by (λ {((g , h) and d are-in-the-same-fiber-by γ)
+--                       →  ((g , h) and d are-in-the-same-fiber-by γ)
+--                         ≈⟨ {!!}⟩
+--                          (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
+--                         ≈∎})))
     
