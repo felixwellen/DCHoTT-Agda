@@ -257,6 +257,27 @@ module PullbackSquare where
     in the-square-commuting-by p-homotopy and-inducing-an-equivalence-by
       (has-left-inverse id by step1 and-right-inverse id by step2)
 
+
+ 
+  square-with-pullback-as-iterated-∑ :
+    ∀ {A B C : U₀} (f : A → C) (g : B → C)
+    → pullback-square f g ∑π₁ (λ x → ∑π₁ (∑π₂ x))
+  square-with-pullback-as-iterated-∑ {A} {B} {C} f g =
+    let
+      as-sum = ∑ (λ (a : A) → ∑ (λ (b : B) → f(a) ≈ g(b)))
+
+      ψ : as-sum → pullback f g
+      ψ = λ {(a , (b , γ)) → a and b are-in-the-same-fiber-by γ}
+
+      ψ⁻¹ : pullback f g → as-sum 
+      ψ⁻¹ = λ {(a and b are-in-the-same-fiber-by γ) → (a , (b , γ))}
+      
+    in the-square-commuting-by (λ {(a , (b , γ)) → γ})
+       and-inducing-an-equivalence-by
+       (the-map _ is-an-equivalence-since-it-is-homotopic-to ψ by (λ _ → refl)
+        which-is-an-equivalence-by
+         (has-left-inverse ψ⁻¹ by (λ _ → refl) and-right-inverse ψ⁻¹ by (λ _ → refl)))
+    
   {- for all products A × B there is a pullback square
 
     A×B ─π₁→ A

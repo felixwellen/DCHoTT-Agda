@@ -70,6 +70,8 @@ module Contractibility where
 
 
 
+
+
 {-
   -- the following is a dead end
   -- the aim was to prove '(A → A) ≃ A' implies 'A is contractible'
