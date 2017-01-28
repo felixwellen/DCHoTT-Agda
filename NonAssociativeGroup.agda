@@ -187,5 +187,4 @@ module NonAssociativeGroup where
                          ≈⟨ {!!}⟩
                           (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
                          ≈∎})))
->>>>>>> Stashed changes
     
