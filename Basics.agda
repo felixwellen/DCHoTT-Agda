@@ -68,6 +68,7 @@ record ∑ {i j} {A : U i} (P : A → U j) : U (i ⊔ j) where
   → (x : ∑ P) → P (∑π₁ x)
 ∑π₂ (a , p) = p  
 
+
 Π-to-∑ : ∀ {A : U₀} {P : A → U₀}
          → Π P → A → ∑ P
 Π-to-∑ s a = (a , s a)
