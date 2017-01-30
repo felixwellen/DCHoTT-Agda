@@ -12,6 +12,28 @@ module Sums where
   open import Contractibility
 
 
+  the-equivalence-of-sums-given-by_being-fiberwise-an-equivalence-by_ :
+    ∀ {A : U₀} {P Q : A → U₀}
+    → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
+    → ∑ P ≃ ∑ Q
+  the-equivalence-of-sums-given-by_being-fiberwise-an-equivalence-by_ {A} {P} {Q} e e-is-an-equivalence =
+    let
+      open _is-an-equivalence
+      e⁻¹l : (a : A) → (Q a → P a)
+      e⁻¹l = λ a → left-inverse (e-is-an-equivalence a)
+      e⁻¹r : (a : A) → (Q a → P a)
+      e⁻¹r = λ a → right-inverse (e-is-an-equivalence a)
+      unit : (a : A) → (e⁻¹l a) ∘ e a ⇒ id 
+      unit = λ a → unit (e-is-an-equivalence a)
+      counit : (a : A) → id ⇒ e a ∘ (e⁻¹r a) 
+      counit = λ a → counit (e-is-an-equivalence a)
+      
+    in (λ {(a , pₐ) → (a , (e a) pₐ)}) is-an-equivalence-because
+       (has-left-inverse (λ {(a , qₐ) → (a , (e⁻¹l a) qₐ)})
+          by (λ {(a , pₐ) → construct-path-in-∑ a a _ _ refl (unit a pₐ)})
+        and-right-inverse (λ {(a , qₐ) → (a , (e⁻¹r a) qₐ)})
+          by (λ {(a , qₐ) → construct-path-in-∑ a a _ _ refl (counit a qₐ)}))
+    
   module iterated-sums-over-independant-bases (A B : U₀) (P : A → B → U₀) where
     iterated-sum = ∑ (λ (a : A) → ∑ λ (b : B) → P a b)
     switched-iterated-sum = ∑ (λ (b : B) → ∑ λ (a : A) → P a b)
