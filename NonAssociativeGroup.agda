@@ -190,7 +190,9 @@ module NonAssociativeGroup where
     ∂∘left-translate-by-φ⇒φ∘π₂ (g , d) = ∂ (g , μ (φ d , g))
                                         ≈⟨ refl ⟩
                                          left-translation-difference g (μ (φ(d) , g))
-                                        ≈⟨ two-solutions-are-equal (left-translation-difference g (μ (φ(d) , g))) (φ(d)) (left-difference-is-a-solution _ _) refl ⟩
+                                        ≈⟨ two-solutions-are-equal
+                                           (left-translation-difference g (μ (φ(d) , g))) (φ(d))
+                                           (left-difference-is-a-solution _ _) refl ⟩
                                          φ(d) ≈∎
 
 
@@ -208,8 +210,11 @@ module NonAssociativeGroup where
     square1 = square-with-pullback-as-iterated-∑ φ ∂
 
     {-
-      ∑(d : D) ∑((g,h):G×G) φ(d)≈∂(g,h) ≃ 
+      ∑(d : D) ∑((g,h):G×G) φ(d)≈∂(g,h) ≃ ∑(d : D) ∑(g : G) ∑(h : G)  φ(d)≈∂(g,h) 
     -}
+
+--    square2 = substitute-equivalent-cone ? ?
+--              (iterated-sums-over-independant-bases.curry G G (λ g → λ h → φ(d) ≈ ∂(g , h) )) 
 
     ψ : G × D → pullback ∂ φ 
     ψ (g , d) = (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
@@ -218,17 +223,17 @@ module NonAssociativeGroup where
     ψ⁻¹ ((g , h) and d are-in-the-same-fiber-by γ) = (g , d)
     
 
-    result : pullback-square-with-right ∂ bottom φ top left-translate-by-φ left π₂
-    result = the-square-commuting-by ∂∘left-translate-by-φ⇒φ∘π₂ 
-             and-inducing-an-equivalence-by
-               (the-map _ is-an-equivalence-since-it-is-homotopic-to ψ by (λ _ → refl)
-                which-is-an-equivalence-by
-                  (has-left-inverse ψ⁻¹ by (λ _ → refl)
-                   and-right-inverse ψ⁻¹
-                   by (λ {((g , h) and d are-in-the-same-fiber-by γ)
-                       →  ((g , h) and d are-in-the-same-fiber-by γ)
-                         ≈⟨ {!!}⟩
-                          (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
-                         ≈∎})))
+--    result : pullback-square-with-right ∂ bottom φ top left-translate-by-φ left π₂
+--    result = the-square-commuting-by ∂∘left-translate-by-φ⇒φ∘π₂ 
+--             and-inducing-an-equivalence-by
+--               (the-map _ is-an-equivalence-since-it-is-homotopic-to ψ by (λ _ → refl)
+--                which-is-an-equivalence-by
+--                  (has-left-inverse ψ⁻¹ by (λ _ → refl)
+--                   and-right-inverse ψ⁻¹
+--                   by (λ {((g , h) and d are-in-the-same-fiber-by γ)
+--                       →  ((g , h) and d are-in-the-same-fiber-by γ)
+--                         ≈⟨ {!!}⟩
+--                          (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
+--                         ≈∎})))
 
     
