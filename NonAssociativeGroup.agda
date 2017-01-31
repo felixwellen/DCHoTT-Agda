@@ -12,6 +12,7 @@ module NonAssociativeGroup where
   open import EquivalenceCharacterization
   open import Pullback
   open import PullbackSquare
+  open import Sums
 
   record non-associative-group-structure-on_ (X : U₀) : U₀ where
     constructor
@@ -213,8 +214,24 @@ module NonAssociativeGroup where
       ∑(d : D) ∑((g,h):G×G) φ(d)≈∂(g,h) ≃ ∑(d : D) ∑(g : G) ∑(h : G)  φ(d)≈∂(g,h) 
     -}
 
---    square2 = substitute-equivalent-cone ? ?
---              (iterated-sums-over-independant-bases.curry G G (λ g → λ h → φ(d) ≈ ∂(g , h) )) 
+    curry-G×G : ∑ (λ d → ∑ λ {(g , h) → φ(d) ≈ ∂(g , h)}) → ∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ ∂(g , h)
+    curry-G×G (d , ((g , h) , γ)) = (d , (g , (h , γ)))
+ 
+    currying-G×G-is-an-equivalence : curry-G×G is-an-equivalence
+    currying-G×G-is-an-equivalence =
+      the-map-of-sums-given-by
+        (λ d → iterated-sums-over-independant-bases.curry
+               G G (λ g h → φ(d) ≈ ∂(g , h)))
+       is-an-equivalence-since-it-is-fiberwise-an-equivalence-by
+         (λ d → iterated-sums-over-independant-bases.currying-is-an-equivalence
+               G G (λ g h → φ(d) ≈ ∂(g , h)))
+               
+    square2 = substitute-equivalent-cone
+                ∑π₁ ((∑π₁ ∘ ∑π₂ ∘ ∑π₂) ×→ ∑π₁ ∘ ∑π₂)
+                curry-G×G currying-G×G-is-an-equivalence
+                ? ?
+                square1
+              
 
     ψ : G × D → pullback ∂ φ 
     ψ (g , d) = (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))

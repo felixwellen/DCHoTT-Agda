@@ -12,11 +12,12 @@ module Sums where
   open import Contractibility
 
 
-  the-equivalence-of-sums-given-by_being-fiberwise-an-equivalence-by_ :
+  the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ :
     ∀ {A : U₀} {P Q : A → U₀}
     → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
-    → ∑ P ≃ ∑ Q
-  the-equivalence-of-sums-given-by_being-fiberwise-an-equivalence-by_ {A} {P} {Q} e e-is-an-equivalence =
+    → (λ {(a , pₐ) → (a , ((e a) pₐ))}) is-an-equivalence
+  the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ {A} {P} {Q} e e-is-an-equivalence
+    =
     let
       open _is-an-equivalence
       e⁻¹l : (a : A) → (Q a → P a)
@@ -27,12 +28,19 @@ module Sums where
       unit = λ a → unit (e-is-an-equivalence a)
       counit : (a : A) → id ⇒ e a ∘ (e⁻¹r a) 
       counit = λ a → counit (e-is-an-equivalence a)
-      
-    in (λ {(a , pₐ) → (a , (e a) pₐ)}) is-an-equivalence-because
-       (has-left-inverse (λ {(a , qₐ) → (a , (e⁻¹l a) qₐ)})
+    in has-left-inverse (λ {(a , qₐ) → (a , (e⁻¹l a) qₐ)})
           by (λ {(a , pₐ) → construct-path-in-∑ a a _ _ refl (unit a pₐ)})
-        and-right-inverse (λ {(a , qₐ) → (a , (e⁻¹r a) qₐ)})
-          by (λ {(a , qₐ) → construct-path-in-∑ a a _ _ refl (counit a qₐ)}))
+       and-right-inverse (λ {(a , qₐ) → (a , (e⁻¹r a) qₐ)})
+          by (λ {(a , qₐ) → construct-path-in-∑ a a _ _ refl (counit a qₐ)})
+
+
+  the-equivalence-of-sums-given-by_being-fiberwise-an-equivalence-by_ :
+    ∀ {A : U₀} {P Q : A → U₀}
+    → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
+    → ∑ P ≃ ∑ Q
+  the-equivalence-of-sums-given-by e being-fiberwise-an-equivalence-by e-is-an-equivalence =
+     (λ {(a , pₐ) → (a , (e a) pₐ)}) is-an-equivalence-because
+      (the-map-of-sums-given-by e is-an-equivalence-since-it-is-fiberwise-an-equivalence-by e-is-an-equivalence)
     
   module iterated-sums-over-independant-bases (A B : U₀) (P : A → B → U₀) where
     iterated-sum = ∑ (λ (a : A) → ∑ λ (b : B) → P a b)
