@@ -31,7 +31,7 @@ module NonAssociativeGroup where
 
 
     open _is-contractible
-
+    open import CommonEquivalences 
     -- 'unique' meaning unique up to contractible choice
     uniqueness-of-left-translations :
       (a : X) → (b : X) → (∑ (λ x → μ (x , a) ≈ b)) is-contractible
@@ -39,6 +39,15 @@ module NonAssociativeGroup where
                                             (fiber-as-sum ⁻¹≃)
                                             (contractible-fibers-characterize-equivalences.to-fiber-condition
                                              (λ x → μ (x , a)) (left-invertible a) b)
+
+    uniqueness-of-left-translations′ :
+      (a : X) → (b : X) → (∑ (λ x → b ≈ μ (x , a))) is-contractible
+    uniqueness-of-left-translations′ a b =
+       types-equivalent-to-contractibles-are-contractible
+          (the-equivalence-of-sums-given-by (λ _ γ → γ ⁻¹)
+            being-fiberwise-an-equivalence-by (λ _ → inversion-is-an-equivalence.proof))
+          (uniqueness-of-left-translations a b)
+    
     uniqueness-of-right-translations :
       (a : X) → (b : X) → (∑ (λ x → μ (a , x) ≈ b)) is-contractible
     uniqueness-of-right-translations a b = types-equivalent-to-contractibles-are-contractible
@@ -46,28 +55,58 @@ module NonAssociativeGroup where
                                             (contractible-fibers-characterize-equivalences.to-fiber-condition
                                              (λ x → μ (a , x)) (right-invertible a) b)
 
+    uniqueness-of-right-translations′ :
+      (a : X) → (b : X) → (∑ (λ x → b ≈ μ (a , x))) is-contractible
+    uniqueness-of-right-translations′ a b =
+       types-equivalent-to-contractibles-are-contractible
+          (the-equivalence-of-sums-given-by (λ _ γ → γ ⁻¹)
+            being-fiberwise-an-equivalence-by (λ _ → inversion-is-an-equivalence.proof))
+          (uniqueness-of-right-translations a b)
+
     -- solve equation of the form xa=b
     left-translation-difference : X → X → X
     left-translation-difference a b = ∑π₁ (center (uniqueness-of-left-translations a b))
 
-    left-difference-is-a-solution :
-      ∀ (a b : X)
-      → μ (left-translation-difference a b , a) ≈ b
-    left-difference-is-a-solution a b = ∑π₂ (center (uniqueness-of-left-translations a b))
-
     right-translation-difference : X → X → X
     right-translation-difference a b = ∑π₁ (center (uniqueness-of-right-translations a b))
 
+
+    _‣_ : X → X → X
+    a ‣ b = μ (a , b)
+
+    _‣_⁻ : X → X → X
+    a ‣ b ⁻ = left-translation-difference b a
+
     two-solutions-are-equal :
       ∀ {a b : X} (x y : X)
-      → μ (x , a) ≈ b → μ (y , a) ≈ b
+      → (x ‣ a) ≈ b → (y ‣ a) ≈ b
       → x ≈ y
     two-solutions-are-equal {a} {b} x y γ η =
       let
         c = contraction (uniqueness-of-left-translations a b)
       in ∑π₁ ⁎ (c (x , γ) ⁻¹ • c (y , η))
 
+    left-difference-is-a-solution :
+      ∀ (a b : X)
+      → (b ‣ a ⁻) ‣ a ≈ b
+    left-difference-is-a-solution a b = ∑π₂ (center (uniqueness-of-left-translations a b))
 
+
+
+
+    cancel-left-differences : 
+      ∀ (a b : X)
+      → a ≈ (b ‣ (b ‣ a ⁻) ⁻)
+    cancel-left-differences a b =
+      let
+        γ : (b ‣ (a ‣ b ⁻) ⁻) ‣ (a ‣ b ⁻) ≈ b
+        γ = left-difference-is-a-solution (left-translation-difference b a) b
+      in {!!}
+    
+    left-difference-is-unique :
+      ∀ (a b : X)
+      → (∑ λ (x : X) → a ≈ (b ‣ x ⁻)) is-contractible
+    left-difference-is-unique a b = contracts-to {!(left-translation-difference b a , )!} by {!!}
 
 
   -- G-affine types, just some name for something which seems to be
@@ -200,12 +239,12 @@ module NonAssociativeGroup where
     {- get a starting pullback square where the pullback is written as
         an iterated sigma-type. this will ease manipulation.
 
- ∑∑φ(d)≈∂(g,h) ─π₂─→ D
-       |             |
-       |             φ
-       |             |
-       ↓             ↓
-      G×G ────∂────→ G
+ ∑∑∑φ(d)≈∂(g,h) ─π₂─→ D
+       |              |
+       |              φ
+       |              |
+       ↓              ↓
+      G×G ─────∂────→ G
 
     -}
     square1 = square-with-pullback-as-iterated-∑ φ ∂
@@ -214,24 +253,33 @@ module NonAssociativeGroup where
       ∑(d : D) ∑((g,h):G×G) φ(d)≈∂(g,h) ≃ ∑(d : D) ∑(g : G) ∑(h : G)  φ(d)≈∂(g,h) 
     -}
 
-    curry-G×G : ∑ (λ d → ∑ λ {(g , h) → φ(d) ≈ ∂(g , h)}) → ∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ ∂(g , h)
-    curry-G×G (d , ((g , h) , γ)) = (d , (g , (h , γ)))
+    uncurry-G×G : (∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ ∂(g , h)) → ∑ (λ d → ∑ λ {(g , h) → φ(d) ≈ ∂(g , h)})
+    uncurry-G×G (d , (g , (h , γ))) = (d , ((g , h) , γ))
  
-    currying-G×G-is-an-equivalence : curry-G×G is-an-equivalence
-    currying-G×G-is-an-equivalence =
+    uncurrying-G×G-is-an-equivalence : uncurry-G×G is-an-equivalence
+    uncurrying-G×G-is-an-equivalence =
       the-map-of-sums-given-by
-        (λ d → iterated-sums-over-independant-bases.curry
+        (λ d → iterated-sums-over-independent-bases.uncurry
                G G (λ g h → φ(d) ≈ ∂(g , h)))
        is-an-equivalence-since-it-is-fiberwise-an-equivalence-by
-         (λ d → iterated-sums-over-independant-bases.currying-is-an-equivalence
+         (λ d → iterated-sums-over-independent-bases.uncurrying-is-an-equivalence
                G G (λ g h → φ(d) ≈ ∂(g , h)))
                
     square2 = substitute-equivalent-cone
-                ∑π₁ ((∑π₁ ∘ ∑π₂ ∘ ∑π₂) ×→ ∑π₁ ∘ ∑π₂)
-                curry-G×G currying-G×G-is-an-equivalence
-                ? ?
+                ∑π₁ (λ {(d , (g , (h , γ))) → g , h})
+                uncurry-G×G uncurrying-G×G-is-an-equivalence
+                (λ {(d , (g , (h , γ))) → refl}) (λ {(d , (g , (h , γ))) → refl})
                 square1
-              
+
+    {- the inner most ∑ ist contractible
+       this way of proving it, was written by mike shulman somewhere on the nlab
+       
+       ∑(d : D) ∑(g : G) ∑(h : G) φ(d)≈∂(g,h) ≃ ∑(d : D) ∑(g : G) 1 ≃ D × G
+    -}
+
+    inner-sum-is-contractible : (d : D) → (g : G) → (∑ λ h → φ(d) ≈ ∂(g , h)) is-contractible
+    inner-sum-is-contractible d g = {!uniqueness-of-right-translations′ g (φ d) !}
+
 
     ψ : G × D → pullback ∂ φ 
     ψ (g , d) = (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))

@@ -42,7 +42,7 @@ module Sums where
      (λ {(a , pₐ) → (a , (e a) pₐ)}) is-an-equivalence-because
       (the-map-of-sums-given-by e is-an-equivalence-since-it-is-fiberwise-an-equivalence-by e-is-an-equivalence)
     
-  module iterated-sums-over-independant-bases (A B : U₀) (P : A → B → U₀) where
+  module iterated-sums-over-independent-bases (A B : U₀) (P : A → B → U₀) where
     iterated-sum = ∑ (λ (a : A) → ∑ λ (b : B) → P a b)
     switched-iterated-sum = ∑ (λ (b : B) → ∑ λ (a : A) → P a b)
 
@@ -66,6 +66,11 @@ module Sums where
     currying-is-an-equivalence =
       has-left-inverse uncurry by (λ _ → refl)
       and-right-inverse uncurry by (λ _ → refl)
+
+    uncurrying-is-an-equivalence : uncurry is-an-equivalence
+    uncurrying-is-an-equivalence =
+      has-left-inverse curry by (λ _ → refl)
+      and-right-inverse curry by (λ _ → refl)
 
   module sums-over-contractibles
     (A : U₀) (P : A → U₀) (all-contractible : (a : A) → (P a) is-contractible) where
