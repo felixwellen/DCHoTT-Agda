@@ -690,7 +690,9 @@ module Im where
                                 }
 
     {- 
-      ℑ also preserves the difference map (a ↦ a • b ⁻¹),
+      ℑ also preserves the difference map " a ↦ a • b ⁻¹ ",
       where the difference map ist NOT given by multiplication with a left inverse,
       but as the inverse of μ(_,b).
     -}
+
+    
