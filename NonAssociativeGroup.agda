@@ -26,7 +26,6 @@ module NonAssociativeGroup where
       -- of x'es such that: xa=b
       -- therefore, 'invertible' may also be called 'cancellable'
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
-      right-invertible : ∀ (x₀ : X) → (λ x → μ (x₀ , x)) is-an-equivalence
 
     open _is-an-equivalence 
     
@@ -55,28 +54,11 @@ module NonAssociativeGroup where
             being-fiberwise-an-equivalence-by (λ _ → inversion-is-an-equivalence.proof))
           (uniqueness-of-left-translations a b)
     
-    uniqueness-of-right-translations :
-      (a : X) → (b : X) → (∑ (λ x → μ (a , x) ≈ b)) is-contractible
-    uniqueness-of-right-translations a b = types-equivalent-to-contractibles-are-contractible
-                                            (fiber-as-sum ⁻¹≃)
-                                            (contractible-fibers-characterize-equivalences.to-fiber-condition
-                                             (λ x → μ (a , x)) (right-invertible a) b)
-
-    uniqueness-of-right-translations′ :
-      (a : X) → (b : X) → (∑ (λ x → b ≈ μ (a , x))) is-contractible
-    uniqueness-of-right-translations′ a b =
-       types-equivalent-to-contractibles-are-contractible
-          (the-equivalence-of-sums-given-by (λ _ γ → γ ⁻¹)
-            being-fiberwise-an-equivalence-by (λ _ → inversion-is-an-equivalence.proof))
-          (uniqueness-of-right-translations a b)
 
     -- solve equation of the form xa=b
     left-translation-difference : X → X → X
     left-translation-difference a b = left-invert a b
 
-    -- solve equation of the form ax=b
-    right-translation-difference : X → X → X
-    right-translation-difference a b = ∑π₁ (center (uniqueness-of-right-translations a b))
 
 
     _‣_ : X → X → X
@@ -124,26 +106,6 @@ module NonAssociativeGroup where
 
   module inversion (G : U₀) (structure : non-associative-group-structure-on G) where
     open non-associative-group-structure-on_ structure
-
---    left-inversion : G → G
---    left-inversion x = {!(left-invertible x) e!}
-
-  module opposite-group {X : U₀} (group-structure-on-X : non-associative-group-structure-on X) where
-    open non-associative-group-structure-on_ group-structure-on-X
-
-    e′ = e
-    
-    μ′ : X × X → X
-    μ′ (x , x′) = μ (x′ , x)
-
-    structure : non-associative-group-structure-on X
-    structure = record {
-                       e = e;
-                       μ = μ′;
-                       left-neutral = right-neutral;
-                       right-neutral = left-neutral;
-                       left-invertible = right-invertible;
-                       right-invertible = left-invertible}
 
 
   module loop-spaces-are-non-associative-groups (BG : U₀) (e : BG) where
@@ -201,8 +163,7 @@ module NonAssociativeGroup where
                           μ = λ {(γ , η) → γ • η};
                           left-neutral = refl-is-left-neutral;
                           right-neutral = refl-is-right-neutral ⁻¹⇒;
-                          left-invertible = right-composing-is-an-equivalence;
-                          right-invertible = left-composing-is-an-equivalence} 
+                          left-invertible = right-composing-is-an-equivalence} 
 
 
     
@@ -277,14 +238,40 @@ module NonAssociativeGroup where
     {- the inner most ∑ ist contractible
        this way of proving it, was written by mike shulman somewhere on the nlab
        
-       ∑(d : D) ∑(g : G) ∑(h : G) φ(d)≈∂(g,h) ≃ ∑(d : D) ∑(g : G) 1 ≃ D × G
+       ∑(d : D) ∑(g : G) ∑(h : G) φ(d)≈∂(g,h) ≃ ∑(x : D × G) 1 ≃ D × G
+
+       first, curry the outer two (square3):
+       
+       ∑(d : D) ∑(g : G) ∑(h : G) φ(d)≈∂(g,h) ≃ ∑(x : D × G) ∑(h : G) φ(π₁(x))≈∂(π₂(x),h) 
+ 
+       second, use contractibility of the innermost sum:
+
+       ∑(x : D × G) ∑(h : G) φ(π₁(x))≈∂(π₂(x),h) ≃ D × G
     -}
 
-    inner-sum-is-contractible : (d : D) → (g : G) → (∑ λ h → φ(d) ≈ ∂(g , h)) is-contractible
-    inner-sum-is-contractible d g = left-difference-is-unique′ g (φ d)
 
-    equivalence-to-curried-product : (∑ λ (d : D) → G) → ∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ ∂(g , h)
-    equivalence-to-curried-product = {!sums-over-contractibles.section (∑ λ (d : D) → G) _ (λ {(d , g) → inner-sum-is-contractible d g}) !}
+    curry-D×G :
+        (∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ ∂((π₂ x) , h))
+      → ∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ ∂(g , h)
+    curry-D×G = iterated-sums-over-independent-bases.curry D G _
+
+    square3 = substitute-equivalent-cone
+                (λ {((d , _) , _) → d}) (λ {((_ , g) , (h , _)) → (g , h)})
+                curry-D×G (iterated-sums-over-independent-bases.currying-is-an-equivalence D G _)
+                (λ _ → refl) (λ _ → refl)
+                square2
+
+
+    inner-sum-is-contractible :
+      ∀ (d : D) (g : G)
+      → (∑ λ h → φ(d) ≈ ∂(g , h)) is-contractible
+    inner-sum-is-contractible d g = left-difference-is-unique′ g (φ d)
+    
+    equivalence-to-product :
+        D × G
+      → ∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ ∂((π₂ x) , h)
+    equivalence-to-product = sums-over-contractibles.section
+                                   (∑ λ (d : D) → G) _ (λ {(d , g) → inner-sum-is-contractible d g}) 
     
     ψ : G × D → pullback ∂ φ 
     ψ (g , d) = (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
