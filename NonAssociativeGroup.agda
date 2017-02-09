@@ -181,7 +181,7 @@ module NonAssociativeGroup where
     (look at the code below for the definition of all maps)
   -}
 
-  module description-of-∂-pullback {G D : U₀} (structure : non-associative-group-structure-on G) (φ : D → G) where
+  module mayer-vietoris-lemma {G D : U₀} (structure : non-associative-group-structure-on G) (φ : D → G) where
     open non-associative-group-structure-on_ structure
 
     ∂ : G × G → G
@@ -263,34 +263,37 @@ module NonAssociativeGroup where
 
 
     inner-sum-is-contractible :
-      ∀ (d : D) (g : G)
-      → (∑ λ h → φ(d) ≈ ∂(g , h)) is-contractible
-    inner-sum-is-contractible d g = left-difference-is-unique′ g (φ d)
+      ∀ (x : D × G)
+      → (∑ λ h → φ(π₁ x) ≈ ∂((π₂ x) , h)) is-contractible
+    inner-sum-is-contractible (d , g) = left-difference-is-unique′ g (φ d)
     
     equivalence-to-product :
         D × G
       → ∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ ∂((π₂ x) , h)
     equivalence-to-product = sums-over-contractibles.section
-                                   (∑ λ (d : D) → G) _ (λ {(d , g) → inner-sum-is-contractible d g}) 
-    
-    ψ : G × D → pullback ∂ φ 
-    ψ (g , d) = (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
-    
-    ψ⁻¹ : pullback ∂ φ  → G × D
-    ψ⁻¹ ((g , h) and d are-in-the-same-fiber-by γ) = (g , d)
-    
+                                   (∑ λ (d : D) → G) _ (λ {(d , g) → inner-sum-is-contractible (d , g)}) 
 
---    result : pullback-square-with-right ∂ bottom φ top left-translate-by-φ left π₂
---    result = the-square-commuting-by ∂∘left-translate-by-φ⇒φ∘π₂ 
---             and-inducing-an-equivalence-by
---               (the-map _ is-an-equivalence-since-it-is-homotopic-to ψ by (λ _ → refl)
---                which-is-an-equivalence-by
---                  (has-left-inverse ψ⁻¹ by (λ _ → refl)
---                   and-right-inverse ψ⁻¹
---                   by (λ {((g , h) and d are-in-the-same-fiber-by γ)
---                       →  ((g , h) and d are-in-the-same-fiber-by γ)
---                         ≈⟨ {!!}⟩
---                          (( g , μ(φ(d) , g) ) and d are-in-the-same-fiber-by ∂∘left-translate-by-φ⇒φ∘π₂ (g , d))
---                         ≈∎})))
+    square4 : pullback-square-with-right φ
+                bottom ∂
+                top π₁
+                left (λ {(d , g) → (g , μ (φ d , g))})
+    square4 = substitute-equivalent-cone
+                π₁ (λ {(d , g) → (g , μ (φ d , g))})
+                equivalence-to-product
+                (sums-over-contractibles.section-is-an-equivalence (D × G) _
+                                        inner-sum-is-contractible)
+                (λ _ → refl) (λ {(d , g) → refl})
+                square3
 
-    
+    {-
+             D × G ────π₁───→ D
+               | ⌟            |
+               |              |
+    (d,g)↦(g,μ(φ(d),g))       φ
+               |              |
+               ↓              ↓
+             G × G ───∂─────→ G 
+    -}
+
+
+    result-as-square = square4

@@ -86,7 +86,12 @@ module Sums where
         by (λ x → (inclusion-of-the-fiber-of P over (∑π₁ x)) ⁎ ((contraction (all-contractible (∑π₁ x))) (∑π₂ x)))
        and-right-inverse section by (λ a → refl))
 
+    open _≃_
 
+    section-is-an-equivalence : section is-an-equivalence
+    section-is-an-equivalence =
+      the-inverse-of ∑π₁ which-is-an-equivalence-by
+      (proof-of-invertibility equivalence-to-base) is-again-an-equivalence 
 
   module sum-of-free-path-at-a-point-is-contractible (A : U₀) (a₀ : A) where
 
