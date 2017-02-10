@@ -44,6 +44,7 @@ data Bool : Set where
       → (a : A) → Π P → P a
 π-Π a = λ s → s a      
 
+infix 20 _,_
 record ∑ {i j} {A : U i} (P : A → U j) : U (i ⊔ j) where
   constructor _,_
   field

@@ -505,7 +505,7 @@ module Im where
   
     coreduced : (ℑX × ℑX) is-coreduced
     coreduced = ∑-of-coreduced-types-is-coreduced 
-                           (ℑ X) (ℑ-is-coreduced X) (λ _ → ℑ X) (λ _ → ℑ-is-coreduced X)
+                  (ℑ X) (ℑ-is-coreduced X) (λ _ → ℑ X) (λ _ → ℑ-is-coreduced X)
 
     curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
     curry f = λ a → (λ b → f (a , b))
@@ -530,14 +530,14 @@ module Im where
     φ : ℑX × ℑX → ℑ(X × X)
     φ = uncurry ψ′′
 
-    -- operations of the image H-Space
+    -- operations of the image structure
     ℑμ : ℑX × ℑX → ℑX
     ℑμ = ℑ→ μ ∘ φ 
 
     ℑe : ℑX
     ℑe = ℑ-unit e
 
-    -- relations of the image H-Space
+    -- relations of the image structure
 
     {-
 
@@ -573,7 +573,8 @@ module Im where
       ≈∎
 
     ℑright-neutral′ : ∀ (x : X) → ℑμ (ℑ-unit x , ℑe) ≈ ℑ-unit x
-    ℑright-neutral′ x = ℑμ (ℑ-unit x , ℑe)
+    ℑright-neutral′ x =
+                     ℑμ (ℑ-unit x , ℑe)
                     ≈⟨ refl ⟩
                      ℑ→ μ (φ (ℑ-unit x , ℑe))
                     ≈⟨ ℑ→ μ ⁎ ℑ-commutes-with-pair-construction x e ⟩ 
@@ -648,14 +649,14 @@ module Im where
       ∀ (x₀ : X)
       → (x : X) → ℑ→ (λ (x : X) → μ (x , x₀)) (ℑ-unit x) ≈ ℑμ (ℑ-unit x , ℑ-unit x₀)
     ℑ-of-left-abstracted-μ′ x₀ x =
-      ℑ→ (λ x → μ (x , x₀)) (ℑ-unit x)
-     ≈⟨ apply-ℑ-commutes-with-∘ (λ x → (x , x₀)) μ (ℑ-unit x) ⟩
-       (ℑ→ μ ∘ ℑ→ (λ x → (x , x₀))) (ℑ-unit x)
-     ≈⟨ (ℑ→ μ) ⁎ naturality-of-ℑ-unit (λ x → (x , x₀)) x ⟩
-      ℑ→ μ (ℑ-unit (x , x₀))
-     ≈⟨ (ℑ→ μ) ⁎ ℑ-commutes-with-pair-construction x x₀ ⁻¹ ⟩ 
-      ℑμ (ℑ-unit x , ℑ-unit x₀)
-     ≈∎
+       ℑ→ (λ x → μ (x , x₀)) (ℑ-unit x)
+      ≈⟨ apply-ℑ-commutes-with-∘ (λ x → (x , x₀)) μ (ℑ-unit x) ⟩
+        (ℑ→ μ ∘ ℑ→ (λ x → (x , x₀))) (ℑ-unit x)
+      ≈⟨ (ℑ→ μ) ⁎ naturality-of-ℑ-unit (λ x → (x , x₀)) x ⟩
+       ℑ→ μ (ℑ-unit (x , x₀))
+      ≈⟨ (ℑ→ μ) ⁎ ℑ-commutes-with-pair-construction x x₀ ⁻¹ ⟩ 
+       ℑμ (ℑ-unit x , ℑ-unit x₀)
+      ≈∎
 
     ℑ-of-left-abstracted-μ :
       ∀ (x₀ : X)
@@ -678,7 +679,7 @@ module Im where
                                 (left-invertible x₀))
                              (ℑ-of-left-abstracted-μ x₀))
 
-
+    
 
     structure-of-image : non-associative-group-structure-on ℑX
     structure-of-image = record {
@@ -689,10 +690,46 @@ module Im where
                                   left-invertible = ℑleft-invertible
                                 }
 
-    {- 
-      ℑ also preserves the difference map " a ↦ a • b ⁻¹ ",
-      where the difference map ist NOT given by multiplication with a left inverse,
-      but as the inverse of μ(_,b).
+
+    {-
+      we are now interested in commutativity of square 1:
+
+
+      X × X ─ι×ι→ ℑX × ℑX ─φ─→ ℑ(X × X)
+        |          |  |        /
+        ∂     1   ℑ∂  ℑ∂′     /
+        |          |  |      /
+        ↓          ↓  ↓   ℑ→ ∂
+        X ────ι───→ ℑX ←───  
+    -}
+    
+    ℑ∂′ : ℑX × ℑX → ℑ X
+    ℑ∂′ = ℑ→ ∂ ∘ φ
+
+    ℑ∂ : ℑX × ℑX → ℑ X
+    ℑ∂ = non-associative-group-structure-on_.∂ structure-of-image
+    
+    ℑ∂∘ι×ι⇒ι∘∂ : ℑ∂′ ∘ (ℑ-unit ×→ ℑ-unit) ⇒ ℑ-unit ∘ ∂
+    ℑ∂∘ι×ι⇒ι∘∂ (x , x′) = ℑ∂′ (ℑ-unit x , ℑ-unit x′)
+                         ≈⟨ ℑ→ ∂ ⁎ ℑ-commutes-with-pair-construction x x′ ⟩
+                          ℑ→ ∂ (ℑ-unit (x , x′))
+                         ≈⟨ naturality-square-for-ℑ ∂ (x , x′) ⟩
+                          ℑ-unit (∂ (x , x′))
+                         ≈∎
+
+
+    {-
+
+      What remains to be constructed
+      is a homotopy
+
+          ℑX × ℑX
+           |   |  
+          ℑ∂ ⇒ ℑ∂′
+           |   |  
+           ↓   ↓
+            ℑX 
+
     -}
 
     
