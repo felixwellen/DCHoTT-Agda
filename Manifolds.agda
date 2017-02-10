@@ -25,7 +25,7 @@ module Manifolds where
         top ℑ-unit
         left (underlying-map-of f́)
   pullback-square-of (f , (the-induced-map-is-an-equivalence-by pullback-property)) =
-    the-square-commuting-by naturality-of-ℑ-unit f
+    the-square-commuting-by (naturality-of-ℑ-unit f)
       and-inducing-an-equivalence-by pullback-property
 
   _is-a-manifold-by-the-covering_which-is-a-covering-of-the-∞-group-with-delooping_,_by_ : 
