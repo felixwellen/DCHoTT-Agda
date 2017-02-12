@@ -503,8 +503,8 @@ module Im where
     open non-associative-group-structure-on_ non-associative-group-structure-on-X
     ℑX = ℑ X
   
-    coreduced : (ℑX × ℑX) is-coreduced
-    coreduced = ∑-of-coreduced-types-is-coreduced 
+    ℑX×ℑX-coreduced : (ℑX × ℑX) is-coreduced
+    ℑX×ℑX-coreduced = ∑-of-coreduced-types-is-coreduced 
                   (ℑ X) (ℑ-is-coreduced X) (λ _ → ℑ X) (λ _ → ℑ-is-coreduced X)
 
     curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
@@ -627,6 +627,13 @@ module Im where
         (λ (a : ℑ A) →
           coreduced-types-have-coreduced-identity-types (ℑ B) (ℑ-is-coreduced _) _ _)
 
+    induce-homotopy-on-coreduced-types :
+      ∀ {A B : U₀} (f g : ℑ A → ℑ B)
+      → f ∘ ℑ-unit ⇒ g ∘ ℑ-unit
+      → f ⇒ g
+    induce-homotopy-on-coreduced-types f g H =
+      ℑ-induction (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _) H
+
     coreduced-types-have-a-coreduced-equivalence-proposition :
       ∀ {A B : U₀}
       → (f : ℑ A → ℑ B) → (f is-an-equivalence) is-coreduced
@@ -701,6 +708,9 @@ module Im where
         |          |  |      /
         ↓          ↓  ↓   ℑ→ ∂
         X ────ι───→ ℑX ←───  
+
+      we aim at using the ∂-triangle characteization 
+      (∂-is-determined-by-a-triangle in NonAssociativeGroup)
     -}
     
     ℑ∂′ : ℑX × ℑX → ℑ X
@@ -709,19 +719,119 @@ module Im where
     ℑ∂ : ℑX × ℑX → ℑ X
     ℑ∂ = non-associative-group-structure-on_.∂ structure-of-image
     
-    ℑ∂∘ι×ι⇒ι∘∂ : ℑ∂′ ∘ (ℑ-unit ×→ ℑ-unit) ⇒ ℑ-unit ∘ ∂
-    ℑ∂∘ι×ι⇒ι∘∂ (x , x′) = ℑ∂′ (ℑ-unit x , ℑ-unit x′)
+    ℑ∂′-square : ℑ∂′ ∘ (ℑ-unit ×→ ℑ-unit) ⇒ ℑ-unit ∘ ∂
+    ℑ∂′-square (x , x′) = ℑ∂′ (ℑ-unit x , ℑ-unit x′)
                          ≈⟨ ℑ→ ∂ ⁎ ℑ-commutes-with-pair-construction x x′ ⟩
                           ℑ→ ∂ (ℑ-unit (x , x′))
                          ≈⟨ naturality-square-for-ℑ ∂ (x , x′) ⟩
                           ℑ-unit (∂ (x , x′))
                          ≈∎
 
+    μ-naturality :
+      ∀ (a b : X)
+      → ℑμ (ℑ-unit a , ℑ-unit b) ≈ ℑ-unit (μ (a ,  b))
+    μ-naturality a b =
+              ℑμ (ℑ-unit a , ℑ-unit b)
+             ≈⟨ ℑ→ μ ⁎ ℑ-commutes-with-pair-construction a b ⟩
+              ℑ→ μ (ℑ-unit (a , b))
+             ≈⟨ naturality-of-ℑ-unit μ (a , b) ⟩
+              ℑ-unit (μ (a , b)) ≈∎
+
+
+    ℑ→∂-triangle :
+      ℑ→ π₁ ⇒ ℑ→ ∂ ∘ ℑ→ (π₂ ,→ μ)
+    ℑ→∂-triangle = ℑ⇒ ∂-triangle •⇒ apply-ℑ-commutes-with-∘ (π₂ ,→ μ) ∂
+
 
     {-
 
-      What remains to be constructed
-      is a homotopy
+             ℑ(X×X) ←─φ── ℑX × ℑX
+                |            |
+            ℑ⟶(π,μ)        (π,ℑμ)
+                |            |
+                ↓            ↓ 
+             ℑ(X×X) ←─φ── ℑX × ℑX
+    -}
+
+    {-
+      by currying and using that Π-types of coreduced fibrations are coreduced,
+      we can prove a specialized induction rule for products:
+    -}
+
+    ℑ×-induction :
+      ∀ {A B : U₀} {P : ℑ A → ℑ B → U₀} →
+       ((a : ℑ A) → (b : ℑ B)  → P a b is-coreduced) →
+       ((x : A × B) → P (ℑ-unit (π₁ x)) (ℑ-unit (π₂ x))) → (x : ℑ A × ℑ B) → P (π₁ x) (π₂ x)
+    ℑ×-induction {A} {B} {P} coreduced proof-on-canonical =
+      λ x → ℑ-induction
+              (λ b → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ a → coreduced b a))
+              (λ (a : A) → ℑ-induction (λ _ → coreduced _ _) (λ b → proof-on-canonical (a , b))) (π₁ x) (π₂ x)
+    
+    φ-square :
+      ℑ→ (π₂ ,→ μ) ∘ φ ⇒ φ ∘ (π₂ ,→ ℑμ)
+    φ-square = ℑ×-induction
+                (λ _ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
+                (λ {(a , b) →
+                  (ℑ→ (π₂ ,→ μ) ∘ φ) (ℑ-unit a , ℑ-unit b)
+                 ≈⟨ ℑ→ (π₂ ,→ μ) ⁎ ℑ-commutes-with-pair-construction a b ⟩
+                  ℑ→ (π₂ ,→ μ) (ℑ-unit (a , b))
+                 ≈⟨ naturality-of-ℑ-unit (π₂ ,→ μ) (a , b) ⟩
+                  ℑ-unit (b , μ (a , b))
+                 ≈⟨ ℑ-commutes-with-pair-construction b (μ (a , b)) ⁻¹ ⟩ 
+                  φ (ℑ-unit b , ℑ-unit (μ (a , b)))
+                 ≈⟨ φ ⁎ (λ x → ℑ-unit b , x) ⁎ μ-naturality a b ⁻¹ ⟩
+                  (φ ∘ (π₂ ,→ ℑμ)) (ℑ-unit a , ℑ-unit b)
+                 ≈∎})
+
+
+    {-
+     one less interesting piece of the puzzle:
+
+     ℑX×ℑX ─φ─→ ℑ(X×X)
+       |       /
+      π₁      /
+       |     /
+       ↓   ℑ→π₁
+      ℑX ←─ 
+    -}
+
+    π₁-triangle :
+      ℑ→ π₁ ∘ φ ⇒ π₁
+    π₁-triangle = ℑ×-induction (λ _ _ →
+                                    coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
+                               (λ { (a , b) → (ℑ→ π₁ ∘ φ) (ℑ-unit a , ℑ-unit b)
+                                              ≈⟨ ℑ→ π₁ ⁎ ℑ-commutes-with-pair-construction a b ⟩
+                                               ℑ→ π₁ (ℑ-unit (a , b))
+                                              ≈⟨ naturality-of-ℑ-unit π₁ (a , b) ⟩
+                                               π₁ (ℑ-unit a , ℑ-unit b) ≈∎ })
+
+
+    {-
+      put the last few polygons together, to get a ∂-triangle for ℑ∂′:
+      
+     ℑX×ℑX ─(π,ℑμ)─→ ℑX×ℑX
+       |            /
+      π₁           /
+       |          /
+       ↓       ℑ∂′
+      ℑX ←───── 
+      
+    -}
+
+    ℑ∂′-triangle :
+      π₁ ⇒ ℑ∂′ ∘ (π₂ ,→ ℑμ) 
+    ℑ∂′-triangle (a , b) = a
+                         ≈⟨ π₁-triangle (a , b) ⁻¹ ⟩
+                           ℑ→ π₁ (φ (a , b))
+                         ≈⟨ ℑ→∂-triangle (φ (a , b)) ⟩
+                           (ℑ→ ∂ ∘ ℑ→ (π₂ ,→ μ)) (φ (a , b))
+                         ≈⟨ ℑ→ ∂ ⁎ φ-square (a , b) ⟩
+                           ℑ→ ∂ ((φ ∘ (π₂ ,→ ℑμ)) (a , b))
+                         ≈⟨ refl ⟩
+                           (ℑ∂′ ∘ (π₂ ,→ ℑμ)) (a , b) ≈∎
+
+    {-
+      now, we can get to the conclusion
 
           ℑX × ℑX
            |   |  
@@ -730,6 +840,25 @@ module Im where
            ↓   ↓
             ℑX 
 
+       
     -}
 
+    ℑ∂′⇒ℑ∂ :
+      ℑ∂′ ⇒ ℑ∂
+    ℑ∂′⇒ℑ∂ = non-associative-group-structure-on_.∂-is-determined-by-a-triangle
+               structure-of-image ℑ∂′ ℑ∂′-triangle
+
     
+    {-
+      and get the desired square
+      (used in the proof of trivialiy of formal disk bundles over groups)
+    -}
+
+    ℑ∂-square :
+      ℑ-unit ∘ ∂ ⇒ ℑ∂ ∘ (ℑ-unit ×→ ℑ-unit)
+    ℑ∂-square x =  (ℑ-unit ∘ ∂) x
+                  ≈⟨ ℑ∂′-square x ⁻¹ ⟩
+                   (ℑ∂′ ∘ (ℑ-unit ×→ ℑ-unit)) x
+                  ≈⟨ ℑ∂′⇒ℑ∂ ((ℑ-unit ×→ ℑ-unit) x) ⟩
+                   (ℑ∂ ∘ (ℑ-unit ×→ ℑ-unit)) x
+                  ≈∎

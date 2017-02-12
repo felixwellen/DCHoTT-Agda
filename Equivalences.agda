@@ -2,8 +2,8 @@
 
 module Equivalences where 
 
-  open import Basics public
-  open import EqualityAndPaths public
+  open import Basics 
+  open import EqualityAndPaths
   open import Language 
   open import Homotopies
   
@@ -357,6 +357,26 @@ module Equivalences where
         in equivalences-are-preserved-by-homotopy ((r ∘ l) ∘ l⁻¹) r
              (proof-of-equivalency r∘l∘l⁻¹-as-an-equivalence) r∘l∘l⁻¹∼l
   
+
+
+  {-
+
+    if e is an equivalence and we know fe ⇒ ge, then
+    we also have f ⇒ g
+
+  -}
+
+  unwhisker-equivalence :
+    ∀ {A B C : U₀} (f g : B → C) (e : A → B) 
+    → e is-an-equivalence
+    → f ∘ e ⇒ g ∘ e → f ⇒ g
+  unwhisker-equivalence f g e e-is-an-equivalence H =
+    let
+      open _is-an-equivalence e-is-an-equivalence
+      e⁻¹ = right-inverse
+      cancel : id ⇒ e ∘ e⁻¹ 
+      cancel = counit
+    in λ b → f ⁎ counit b • (e⁻¹ left-whisker H) b • g ⁎ (counit b ⁻¹)
 
 
   -- reasoning

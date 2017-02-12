@@ -27,6 +27,8 @@ module NonAssociativeGroup where
       -- therefore, 'invertible' may also be called 'cancellable'
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
 
+  
+
     open _is-an-equivalence 
     
     left-invert : ∀ (x₀ : X) → (X → X)
@@ -69,6 +71,42 @@ module NonAssociativeGroup where
     -- read as difference
     ∂ : X × X → X
     ∂ (a , b) = b ‣ a ⁻
+
+    ∂-is-left-inverse-of-right-translation :
+      ∀ (a : X)
+      → (λ (x : X) → x ‣ a ⁻) ∘ (λ x → x ‣ a) ⇒ id
+    ∂-is-left-inverse-of-right-translation a = unit (left-invertible a)
+
+    ∂-is-right-inverse-of-right-translation :
+      ∀ (a : X)
+      →  (λ x → x ‣ a) ∘ (λ (x : X) → x ‣ a ⁻) ⇒ id
+    ∂-is-right-inverse-of-right-translation a =
+      left-inverses-are-also-right-inverses (λ x → x ‣ a)
+        (λ (x : X) → x ‣ a ⁻) _ (∂-is-left-inverse-of-right-translation a)
+        (counit (left-invertible a))
+
+    -- the following stuff finds its non-obvious use in Im.agda
+
+    invertibilty-as-automorphism-of-the-product :
+      (π₂ ,→ μ) is-an-equivalence
+    invertibilty-as-automorphism-of-the-product =
+      has-left-inverse (∂ ,→ π₁)
+        by (λ {(a , b) → (λ x → (x , b)) ⁎ ∂-is-left-inverse-of-right-translation b a})
+      and-right-inverse (∂ ,→ π₁)
+        by (λ {(a , b) → (λ x → a , x) ⁎ ∂-is-right-inverse-of-right-translation a b ⁻¹})
+
+    ∂-triangle :
+      π₁ ⇒ ∂ ∘ (π₂ ,→ μ)
+    ∂-triangle (a , b) = ∂-is-left-inverse-of-right-translation b a ⁻¹
+    
+    ∂-is-determined-by-a-triangle :
+      ∀ (f : X × X → X)
+      → π₁ ⇒ f ∘ (π₂ ,→ μ) → f ⇒ ∂
+    ∂-is-determined-by-a-triangle f triangle =
+      unwhisker-equivalence f ∂ (π₂ ,→ μ)
+        invertibilty-as-automorphism-of-the-product
+        (triangle ⁻¹⇒ •⇒ ∂-triangle)
+
 
     two-solutions-are-equal :
       ∀ {a b : X} (x y : X)
