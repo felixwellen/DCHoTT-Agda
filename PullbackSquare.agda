@@ -860,25 +860,6 @@ module PullbackSquare where
      in the-square-commuting-by η and-inducing-an-equivalence-by the-induced-map-is-an-equivalence
 
 
-  -- define an extra operation for vertical pasting of pullback squares
-  -- which simplifies the 2-cell.
-{- (discontinued - to much work and not neccessary for the short term goals...)
-  vertical-pasting-of-pullback-squares : 
-    ∀ {W Z A B C D : U₀} 
-    {f : A → C} {g : B → C} {h : W → D}
-    {z₁ : Z → A} {z₂ : Z → B}
-    {w₁ : W → Z} {w₂ : W → D}
-    → (upper-square : pullback-square-with-right f bottom w₁ top z₁ left z₂)
-    → (lower-square : pullback-square-with-right z₂ bottom h top w₁ left w₂)
-    → pullback-square-with-right ? bottom ? top ? left ?
-  vertical-pasting-of-pullback-squares {W} {Z} {A} {B} {C} {D} {f} {g} {h} {z₁} {z₂} {w₁} {w₂} 
-    (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence) 
-    (the-square-commuting-by η and-inducing-an-equivalence-by proof-of-equivalence′) 
-    = rotate-cospan (pasting-of-pullback-squares 
-        (rotate-cospan (the-square-commuting-by η and-inducing-an-equivalence-by proof-of-equivalence′))
-        (rotate-cospan (the-square-commuting-by γ and-inducing-an-equivalence-by proof-of-equivalence))
-        )
--}
 
   {-
      if the big rectangle is a pullback and the
@@ -974,54 +955,7 @@ module PullbackSquare where
       left-square′ : pullback-square-with-right z₂ bottom h top (ψ⁻¹ ∘ φ) left w₂
       left-square′ = substitute-equivalent ψ proof-of-equivalence left-pullback-square
     in left-square′
-  {-
-     if the big rectangle is a pullback and the
-     right square is a pullback, then the left 
-     square is a pullback
-     in this version, a 2-factorization of the
-     rectangle has to be supplied
-
-         w₁    z₁
-       W--> Z--> A
-       |    |    |
-       w₂   z₂   f
-       |    |    |
-       v h  v g  v
-       D -> B -> C
-  -}
 
 
 
-
-  {-
-    E---> E
-    | ⌟   |
-    ↓     ↓
-    B--->B×B
-  -}
   
-{-  diagonal-pullback-square :
-    ∀ {E B : U₀}
-    → (p : E → B)
-    → pullback-square-with-right (λ x → (p x , p x))
-        bottom Δ
-        top id
-        left p
-  diagonal-pullback-square {E} {B} p =
-    let
-      calculation : ∀ (x y : B)
-        → (γ : (x , x) ≈ (y , y)) → γ • Δ ⁎ (π₁ ⁎ γ ⁻¹) ≈ refl
-      calculation x y γ = (λ ξ → γ • ξ) ⁎ application-commutes-with-inversion Δ (π₁ ⁎ γ) • {!⁻¹-is-right-inversion γ!}
-    in commutes-by (λ e → refl)
-        and-the-induced-map-is-an-equivalence-by
-            (has-left-inverse (λ {(e and _ are-in-the-same-fiber-by _) → e})
-               by (λ a → refl)
-             and-right-inverse (λ { (e and _ are-in-the-same-fiber-by _) → e })
-               by (λ {(e and b are-in-the-same-fiber-by γ) →
-                  (e and b are-in-the-same-fiber-by γ)
-                 ≈⟨ equalitiy-action′ (λ x → p x , p x) Δ b (p e) ((π₁ ⁎ γ) ⁻¹) e γ ⟩
-                  (e and p e are-in-the-same-fiber-by γ • Δ ⁎ (π₁ ⁎ γ ⁻¹))
-                 ≈⟨  {!(λ ξ → a and b are-in-the-same-fiber-by ξ) ⁎ !} ⟩
-                  (e and p e are-in-the-same-fiber-by refl)
-                 ≈∎}))
--}

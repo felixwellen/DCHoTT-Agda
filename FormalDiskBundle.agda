@@ -14,7 +14,7 @@ module FormalDiskBundle where
   open import InfinityGroups
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
-
+  open import NonAssociativeGroup
 
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
@@ -50,6 +50,9 @@ module FormalDiskBundle where
 
     ℑG = ℑ G
     ℑG′ = Ω (ℑ BG) (ℑ-unit e)
+
+    structure-on-G = loop-spaces-are-non-associative-groups.as-non-associative-group BG e
+    structure-on-ℑG = ℑ-preserves-non-associative-groups.structure-of-image G structure-on-G
 
     ℑGΔ′ : ℑG′ × ℑG′ → ℑG′
     ℑGΔ′ = ∞-group-Δ (ℑ BG) (ℑ-unit e) 
@@ -111,8 +114,49 @@ module FormalDiskBundle where
   --   ↓        ↓
   --ℑG′ × ℑG′ → ℑG′
   --
+
+    -- new
+  {-   Step 2:
+       use mayer-vietoris-lemma on oo-group like structures to get a square:
+
+      ℑG ---→ ∗
+       |  ⌟   |
+       Δ      |
+       ↓      ↓
+    ℑG × ℑG → ℑG′
+  
+  -}
+    open non-associative-group-structure-on_ structure-on-G using (∂; μ) 
+    open non-associative-group-structure-on_ structure-on-ℑG using ()
+         renaming (∂ to ℑ∂; e to ℑe; μ to ℑμ; left-neutral to ℑleft-neutral) 
+
+    constant-ℑe : One → ℑG
+    constant-ℑe x = ℑe
+
+
+    square2a : 
+          pullback-square-with-right constant-ℑe
+              bottom ℑ∂
+              top π₁
+              left (λ {(d , g) → (g , ℑμ (ℑe , g))})
+    square2a = mayer-vietoris-lemma.result-as-square structure-on-ℑG
+                     constant-ℑe
     
 
+    constant-∗′ : ℑG → One
+    constant-∗′ _ = ∗
+
+    square2 :
+          pullback-square-with-right constant-ℑe
+              bottom ℑ∂
+              top constant-∗′
+              left Δ
+    square2 = substitute-equivalent-cone
+                    constant-∗′ Δ
+                    (λ g → ∗ , g) (has-left-inverse π₂ by (λ _ → refl) and-right-inverse π₂ by (λ {(∗ , _) → refl}))
+                    (λ _ → refl) (λ g → (λ x → g , x) ⁎ ℑleft-neutral g)
+                    square2a
+    -- end new
 
     constant-refl-e : One → ℑG′
     constant-refl-e x = refl
@@ -197,6 +241,27 @@ module FormalDiskBundle where
     
     -}
 
+    -- new
+    {-
+      Step 3 (combine square 1 and 2):
+
+       T∞ G  -→ ℑG           ℑG ----→ ∗      T∞ G ---→ ∗
+        |  ⌟    |             |  ⌟    |        |  ⌟    |
+        |       Δ      and    Δ       |   ⇒    |       |
+        ↓       ↓             ↓       ↓        ↓       ↓
+     G × G → ℑG × ℑG       ℑG × ℑG → ℑG      G × G --→ ℑG
+    
+    -}
+
+    square3 : 
+      pullback-square-with-right constant-ℑe
+        bottom ℑ∂ ∘ (ℑ-unit ×→ ℑ-unit)
+        top (λ _ → ∗)
+        left forget-path
+    square3 = pasting-of-pullback-squares step1 square2
+    
+    -- end new
+
     step3′ : pullback-square-with-right constant-refl-e 
               bottom ℑGΔ′ ∘ (ψ ×→ ψ) ∘ (ℑ-unit-at G ×→ ℑ-unit-at G)
               top (λ _ → ∗) 
@@ -235,6 +300,27 @@ module FormalDiskBundle where
     
     -}
 
+
+    -- new
+    {-
+  
+    Step 4: factor square3
+
+             T∞ G ────────→ ∗
+              | ⌟           |
+ forget-path  |             |
+              ↓             ↓
+            G × G --→ G -→ ℑG
+              \       ⇓    ↗ 
+               ─ ℑ-unit ∘ ∂  
+    -}
+
+    square4 = substitute-homotopic-bottom-map square3
+                (ℑ-unit ∘ ∂)
+                (ℑ-preserves-non-associative-groups.ℑ∂-square G structure-on-G)
+
+    -- end new
+    
     De = D G (refl {a = e})
 
     ∂G : G × G → G
@@ -282,6 +368,28 @@ module FormalDiskBundle where
     φ : De → G
     φ = p₂
 
+    -- new
+
+    {-
+  
+    the right square
+      
+     De -→ ∗
+     | ⌟   |
+     |     |
+     ↓     ↓
+     G -→ ℑG
+    
+    -}
+    
+    new-De-square : pullback-square-with-right (λ _ → ℑe)
+                      bottom ℑ-unit
+                      top p₁
+                      left φ
+    new-De-square = complete-to-pullback-square (λ ∗ → ℑe) (ℑ-unit-at G)
+
+    -- end new
+
     the-De-square : pullback-square-with-right (λ _ → ℑ-unit refl)
                       bottom ℑ-unit
                       top p₁
@@ -316,6 +424,16 @@ module FormalDiskBundle where
     is a pullback
     -}
 
+    -- new
+
+    square5 : pullback-square-with-right φ
+                bottom ∂
+                top _
+                left forget-path
+    square5 = cancel-the-right-pullback-square new-De-square from square4
+
+    -- end new
+
     right-square = the-De-square′
 
     step5 : pullback-square-with-right φ
@@ -333,9 +451,19 @@ module FormalDiskBundle where
        | ⌟      |
        |        φ
        ↓        ↓
-     G × G ---> G
+     G × G -∂-> G
     
     -}
+
+    -- new
+
+    square6 : pullback-square-with-right φ 
+                bottom ∂
+                top π₁
+                left (λ {(d , g) → (g , μ ((φ d) , g))})
+    square6 = mayer-vietoris-lemma.result-as-square structure-on-G φ
+
+    -- end new
 
     step6a′ : pullback-square-with-right φ 
                 bottom (∞-group-Δ BG e) 
@@ -356,6 +484,26 @@ module FormalDiskBundle where
     step6b′ : T∞ G ≃ De × G 
     step6b′ = deduce-equivalence-of-vertices step5 step6a
 
+    new-step6 : De × G ≃ T∞ G
+    new-step6 = deduce-equivalence-of-vertices square6 square5
+
+    new-step6′ : T∞ G ≃ De × G
+    new-step6′ = deduce-equivalence-of-vertices square5 square6
+    
+    χ : T∞ G → G
+    χ (g₁ and g₂ are-in-the-same-fiber-by γ) = g₁
+
+    χ′ : T∞ G → G
+    χ′ (g₁ and g₂ are-in-the-same-fiber-by γ) = g₂
+
+    new-product-square′ :
+      pullback-square-with-right (λ (d : De) → ∗)
+        bottom (λ (g : G) → ∗)
+        top _
+        left p₁
+    new-product-square′ = 
+      square6 and square5 pull-back-the-same-cospan-so-the-first-may-be-replaced-by-the-second-in-the-square (product-square De G)
+      
     as-product-square′ : 
       pullback-square-with-right (λ (d : De) → ∗)
         bottom (λ (g : G) → ∗)
@@ -364,19 +512,22 @@ module FormalDiskBundle where
     as-product-square′ = 
       step6a and step5 pull-back-the-same-cospan-so-the-first-may-be-replaced-by-the-second-in-the-square (product-square De G)
 
-    χ′ : T∞ G → G
-    χ′ (g₁ and g₂ are-in-the-same-fiber-by γ) = g₂
 
     χ′⇒π₂∘step6b′ : (lemma-on-pullbacks-of-Δ.θ BG e De φ) ∘ (underlying-map-of step6b′) ⇒ forget-path
     χ′⇒π₂∘step6b′ = 
       deduced-equivalence-factors-the-left-map step5 step6a
 
+    p₂⇒π₂∘step6b′ : (λ {(d , g) → (g , μ ((φ d) , g))}) ∘ (underlying-map-of new-step6′) ⇒ forget-path
+    p₂⇒π₂∘step6b′ = 
+      deduced-equivalence-factors-the-left-map square5 square6
+
     χ′⇒π₂∘step6b : χ′ ⇒ π₂ ∘ (underlying-map-of step6b′)
     χ′⇒π₂∘step6b (g₁ and g₂ are-in-the-same-fiber-by γ) = π₂ ⁎ (χ′⇒π₂∘step6b′ (g₁ and g₂ are-in-the-same-fiber-by γ))
 
-    χ : T∞ G → G
-    χ (g₁ and g₂ are-in-the-same-fiber-by γ) = g₁
 
+
+
+  
 
     as-product-square : 
       pullback-square-with-right (λ (d : De) → ∗)
