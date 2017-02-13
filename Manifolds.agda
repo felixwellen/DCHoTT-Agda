@@ -40,7 +40,7 @@ module Manifolds where
     f = underlying-map-of f́
 
     {-
-    Step 1a: formal disk bundle on the codaim as a pullback square
+    Step 1a: formal disk bundle on the codomain as a pullback square
     
     T∞ B ──→ B
      | ⌟     |
@@ -52,9 +52,9 @@ module Manifolds where
 
     step1a : pullback-square-with-right ℑ-unit 
                bottom ℑ-unit 
-               top p₁ 
-               left p₂
-    step1a = formal-disk-bundle-as-pullback-square B
+               top p₂ 
+               left p₁
+    step1a = rotate-cospan (formal-disk-bundle-as-pullback-square B)
 
     {-
     Step 1b: base change along f as pullback square
@@ -66,12 +66,12 @@ module Manifolds where
        A ──ét─→ B
     -}
 
-    step1b : pullback-square-with-right p₂
+    step1b : pullback-square-with-right (p-of-T∞ B)
                bottom f
-               top p₁
-               left p₂
+               top _
+               left _
     step1b = complete-to-pullback-square 
-               (p₂-of-pullback ℑ-unit ℑ-unit)
+               (p-of-T∞ B)
                f
 
     {-
@@ -98,14 +98,14 @@ module Manifolds where
     step3 : pullback-square-with-right (ℑ-unit-at B)
                bottom (ℑ-unit ∘ f)
                top _
-               left (p₂-of-pullback (ℑ-unit-at A) (ℑ-unit-at A))
-    step3 = substitute-homotopic-bottom-map 
+               left (p-of-T∞ A)
+    step3 = substitute-homotopic-bottom-map
                (pasting-of-pullback-squares 
-                 (formal-disk-bundle-as-pullback-square A)
-                 step2 
-                 ) 
-               (ℑ-unit ∘ f)
-               (naturality-of-ℑ-unit f ⁻¹∼)
+                 (rotate-cospan (formal-disk-bundle-as-pullback-square A))
+                 step2)
+                 (ℑ-unit ∘ f) ((naturality-of-ℑ-unit f ⁻¹∼))
+                  
+             
 
     {-
     Conclude by cancelling with step1:
@@ -121,7 +121,7 @@ module Manifolds where
         bottom f
         top _
         left (p-of-T∞ A)
-    conclusion = cancel-the-right-pullback-square step1a from step3
+    conclusion = cancel-the-right-pullback-square step1a from step3 
 
     f*T∞B = upper-left-vertex-of step1b
 
@@ -158,6 +158,7 @@ module Manifolds where
 
          constructed below
          -}
+
          T∞V-is-trivial : 
            pullback-square-with-right (λ (d : De) → ∗)
              bottom (λ (x : V) → ∗)
@@ -166,9 +167,18 @@ module Manifolds where
          T∞V-is-trivial =
            pasting-of-pullback-squares 
              (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
-             (substitute-homotopic-left-map
-               (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square BG e) 
-               p₂ (λ {(g₁ and g₂ are-in-the-same-fiber-by γ) → refl}))
+             (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square BG e)
+
+         {-
+
+            T∞V─id─→T∞V      
+             | ⌟     |   
+             p       p   and 
+             |       |
+             ↓       ↓
+             V ─id─→ V
+
+         -}
 
          T∞V-is-equivalent-to-v*T∞M :
            pullback-square-with-right (p-of-T∞ V)
@@ -214,3 +224,4 @@ module Manifolds where
          (M-is-a-manifold : M is-a-manifold-by-the-covering v́ 
                             which-is-a-covering-of-the-∞-group-with-delooping BG , e
                             by ǵ) where
+
