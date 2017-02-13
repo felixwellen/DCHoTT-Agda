@@ -16,6 +16,7 @@ module Manifolds where
   open import Language
   open import OneImage
   open import FiberBundle
+  open import NonAssociativeGroup
 
   pullback-square-of :
     ∀ {A B : U₀}
@@ -167,7 +168,8 @@ module Manifolds where
          T∞V-is-trivial =
            pasting-of-pullback-squares 
              (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
-             (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square BG e)
+             (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square
+               (loop-spaces-are-non-associative-groups.as-non-associative-group BG e))
 
          {-
 

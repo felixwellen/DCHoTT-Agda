@@ -45,17 +45,16 @@ module FormalDiskBundle where
 
 
 
-  module triviality-of-the-formel-disk-bundle-over-∞-groups (BG : U₀) (e : BG) where
-    G = Ω BG e
+  module triviality-of-the-formel-disk-bundle-over-∞-groups
+    {G : U₀} (structure-on-G : non-associative-group-structure-on G) where
 
     ℑG = ℑ G
-    ℑG′ = Ω (ℑ BG) (ℑ-unit e)
 
-    structure-on-G = loop-spaces-are-non-associative-groups.as-non-associative-group BG e
     structure-on-ℑG = ℑ-preserves-non-associative-groups.structure-of-image G structure-on-G
 
-    ℑGΔ′ : ℑG′ × ℑG′ → ℑG′
-    ℑGΔ′ = ∞-group-Δ (ℑ BG) (ℑ-unit e) 
+    open non-associative-group-structure-on_ structure-on-G using (∂; μ; e) 
+    open non-associative-group-structure-on_ structure-on-ℑG using ()
+         renaming (∂ to ℑ∂; e to ℑe; μ to ℑμ; left-neutral to ℑleft-neutral) 
 
     disk-to-coreduced-point : T∞ G → ℑG
     disk-to-coreduced-point (a and b are-in-the-same-fiber-by γ) = ℑ-unit a 
@@ -109,9 +108,6 @@ module FormalDiskBundle where
     ℑG × ℑG → ℑG′
   
   -}
-    open non-associative-group-structure-on_ structure-on-G using (∂; μ) 
-    open non-associative-group-structure-on_ structure-on-ℑG using ()
-         renaming (∂ to ℑ∂; e to ℑe; μ to ℑμ; left-neutral to ℑleft-neutral) 
 
     constant-ℑe : One → ℑG
     constant-ℑe x = ℑe
@@ -176,7 +172,7 @@ module FormalDiskBundle where
                 (ℑ-unit ∘ ∂)
                 (ℑ-preserves-non-associative-groups.ℑ∂-square G structure-on-G)
 
-    De = D G (refl {a = e})
+    De = D G e
 
     φ : De → G
     φ = p₂
