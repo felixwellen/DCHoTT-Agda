@@ -17,11 +17,7 @@ module Im where
   open import NonAssociativeGroup
 
   -- Axioms for ℑ, the infinitesimal shape modality
-  -- (this may also be read as axiomatizing a general lex Modality)
-  -- the axioms are taken from a n-cafe post from mike shulman
-  -- "internalizing the external, or the joy of codiscreteness"
-  -- update: except the lexness-axioms
-  -- update: Now, it is close to the definition from the HoTT-Book
+  -- (this may also be read as axiomatizing a general modality)
 
   postulate
     ℑ : ∀ {i} → U i → U i
@@ -41,45 +37,20 @@ module Im where
     ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
 
     ℑ-induction :  
-      ∀ {i} {A : U i} {B : ℑ A → U i}
+      ∀ {A : U₀} {B : ℑ A → U₀}
       → (∀ (a : ℑ A) → B(a) is-coreduced)
       → ((a : A) → B(ℑ-unit a))
       → ((a : ℑ A) → B(a))
     ℑ-compute-induction :  
-      ∀ {i} {A : U i} {B : ℑ A → U i}
+      ∀ {A : U₀} {B : ℑ A → U₀}
       → (coreducedness : ∀ (a : ℑ A) → B(a) is-coreduced)
       → (f : (a : A) → B(ℑ-unit a))
       → (a : A) → (ℑ-induction coreducedness f) (ℑ-unit a) ≈ f a
 
     coreduced-types-have-coreduced-identity-types :
       ∀ (B : U₀) → (B is-coreduced) → (b b′ : B) 
-      → ℑ-unit-at (b ≈ b′) is-an-equivalence
+      → (b ≈ b′) is-coreduced
 
-  Ω-of-ℑ-is-coreduced : 
-    ∀ (A : U₀) (a : A)
-    → (Ω (ℑ A) (ℑ-unit a)) is-coreduced
-  Ω-of-ℑ-is-coreduced A a = 
-    coreduced-types-have-coreduced-identity-types 
-      (ℑ A) (ℑ-is-coreduced A) (ℑ-unit a) (ℑ-unit a)
-                             
-    -- maybe lexness or some special case
-  postulate
-    ℑ-commutes-with-Ω : 
-      ∀ (A : U₀) (a : A)
-      → ℑ-induction (λ (γ : ℑ (Ω A a)) → Ω-of-ℑ-is-coreduced A a) (λ γ → ℑ-unit ⁎ γ) is-an-equivalence
-
-
-    -- mike's more concise condition for lexness, which he told me in toronto:
-    ℑ-condition-for-lexness : 
-      ∀ {A : U₀}
-      → (ℑ A) is-contractible 
-      → Π {_} {_} {A × A} (λ {(x , y) → ((ℑ (x ≈ y)) is-contractible)}) 
-
-  -- mike's old condition for lexness
-  --    ℑ-condition-for-lexness :  {A B : U₀}
-  --                             → (ℑ A) is-contractible → (ℑ B) is-contractible
-  --                             → ∀ (f : A → B) (b : B) → (ℑ (fiber-of f at b)) is-contractible
-  --
   
   -- End Axioms
 
@@ -135,26 +106,6 @@ module Im where
     ∀ {A B : U₀} (f : A → B)
     → U₀ 
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
-
-
---      
---  the-preimages-of-equivalences-are-ℑ-connected =
---    {!!}
-
-{-
-  units-are-ℑ-connected :
-    ∀ {A : U₀}
-    → (ℑ-unit-at A) is-ℑ-connected
-  units-are-ℑ-connected = {!!}
--}
-  -- it is preserved under composition
---  composition-preserves-ℑ-connectedness :
---    ∀ {A B C : U₀} (f : A → B) (g : B → C)
---    → (f is-ℑ-connected) → (g is-ℑ-connected)
---    → (g ∘ f) is-ℑ-connected 
---  composition-preserves-ℑ-connectedness f g f-is-ℑ-connected g-is-ℑ-connected c =
---    {!!}
-
 
 
   ℑ-recursion-is-unique : 
