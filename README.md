@@ -17,6 +17,4 @@ If you want to have a look at what has been formalized, the following files are 
 - FiberBundle.agda
 - Im.agda
 
-Some basic properties of left exact Modalities are not proven yet, so there is a bit of cheating in 'Im.agda' i.e., the modality is postulated to commute with the loop space functor, which could be reduced to simpler assumptions.
-Furthermore, there is a lot of stuff about pullback squares, which, to my knowledge, has not been formalized in agda before, but probably in coq.
-
+A Modalities 'I' is defined in Im.agda in a way similar to the HoTT-Book, 7.7.5.
