@@ -145,10 +145,6 @@ module NonAssociativeGroup where
 
   
 
-  module inversion (G : U₀) (structure : non-associative-group-structure-on G) where
-    open non-associative-group-structure-on_ structure
-
-
   module loop-spaces-are-non-associative-groups (BG : U₀) (e : BG) where
 
     right-compose-with :

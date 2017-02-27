@@ -110,30 +110,29 @@ module Im where
 
   ℑ-recursion-is-unique : 
     ∀ {A B : U₀} (f : A → B) (coreducedness : B is-coreduced)
-    → (φ : ℑ A → B) → f ∼ φ ∘ ℑ-unit 
-    → ℑ-recursion coreducedness f ∼ φ
+    → (φ : ℑ A → B) → f ⇒ φ ∘ ℑ-unit 
+    → ℑ-recursion coreducedness f ⇒ φ
   ℑ-recursion-is-unique {A} {B} f coreducedness φ φ-factors = 
     let
         factor-over-unit : (A → B) → (ℑ A → B)
         factor-over-unit = ℑ-recursion coreducedness
         factoring-is-nice : ∀ (g : ℑ A → B)
-                            → factor-over-unit (g ∘ ℑ-unit) ∼ g
+                            → factor-over-unit (g ∘ ℑ-unit) ⇒ g
         factoring-is-nice g = 
           let
-            true-on-contructed = ℑ-compute-recursion coreducedness (g ∘ ℑ-unit)
+            true-on-constructed = ℑ-compute-recursion coreducedness (g ∘ ℑ-unit)
           in ℑ-induction
                (λ x → coreduced-types-have-coreduced-identity-types 
                         B coreducedness (factor-over-unit (g ∘ ℑ-unit) x) (g x))
-               true-on-contructed 
+               true-on-constructed 
         induced-map = ℑ-recursion coreducedness f
-        both-factor-the-same-map : induced-map ∘ ℑ-unit ∼ φ ∘ ℑ-unit
+        both-factor-the-same-map : induced-map ∘ ℑ-unit ⇒ φ ∘ ℑ-unit
         both-factor-the-same-map = compose-homotopies (ℑ-compute-recursion coreducedness f) φ-factors
     in compose-homotopies
         (reverse-homotopy (factoring-is-nice induced-map))
-          (compose-homotopies
-            (mapping-preserves-homotopy factor-over-unit
-               both-factor-the-same-map)
-               (factoring-is-nice φ))
+        (compose-homotopies
+           (mapping-preserves-homotopy factor-over-unit both-factor-the-same-map)
+           (factoring-is-nice φ))
 
 
   module ℑ-is-idempotent (E : U₀) (E-is-coreduced : E is-coreduced) where
@@ -432,18 +431,6 @@ module Im where
     → (A ≃ B) → (B is-coreduced → A is-coreduced)
   to-show-that A is-coreduced,-it-suffices-to-show-that B is-coreduced-since-it-is-equivalent-by φ =
     transport _is-coreduced (univalence (φ ⁻¹≃))
-
-  -- ∞-groups and ℑ
-  module ∞-groups-and-ℑ (BG : U₀) (e : BG) where
-  
-    G = Ω BG e
-    
-    unit-commutes-with-Δ : ∀ (g h : G)
-                           → (ℑ-unit ⁎ g) • (ℑ-unit ⁎ h) ⁻¹ ≈ ℑ-unit ⁎ (g • h ⁻¹)
-    unit-commutes-with-Δ g h = 
-                         (λ ξ → ℑ-unit ⁎ g • ξ) ⁎ application-commutes-with-inversion ℑ-unit h ⁻¹ 
-                         • application-commutes-with-concatenation ℑ-unit g (h ⁻¹) ⁻¹
-
 
 
   module ℑ-preserves-non-associative-groups
