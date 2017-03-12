@@ -7,7 +7,7 @@ The following is proved and could also be interpreted as theorems about general 
 - All F - fiber bundles are associated to an Aut(F) principal bundle.
 
 The only properties we need of a groups are existence of an operation G x G -> G,
-a neutral element for this operation without further compatibility requirements and invertibility of all rigth translations.
+a neutral element for this operation without further compatibility requirements and invertibility of all right translations.
 [Here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf) (theorem 3.6, 1) and some part of 2) is a short account of the question this code solves.
 The classical, category theoretic, version of the theory and together with a lot of opportunities to extend the formalized version is [here](https://arxiv.org/abs/1701.06238).
 
