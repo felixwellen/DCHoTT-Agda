@@ -14,7 +14,7 @@ module FormalDiskBundle where
   open import InfinityGroups
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
-  open import NonAssociativeGroup
+  open import LeftInvertibleHspace
 
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
@@ -46,14 +46,14 @@ module FormalDiskBundle where
 
 
   module triviality-of-the-formel-disk-bundle-over-∞-groups
-    {G : U₀} (structure-on-G : non-associative-group-structure-on G) where
+    {G : U₀} (structure-on-G : left-invertible-structure-on G) where
 
     ℑG = ℑ G
 
-    structure-on-ℑG = ℑ-preserves-non-associative-groups.structure-of-image G structure-on-G
+    structure-on-ℑG = ℑ-preserves-left-invertible-H-spaces.structure-of-image G structure-on-G
 
-    open non-associative-group-structure-on_ structure-on-G using (∂; μ; e) 
-    open non-associative-group-structure-on_ structure-on-ℑG using ()
+    open left-invertible-structure-on_ structure-on-G using (∂; μ; e) 
+    open left-invertible-structure-on_ structure-on-ℑG using ()
          renaming (∂ to ℑ∂; e to ℑe; μ to ℑμ; left-neutral to ℑleft-neutral) 
 
     disk-to-coreduced-point : T∞ G → ℑG
@@ -170,7 +170,7 @@ module FormalDiskBundle where
 
     square4 = substitute-homotopic-bottom-map square3
                 (ℑ-unit ∘ ∂)
-                (ℑ-preserves-non-associative-groups.ℑ∂-square G structure-on-G)
+                (ℑ-preserves-left-invertible-H-spaces.ℑ∂-square G structure-on-G)
 
     De = D G e
 

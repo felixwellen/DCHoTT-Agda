@@ -16,7 +16,7 @@ module Manifolds where
   open import Language
   open import OneImage
   open import FiberBundle
-  open import NonAssociativeGroup
+  open import LeftInvertibleHspace
 
   pullback-square-of :
     ∀ {A B : U₀}

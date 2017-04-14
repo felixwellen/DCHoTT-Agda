@@ -14,7 +14,7 @@ module Im where
   open import Fiber
   open import Language
   open import Univalence                     -- for now, just convenience
-  open import NonAssociativeGroup
+  open import LeftInvertibleHspace
 
   -- Axioms for ℑ, the infinitesimal shape modality
   -- (this may also be read as axiomatizing a general modality)
@@ -433,12 +433,12 @@ module Im where
     transport _is-coreduced (univalence (φ ⁻¹≃))
 
 
-  module ℑ-preserves-non-associative-groups
+  module ℑ-preserves-left-invertible-H-spaces
          (X : U₀)
-         (non-associative-group-structure-on-X : non-associative-group-structure-on X)
+         (left-invertible-structure-on-X : left-invertible-structure-on X)
        where
      
-    open non-associative-group-structure-on_ non-associative-group-structure-on-X
+    open left-invertible-structure-on_ left-invertible-structure-on-X
     ℑX = ℑ X
   
     ℑX×ℑX-coreduced : (ℑX × ℑX) is-coreduced
@@ -626,7 +626,7 @@ module Im where
 
     
 
-    structure-of-image : non-associative-group-structure-on ℑX
+    structure-of-image : left-invertible-structure-on ℑX
     structure-of-image = record {
                                   e = ℑe;
                                   μ = ℑμ;
@@ -648,14 +648,14 @@ module Im where
         X ────ι───→ ℑX ←───  
 
       we aim at using the ∂-triangle characteization 
-      (∂-is-determined-by-a-triangle in NonAssociativeGroup)
+      (∂-is-determined-by-a-triangle in LeftInvertibleHspace)
     -}
     
     ℑ∂′ : ℑX × ℑX → ℑ X
     ℑ∂′ = ℑ→ ∂ ∘ φ
 
     ℑ∂ : ℑX × ℑX → ℑ X
-    ℑ∂ = non-associative-group-structure-on_.∂ structure-of-image
+    ℑ∂ = left-invertible-structure-on_.∂ structure-of-image
     
     ℑ∂′-square : ℑ∂′ ∘ (ℑ-unit ×→ ℑ-unit) ⇒ ℑ-unit ∘ ∂
     ℑ∂′-square (x , x′) = ℑ∂′ (ℑ-unit x , ℑ-unit x′)
@@ -783,7 +783,7 @@ module Im where
 
     ℑ∂′⇒ℑ∂ :
       ℑ∂′ ⇒ ℑ∂
-    ℑ∂′⇒ℑ∂ = non-associative-group-structure-on_.∂-is-determined-by-a-triangle
+    ℑ∂′⇒ℑ∂ = left-invertible-structure-on_.∂-is-determined-by-a-triangle
                structure-of-image ℑ∂′ ℑ∂′-triangle
 
     
