@@ -22,12 +22,13 @@ module LeftInvertibleHspace where
       μ : X × X → X
       left-neutral : ∀ (x : X) → μ (e , x) ≈ x
       right-neutral : ∀ (x : X) → μ (x , e) ≈ x
-      -- the following means, that for all a,b in X, there is an contractbile space
+      -- the following means, that for all a,b in X, there is an contractible space
       -- of x'es such that: xa=b
       -- therefore, 'invertible' may also be called 'cancellable'
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
 
   
+    
 
     open _is-an-equivalence 
     

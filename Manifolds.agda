@@ -29,12 +29,13 @@ module Manifolds where
     the-square-commuting-by (naturality-of-ℑ-unit f)
       and-inducing-an-equivalence-by pullback-property
 
-  _is-a-manifold-by-the-covering_which-is-a-covering-of-the-∞-group-with-delooping_,_by_ : 
-    ∀ {W : U₀} (M : U₀)
-    → (χ : W ─ét→ M) → (BG : U₀) (e : BG) → (ξ : W ─ét→ Ω BG e)
+  _is-a-manifold-with-cover_locally-like_by_ : 
+    ∀ {W : U₀} {V : U₀} (M : U₀)
+    → (w : W ─ét→ M) → (structure-on-V : left-invertible-structure-on V) → (v : W ─ét→ V)
     → U₀
-  M is-a-manifold-by-the-covering χ which-is-a-covering-of-the-∞-group-with-delooping BG , e by ξ =
-    underlying-map-of χ is-1-epi
+  M is-a-manifold-with-cover w locally-like structure-on-V by v =
+    underlying-map-of w is-1-epi
+    
 
   module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
 
@@ -136,94 +137,90 @@ module Manifolds where
 
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
-         (V M : U₀) (v́ : V ─ét→ M) 
-         (BG : U₀) (e : BG) (ǵ : V ─ét→ Ω BG e)
-         (M-is-a-manifold : M is-a-manifold-by-the-covering v́ 
-                            which-is-a-covering-of-the-∞-group-with-delooping BG , e
-                            by ǵ) where
+         {V : U₀} (W M : U₀) (w : W ─ét→ M) 
+         (structure-on-V : left-invertible-structure-on V) (v : W ─ét→ V)
+         (M-is-a-manifold : M is-a-manifold-with-cover w
+                            locally-like structure-on-V by v) where
 
-         v = underlying-map-of v́
-         g = underlying-map-of ǵ
-         G = Ω BG e
-         De = D G refl
+         open left-invertible-structure-on_ structure-on-V
+         De = D V e
 
 
          {-
-         T∞ V is a trivial bundle, which is witnessed by the square
+         T∞ W is a trivial bundle, which is witnessed by the square
          
-         T∞V ───→ De
+         T∞W ───→ De
           | ⌟     |
           |       |
           ↓       ↓
-          V ────→ 1
+          W ────→ 1
 
          constructed below
          -}
 
-         T∞V-is-trivial : 
+         T∞W-is-trivial : 
            pullback-square-with-right (λ (d : De) → ∗)
-             bottom (λ (x : V) → ∗)
+             bottom (λ (x : W) → ∗)
              top _
-             left (p-of-T∞ V)
-         T∞V-is-trivial =
+             left (p-of-T∞ W)
+         T∞W-is-trivial =
            pasting-of-pullback-squares 
-             (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion ǵ)  
+             (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion v)  
              (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square
-               (loop-spaces-are-non-associative-groups.as-non-associative-group BG e))
+               structure-on-V)
 
          {-
 
-            T∞V─id─→T∞V      
+            T∞W─id─→T∞W      
              | ⌟     |   
-             p       p   and 
+             p       p   and ? 
              |       |
              ↓       ↓
-             V ─id─→ V
+             W ─id─→ W
 
          -}
 
-         T∞V-is-equivalent-to-v*T∞M :
-           pullback-square-with-right (p-of-T∞ V)
+         T∞W-is-equivalent-to-w*T∞M :
+           pullback-square-with-right (p-of-T∞ W)
              bottom id
              top _
              left _
-         T∞V-is-equivalent-to-v*T∞M =
-           (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion v́)
-           and (complete-to-pullback-square (p-of-T∞ M) v)
+         T∞W-is-equivalent-to-w*T∞M =
+           (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion w)
+           and (complete-to-pullback-square (p-of-T∞ M) (underlying-map-of w))
            pull-back-the-same-cospan-so-the-first-may-be-replaced-by-the-second-in-the-square
-           (pullback-square-from-identity-of-morphisms (p-of-T∞ V))
+           (pullback-square-from-identity-of-morphisms (p-of-T∞ W))
 
-         v*T∞M-is-trivial :
+         w*T∞M-is-trivial :
            pullback-square-with-right (λ (d : De) → ∗)
-             bottom (λ (x : V) → ∗)
+             bottom (λ (x : W) → ∗)
              top _
-             left (v *→ (p-of-T∞ M))
-         v*T∞M-is-trivial =
+             left ((underlying-map-of w) *→ (p-of-T∞ M))
+         w*T∞M-is-trivial =
            substitute-homotopic-left-map
              (pasting-of-pullback-squares
-               T∞V-is-equivalent-to-v*T∞M
-               T∞V-is-trivial)
-             (v *→ (p-of-T∞ M))
+               T∞W-is-equivalent-to-w*T∞M
+               T∞W-is-trivial)
+             ((underlying-map-of w) *→ (p-of-T∞ M))
              (deduced-equivalence-factors-the-left-map
-                (complete-to-pullback-square (p-of-T∞ M) v)
+                (complete-to-pullback-square (p-of-T∞ M) (underlying-map-of w))
                 (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion
-                 v́)
+                 w)
                 ⁻¹⇒)
 
          
          T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a De -fiber-bundle
          T∞M-is-a-fiber-bundle =
            let
-             v́-as-surjection = (v is-1-epi-by M-is-a-manifold)
+             v́-as-surjection = ((underlying-map-of w) is-1-epi-by M-is-a-manifold)
            in
-             on V the-pullback-along v́-as-surjection
-             is-trivial-by top-map-of v*T∞M-is-trivial
-             and v*T∞M-is-trivial
+             on W the-pullback-along v́-as-surjection
+             is-trivial-by top-map-of w*T∞M-is-trivial
+             and w*T∞M-is-trivial
 
   module the-formal-disk-bundle-over-a-manifold-is-associated 
-         (V M : U₀) (v́ : V ─ét→ M) 
-         (BG : U₀) (e : BG) (ǵ : V ─ét→ Ω BG e)
-         (M-is-a-manifold : M is-a-manifold-by-the-covering v́ 
-                            which-is-a-covering-of-the-∞-group-with-delooping BG , e
-                            by ǵ) where
+         {V : U₀} (W M : U₀) (w : W ─ét→ M) 
+         (structure-on-V : left-invertible-structure-on V) (v : W ─ét→ V)
+         (M-is-a-manifold : M is-a-manifold-with-cover w
+                            locally-like structure-on-V by v) where
 
