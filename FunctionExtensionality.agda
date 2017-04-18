@@ -55,7 +55,7 @@ module FunctionExtensionality where
                        • (cancel-fun-ext′ _ _ H a)
 
   mapping-preserves-homotopy : ∀ {A B C D : U₀} {f g : A → B} (map : (A → B) → (C → D)) 
-                               → (H : f ∼ g) 
-                               → map f ∼ map g
+                               → (H : f ⇒ g) 
+                               → map f ⇒ map g
   mapping-preserves-homotopy map H = equality-to-homotopy (map ⁎ fun-ext H)
 

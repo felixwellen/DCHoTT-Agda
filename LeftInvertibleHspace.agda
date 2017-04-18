@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
-module NonAssociativeGroup where 
+module LeftInvertibleHspace where 
   open import Basics 
   open import EqualityAndPaths
   open import Homotopies
@@ -14,7 +14,7 @@ module NonAssociativeGroup where
   open import PullbackSquare
   open import Sums
 
-  record non-associative-group-structure-on_ (X : U₀) : U₀ where
+  record left-invertible-structure-on_ (X : U₀) : U₀ where
     constructor
       structure-given-by-e=_,μ=_,neutral-by_and_,left-invertible-by_and_
     field
@@ -22,12 +22,13 @@ module NonAssociativeGroup where
       μ : X × X → X
       left-neutral : ∀ (x : X) → μ (e , x) ≈ x
       right-neutral : ∀ (x : X) → μ (x , e) ≈ x
-      -- the following means, that for all a,b in X, there is an contractbile space
+      -- the following means, that for all a,b in X, there is an contractible space
       -- of x'es such that: xa=b
       -- therefore, 'invertible' may also be called 'cancellable'
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
 
   
+    
 
     open _is-an-equivalence 
     
@@ -145,10 +146,6 @@ module NonAssociativeGroup where
 
   
 
-  module inversion (G : U₀) (structure : non-associative-group-structure-on G) where
-    open non-associative-group-structure-on_ structure
-
-
   module loop-spaces-are-non-associative-groups (BG : U₀) (e : BG) where
 
     right-compose-with :
@@ -199,7 +196,7 @@ module NonAssociativeGroup where
       and-right-inverse left-compose-with (γ ⁻¹) by (λ (η : Ω BG e) → left-compose-right-invertible γ η ⁻¹)
 
 
-    as-non-associative-group : non-associative-group-structure-on (Ω BG e)
+    as-non-associative-group : left-invertible-structure-on (Ω BG e)
     as-non-associative-group = record { e = refl;
                           μ = λ {(γ , η) → γ • η};
                           left-neutral = refl-is-left-neutral;
@@ -222,8 +219,8 @@ module NonAssociativeGroup where
     (look at the code below for the definition of all maps)
   -}
 
-  module mayer-vietoris-lemma {G D : U₀} (structure : non-associative-group-structure-on G) (φ : D → G) where
-    open non-associative-group-structure-on_ structure
+  module mayer-vietoris-lemma {G D : U₀} (structure : left-invertible-structure-on G) (φ : D → G) where
+    open left-invertible-structure-on_ structure
 
 
     {- get a starting pullback square where the pullback is written as
