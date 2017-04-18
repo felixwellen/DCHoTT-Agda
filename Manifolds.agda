@@ -149,6 +149,7 @@ module Manifolds where
 
 
          {-
+
          T∞ V is a trivial bundle, which is witnessed by the square
          
          T∞V ───→ De
@@ -158,6 +159,7 @@ module Manifolds where
           V ────→ 1
 
          constructed below
+
          -}
 
          T∞V-is-trivial : 

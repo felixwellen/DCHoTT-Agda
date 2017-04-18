@@ -660,7 +660,7 @@ module Im where
         ↓          ↓  ↓   ℑ→ ∂
         X ────ι───→ ℑX ←───  
 
-      we aim at using the ∂-triangle characteization 
+      we aim at using the ∂-triangle characterization 
       (∂-is-determined-by-a-triangle in NonAssociativeGroup)
     -}
     
