@@ -259,7 +259,13 @@ module Equivalences where
     let f≃ = f is-an-equivalence-because proof-of-equivalency-of-f
         g≃ = g is-an-equivalence-because proof-of-equivalency-of-g
     in proof-of-equivalency (g≃ ∘≃ f≃)
-  
+
+  the-composition-of_and_is-an-equivalence,-since-the-first-one-is-by_and-the-second-by_ :
+    ∀ {A B C : U₀} (f : A → B) (g : B → C)
+    → f is-an-equivalence → g is-an-equivalence
+    → g ∘ f is-an-equivalence
+  the-composition-of f and g is-an-equivalence,-since-the-first-one-is-by f-is-an-equivalence and-the-second-by g-is-an-equivalence =
+    the-composition-of-equivalences-is-an-equivalence f g f-is-an-equivalence g-is-an-equivalence
   
   -- application for equivalences
   infixl 60 _$≃_

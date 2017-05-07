@@ -39,6 +39,9 @@ module LeftInvertibleHspace where
     left-inverting-is-an-equivalence x₀ = the-inverse-of (λ x → μ (x , x₀)) which-is-an-equivalence-by
                                             (left-invertible x₀) is-again-an-equivalence
 
+    right-translation : (x : X) → X ≃ X
+    right-translation x = (λ y → μ (y , x)) is-an-equivalence-because left-invertible x
+    
     open _is-contractible
     open import CommonEquivalences 
     -- 'unique' meaning unique up to contractible choice

@@ -58,3 +58,5 @@ module EquivalenceCharacterization where
     to-fiber-condition :
       f is-an-equivalence → (∀ (b : B) → (fiber-of f at b) is-contractible) 
     to-fiber-condition f-is-an-equivalence b = fibers-are-contractible f-is-an-equivalence b
+
+

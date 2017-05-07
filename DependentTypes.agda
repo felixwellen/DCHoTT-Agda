@@ -272,3 +272,183 @@ module DependentTypes where
         and-inducing-an-equivalence-by
           (has-left-inverse induced-map⁻¹ by left-invertible
            and-right-inverse induced-map⁻¹ by right-invertible)
+
+
+  -- this would should better be in some pullback-module,
+  -- but due to some dependecy issues, it is here...
+  module pullback-preserves-equivalences
+    {A B C : U₀} (f : A → B) (g : C → B) (f-is-an-equivalence : f is-an-equivalence) where
+
+  {-
+    we pullback f and want to show that f′ is also an equivalence
+   _  ───→ A
+   | ⌟     |
+   f′      f
+   ↓       ↓
+   C ──g─→ B
+  -}
+
+    □-with-f : pullback-square-with-right f
+                 bottom g
+                 top _
+                 left _
+    □-with-f = complete-to-pullback-square f g
+
+    f′ : _ → C
+    f′ = left-map-of □-with-f
+
+  {-
+
+    fiber-of f′ at c ─ι→_
+                | ⌟     |
+                |       f′
+                ↓       ↓
+                1 ────→ C
+  -}
+
+    fiber-□-for-f′ :
+      ∀ (c : C)
+      → pullback-square-with-right f′
+           bottom (λ _ → c)
+           top ι-fiber
+           left (λ _ → ∗)
+    fiber-□-for-f′ c = fiber-square-for f′ at c
+
+
+
+  {-
+    get the following by pasting:
+
+   fiber-of f′ at c ──→ A
+                | ⌟     |
+                |       f
+                ↓       ↓
+                1 ────→ B
+  -}
+
+    pasted-□ :
+      ∀ (c : C)
+      → pullback-square-with-right f
+           bottom (g ∘ (λ _ → c))
+           top _
+           left _
+    pasted-□ c = pasting-of-pullback-squares
+                   (fiber-□-for-f′ c)
+                   □-with-f     
+
+  {-
+    compare this square with a corresponding fiber square of f
+  -}
+
+    the-fiber-is-equivalent-to-a-fiber-of-f :
+      ∀ (c : C)
+      → fiber-of f′ at c ≃ fiber-of f at (g c)
+    the-fiber-is-equivalent-to-a-fiber-of-f c =
+      deduce-equivalence-of-vertices
+        (pasted-□ c) (fiber-square-for f at g c)
+
+    {-
+      conclude that all fibers are contractible
+    -}
+
+    open import EquivalenceCharacterization
+    open import Contractibility
+    
+    all-fibers-are-contractible :
+      ∀ (c : C)
+      → (fiber-of f′ at c) is-contractible
+    all-fibers-are-contractible c =
+      types-equivalent-to-contractibles-are-contractible
+        (the-fiber-is-equivalent-to-a-fiber-of-f c)
+        (contractible-fibers-characterize-equivalences.to-fiber-condition
+          f f-is-an-equivalence (g c))
+
+    conclusion :
+      f′ is-an-equivalence
+    conclusion =
+      contractible-fibers-characterize-equivalences.from-fiber-condition
+        f′ all-fibers-are-contractible
+    
+
+  {-
+    ∑ P - - ∑ Q
+     |       |
+     ↓       ↓ 
+     A ─f──→ B  
+
+    if f is an equivalence and the fiber over a and f(a) are equivalent,
+    there is an equivalence on the total spaces.
+  -}
+  module fiber-equivalences-along-an-equivalence-on-the-base
+    {A B : U₀} (P : A → U₀) (Q : B → U₀)
+    (f≃ : A ≃ B) (s≃ : (a : A) → P a ≃ Q ((underlying-map-of f≃) a)) where
+
+    -- some shortahnds
+    f = underlying-map-of f≃
+
+    s : (a : A) → P a → Q (f a)
+    s a = underlying-map-of (s≃ a)
+
+    f-as-morphism-of-dependent-types : morphism-of-dependent-types A B P Q
+    f-as-morphism-of-dependent-types = record{ base-change = f; morphism-of-fibers = s}
+
+    induced-map : ∑ P → ∑ Q
+    induced-map = the-map-on-total-spaces-induced-by f-as-morphism-of-dependent-types
+
+    -- s ⇒ induced-map?
+
+    □₁ : pullback-square-with-right ∑π₁
+           bottom f
+           top induced-map
+           left ∑π₁
+    □₁ = fiberwise-equivalences-are-pullbacks.fiberwise-equivalences-are-pullbacks
+           f-as-morphism-of-dependent-types
+           (λ a → proof-of-equivalency (s≃ a))
+
+
+    pullback-of-f-along-π₁ : _ → ∑ Q
+    pullback-of-f-along-π₁ = pullback-preserves-equivalences.f′ f ∑π₁ (proof-of-equivalency f≃)
+
+    -- use that pullbacks of equivalences are equivalences
+
+
+    □₂ : pullback-square-with-right (∑π₁-from Q)
+           bottom f
+           top _
+           left _
+    □₂ = rotate-cospan (pullback-preserves-equivalences.□-with-f f ∑π₁ (proof-of-equivalency f≃))
+    
+  {-
+    in this last step, we use both pullback squares
+    to see that the induced map (∑ P ---→ ∑ Q) is an 
+    equivalence.
+    This follows since f′ is one as the pullback of an 
+    equivalence and the induced map Z → ∑ P is an 
+    equivalence, both pullbacks are pullbacks of the same 
+    cospan.
+
+    Z────────f′
+    | ↘        ↘
+    | ∑ P --→ ∑ Q
+    |  |       |
+    \  ↓       ↓ 
+     ↘ A ─f──→ B  
+
+  -}
+
+    induced-map-is-an-equivalence :
+      induced-map is-an-equivalence
+    induced-map-is-an-equivalence =
+      let
+        Z = upper-left-vertex-of □₂
+        f′ : Z → ∑ Q
+        f′ = pullback-preserves-equivalences.f′ f (∑π₁-from Q) (proof-of-equivalency f≃)
+        f′≃ : Z ≃ ∑ Q  
+        f′≃ = f′ is-an-equivalence-because
+          (pullback-preserves-equivalences.conclusion f ∑π₁ (proof-of-equivalency f≃))
+        φ≃ : ∑ P ≃ Z
+        φ≃ = deduce-equivalence-of-vertices □₁ □₂
+        φ : ∑ P → Z
+        φ = underlying-map-of φ≃
+      in the-map induced-map is-an-equivalence-since-it-is-homotopic-to f′ ∘ φ by
+         (λ _ → refl) which-is-an-equivalence-by proof-of-equivalency (f′≃ ∘≃ φ≃)

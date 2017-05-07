@@ -35,7 +35,7 @@ module HalfAdjointEquivalences where
   left-invertibility-of-the-half-adjoint :
     ∀ {A B : U₀}
     → (e : A ≃ha B)
-    → inverse-of-the-half-adjoint e ∘ underlying-map-of-the-half-adjoint e ∼ id 
+    → inverse-of-the-half-adjoint e ∘ underlying-map-of-the-half-adjoint e ⇒ id 
   left-invertibility-of-the-half-adjoint
     (_ , (has-inverse _ by left-invertible , _ and-is-half-adjoint-by _)) =
     left-invertible
@@ -43,7 +43,7 @@ module HalfAdjointEquivalences where
   right-invertibility-of-the-half-adjoint :
     ∀ {A B : U₀}
     → (e : A ≃ha B)
-    → underlying-map-of-the-half-adjoint e ∘ inverse-of-the-half-adjoint e  ∼ id 
+    → underlying-map-of-the-half-adjoint e ∘ inverse-of-the-half-adjoint e  ⇒ id 
   right-invertibility-of-the-half-adjoint
     (_ , (has-inverse _ by _ , right-invertible and-is-half-adjoint-by _)) =
     right-invertible
@@ -140,3 +140,24 @@ module HalfAdjointEquivalences where
     → A ≃ B → A ≃ha B
   equivalence-to-half-adjoint-equivalence e =
     ((underlying-map-of e) , proof-that-the-equivalence e is-half-adjoint)
+
+  -- composition of half adjoint equivalences 
+  infixr 70 _∘≃ha_
+  _∘≃ha_ : ∀ {A B C : U₀} (g : B ≃ha C) (f : A ≃ha B) → A ≃ha C
+  g ∘≃ha f = let
+               to-equivalence = half-adjoint-equivalences-to-equivalences
+               to-ha = equivalence-to-half-adjoint-equivalence
+             in to-ha (to-equivalence g ∘≃ to-equivalence f)
+
+  -- inversion
+--  infix 80 _⁻¹≃ha
+--  _⁻¹≃ha : ∀ 
+
+  transport-as-half-adjoint :
+    ∀ {A : U₀}  {x y : A}
+    → (P : A → U₀) → (γ : x ≈ y) → (P x ≃ha P y)
+  transport-as-half-adjoint P γ =
+    equivalence-to-half-adjoint-equivalence (transport-as-equivalence P γ)
+  
+
+    

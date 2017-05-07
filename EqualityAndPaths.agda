@@ -226,3 +226,24 @@ module EqualityAndPaths where
   _≠_ : {A : U₀} (a a′ : A) → U₀  -- \neq
   a ≠ a′ = a ≈ a → Zero
   
+
+  -- do some stupid calculations needed in Im.agda
+  stupid-but-necessary-calculation-with-associativity : 
+    ∀ {A : U₀} {x y z w : A}
+    → (γ : x ≈ y) (η : x ≈ z) (ζ : y ≈ w)
+    → η • (η ⁻¹ • γ • ζ) • ζ ⁻¹ ≈ γ
+  stupid-but-necessary-calculation-with-associativity refl refl refl =
+     refl • (refl ⁻¹ • refl • refl) • refl ⁻¹
+    ≈⟨ refl ⟩
+     refl
+    ≈∎
+
+  another-stupid-but-necessary-calculation-with-associativity : 
+    ∀ {A : U₀} {x y z w : A}
+    → (γ : x ≈ y) (η : z ≈ x) (ζ : w ≈ y)
+    → η ⁻¹ • (η • γ • ζ ⁻¹) • ζ ≈ γ
+  another-stupid-but-necessary-calculation-with-associativity refl refl refl =
+     refl ⁻¹ • (refl • refl • refl ⁻¹) • refl 
+    ≈⟨ refl ⟩
+     refl
+    ≈∎
