@@ -44,6 +44,8 @@ module FormalDiskBundle where
   induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
     (f x′ , mapping-with f preserves-infinitesimal-proximity x′-is-close-to-x)
 
+  T∞→ = induced-map-on-formal-disks
+
   formal-disk-bundle : (X : U₀) → U₀
   formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
@@ -61,18 +63,39 @@ module FormalDiskBundle where
     ∀ (X : U₀) → pullback-square-with-right ℑ-unit bottom ℑ-unit top p₁ left p₂
   formal-disk-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
 
+  {-
+    we have two versions of the disk bundle, 
+    one constructed as a pullback, the other
+    as the sum over the T∞-as-dependent-type
+  -}
+  module pullback-definition-and-dependent-version-agree (X : U₀) where
+
+    φ : T∞ X → ∑ (T∞-as-dependent-type X)
+    φ (x and y are-in-the-same-fiber-by γ) = (x , (y , γ))
+
+    φ⁻¹ : ∑ (T∞-as-dependent-type X) → T∞ X
+    φ⁻¹ (x , (y , γ)) = x and y are-in-the-same-fiber-by γ
+
+    conclusion : T∞ X ≃ ∑ (T∞-as-dependent-type X)
+    conclusion = φ is-an-equivalence-because
+      (has-left-inverse φ⁻¹ by (λ _ → refl)
+       and-right-inverse φ⁻¹ by (λ _ → refl))
+
+  {-
+    Above, for a morphism f : A → B, we defined the induced
+    dependent morphism  T∞ f : (a : A) → formal-disk-at a → formal-disk-at (f a)
+    if f is an equivalence, T∞ f is an equivalence.
+  -}
+
   module equivalences-induce-equivalences-on-formal-disks
     {A B : U₀} (f≃ : A ≃ B) where
 
     f = underlying-map-of f≃
 
-    T∞f : (a : A) → formal-disk-at a → formal-disk-at (f a)
-    T∞f = induced-map-on-formal-disks f
-
     ℑf⁎-is-an-equivalence : (x y : A) → (λ (γ : x is-close-to y) → ℑ⁎ f ⁎ γ) is-an-equivalence
     ℑf⁎-is-an-equivalence = equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
     
-    T∞f-is-an-equivalence : (a : A) → (T∞f a) is-an-equivalence
+    T∞f-is-an-equivalence : (a : A) → (T∞→ f a) is-an-equivalence
     T∞f-is-an-equivalence a =
       fiber-equivalences-along-an-equivalence-on-the-base.induced-map-is-an-equivalence
         (λ x → a is-close-to x) (λ y → f a is-close-to y) f≃
@@ -80,8 +103,8 @@ module FormalDiskBundle where
            (λ (γ : a is-close-to x) → ℑ⁎ f ⁎ γ) is-an-equivalence-because
            ℑf⁎-is-an-equivalence a x)
            
-    T∞f-as-equivalence : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
-    T∞f-as-equivalence a = (T∞f a) is-an-equivalence-because (T∞f-is-an-equivalence a)
+    conclusion : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
+    conclusion a = (T∞→ f a) is-an-equivalence-because (T∞f-is-an-equivalence a)
 
   module paths-induce-equivalences-of-formal-disks
     {A : U₀} {x y : A} (γ : x ≈ y) where
@@ -110,7 +133,7 @@ module FormalDiskBundle where
         paths-induce-equivalences-of-formal-disks.conclusion
           (left-neutral x)
       ∘≃
-        equivalences-induce-equivalences-on-formal-disks.T∞f-as-equivalence
+        equivalences-induce-equivalences-on-formal-disks.conclusion
           (right-translation x) e
 
     {- 
