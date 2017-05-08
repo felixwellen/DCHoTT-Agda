@@ -93,7 +93,8 @@ module FormalDiskBundle where
     f = underlying-map-of f≃
 
     ℑf⁎-is-an-equivalence : (x y : A) → (λ (γ : x is-close-to y) → ℑ⁎ f ⁎ γ) is-an-equivalence
-    ℑf⁎-is-an-equivalence = equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
+    ℑf⁎-is-an-equivalence =
+      equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
     
     T∞f-is-an-equivalence : (a : A) → (T∞→ f a) is-an-equivalence
     T∞f-is-an-equivalence a =
@@ -135,6 +136,7 @@ module FormalDiskBundle where
       ∘≃
         equivalences-induce-equivalences-on-formal-disks.conclusion
           (right-translation x) e
+
 
     {- 
       now, univalences turns this family to a homotopy in the universe

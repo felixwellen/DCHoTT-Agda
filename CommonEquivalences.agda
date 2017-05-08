@@ -353,6 +353,7 @@ module CommonEquivalences where
     if f is an equivalence and the fiber over a and f(a) are equivalent,
     there is an equivalence on the total spaces.
     (this probably also follows from stuff on pullbacks...)
+    (its in the Book, 4.7.7)
   -}
   module fiber-equivalences-along-an-equivalence-on-the-base
     {A B : U₀} (P : A → U₀) (Q : B → U₀)
