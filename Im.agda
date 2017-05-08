@@ -91,7 +91,7 @@ module Im where
   naturality-of-ℑ-unit : 
     ∀ {A B : U₀}
     → (f : A → B)
-    → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
+    → (a : A) → (ℑ→ f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
   ℑ⇒ : ∀ {A B : U₀} {f g : A → B}
@@ -100,12 +100,21 @@ module Im where
          (λ a → coreduced-types-have-coreduced-identity-types (ℑ _) (ℑ-is-coreduced _) (ℑ→ _ a) (ℑ→ _ a))
          (λ a → naturality-square-for-ℑ _ a • ℑ-unit ⁎ (H a) • naturality-square-for-ℑ _ a ⁻¹)
 
+  ℑ⁎_⁎_ :
+    ∀ {A B : U₀} {x y : A}
+    → (f : A → B)
+    → ((ℑ-unit x ≈ ℑ-unit y) → (ℑ-unit (f(x)) ≈ ℑ-unit (f(y))))
+  ℑ⁎ f ⁎ γ = naturality-square-for-ℑ f _ ⁻¹ • ℑ→ f ⁎ γ • naturality-square-for-ℑ f _
 
   -- define coreduced connectedness
   _is-ℑ-connected :
     ∀ {A B : U₀} (f : A → B)
     → U₀ 
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
+
+
+    
+    
 
 
   ℑ-recursion-is-unique : 
@@ -170,7 +179,7 @@ module Im where
 
   applying-ℑ-preserves-equivalences : ∀ {A B : U₀} (f : A → B)
                                       → f is-an-equivalence
-                                      → (apply-ℑ f) is-an-equivalence
+                                      → (ℑ→ f) is-an-equivalence
   applying-ℑ-preserves-equivalences f witness =
     let ℑf = apply-ℑ f
         l = (_is-an-equivalence.left-inverse witness)
@@ -198,11 +207,64 @@ module Im where
                                → A ≃ B → ℑ A ≃ ℑ B
   apply-ℑ-to-the-equivalence 
     (f is-an-equivalence-because proof-of-invertibility) =
-      apply-ℑ f is-an-equivalence-because
+      ℑ→ f is-an-equivalence-because
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
 
-  module the-ℑ-preimages-of-equivalences-are-ℑ-connected -- not yet complete
+  -- this is put to use later to conclude that equivalences can 'move' formal disks
+  module equivalences-induce-equivalences-on-the-coreduced-identity-types {A B : U₀} (f≃ : A ≃ B) (x y : A) where
+    f = underlying-map-of f≃
+    ℑf⁎ : ℑ-unit(x) ≈ ℑ-unit(y) → ℑ-unit(f x) ≈ ℑ-unit(f y)
+    ℑf⁎ = λ γ → (ℑ⁎ f ⁎ γ)
+    ℑf⁎′ : ℑ-unit(x) ≈ ℑ-unit(y) → ℑ→ f (ℑ-unit x) ≈ ℑ→ f (ℑ-unit y)
+    ℑf⁎′ γ = ℑ→ f ⁎ γ
+    ℑf⁎′-is-an-equivalence : ℑf⁎′ is-an-equivalence
+    ℑf⁎′-is-an-equivalence =
+      proof-that-equivalences-induce-equivalences-on-path-spaces.proof
+        (ℑ A) (ℑ B) (apply-ℑ-to-the-equivalence f≃)
+
+    {- 
+      we want to show that ℑf⁎ is an equivalence
+      it is the composition of ℑf (induced one on path spaces) 
+      and conjugation with a naturality path for ℑ
+      so we have to show, that this conjugation is an equivalence
+    -}
+
+    conjugate : ℑ→ f (ℑ-unit x) ≈ ℑ→ f (ℑ-unit y) → ℑ-unit(f x) ≈ ℑ-unit(f y)
+    conjugate γ = naturality-square-for-ℑ f _ ⁻¹ • γ • naturality-square-for-ℑ f _
+
+    conjugate⁻¹ : ℑ-unit(f x) ≈ ℑ-unit(f y) → ℑ→ f (ℑ-unit x) ≈ ℑ→ f (ℑ-unit y)
+    conjugate⁻¹ γ = naturality-square-for-ℑ f _ • γ • naturality-square-for-ℑ f _ ⁻¹
+
+    conjugate⁻¹∘conjugate⇒id : conjugate⁻¹ ∘ conjugate ⇒ id
+    conjugate⁻¹∘conjugate⇒id γ =
+        (naturality-square-for-ℑ f _) • ((naturality-square-for-ℑ f _) ⁻¹ • γ • naturality-square-for-ℑ f _) • naturality-square-for-ℑ f _ ⁻¹
+      ≈⟨ stupid-but-necessary-calculation-with-associativity γ
+           (naturality-square-for-ℑ f _) (naturality-square-for-ℑ f _) ⟩
+        γ
+      ≈∎
+
+    conjugate∘conjugate⁻¹⇒id : conjugate ∘ conjugate⁻¹ ⇒ id
+    conjugate∘conjugate⁻¹⇒id γ =
+        (naturality-square-for-ℑ f _ ⁻¹) • ((naturality-square-for-ℑ f _) • γ • naturality-square-for-ℑ f _ ⁻¹) • naturality-square-for-ℑ f _ 
+      ≈⟨ another-stupid-but-necessary-calculation-with-associativity γ  (naturality-square-for-ℑ f _) (naturality-square-for-ℑ f _) ⟩
+        γ
+      ≈∎
+
+    -- 
+    conjugation-with-naturality-path-is-an-equivalence :
+      conjugate is-an-equivalence
+    conjugation-with-naturality-path-is-an-equivalence =
+      has-left-inverse conjugate⁻¹ by conjugate⁻¹∘conjugate⇒id
+      and-right-inverse conjugate⁻¹ by conjugate∘conjugate⁻¹⇒id ⁻¹⇒
+
+    ℑf⁎-is-an-equivalence : ℑf⁎ is-an-equivalence
+    ℑf⁎-is-an-equivalence =
+      the-composition-of ℑf⁎′ and conjugate
+        is-an-equivalence,-since-the-first-one-is-by ℑf⁎′-is-an-equivalence
+        and-the-second-by conjugation-with-naturality-path-is-an-equivalence
+
+  module the-ℑ-preimages-of-equivalences-are-ℑ-connected -- not yet complete, not needed anyway
     {A B : U₀} (f : A → B) (ℑf-is-an-equivalence : (ℑ→ f) is-an-equivalence) where
 
     ℑf = ℑ→ f
@@ -281,7 +343,7 @@ module Im where
   retracts-of-coreduced-types-are-coreduced : 
     ∀ (A E : U₀) → (E is-coreduced) 
     → (ι : A → E) (r : E → A)
-    → r ∘ ι ∼ id
+    → r ∘ ι ⇒ id
     → (ℑ-unit-at A) is-an-equivalence
   -- and tobi explained a proof to me:
   retracts-of-coreduced-types-are-coreduced A E E-is-coreduced ι r R =
@@ -306,9 +368,8 @@ module Im where
          (λ â → ℑR â ⁻¹ • ((λ x → ℑr x) ⁎ counit′ (ℑι â)
            • naturality-square-for-ℑ r (r-inverse′ (ℑι â))))
 
-  -- from the book "7.7 Modalities"
-  -- (specialized to ℑ)
 
+  -- from the book "7.7 Modalities"
   module Π-of-coreduced-types-is-coreduced
     {A : U₀} (P : A → U₀)
     (P-is-coreduced : (a : A) → (P a) is-coreduced) where

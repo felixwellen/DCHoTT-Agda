@@ -15,20 +15,36 @@ module FormalDiskBundle where
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
   open import LeftInvertibleHspace
+  open import DependentTypes
 
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
   x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
 
+  _is-close-to_ :
+    {X : U₀} → (x x′ : X) → U₀
+  _is-close-to_ = _is-infinitesimally-close-to_
+
+  mapping-with_preserves-infinitesimal-proximity :
+    ∀ {X Y : U₀} {x x′ : X}
+    → (f : X → Y)
+    → (x is-close-to x′) → (f x) is-close-to (f x′)
+  mapping-with f preserves-infinitesimal-proximity γ = ℑ⁎ f ⁎ γ  -- see 'Im.agda'
+  
   -- T∞ as dependent type
   formal-disk-at_ :
     ∀ {X : U₀}
-    → (x : X) → (X → U₀)
-  formal-disk-at_ x x′ = x′ is-infinitesimally-close-to x
+    → (x : X) → U₀
+  formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
 
-  T∞′ : ∀ (X : U₀) 
-    → (X → U₀)
-  T∞′ X x = ∑ (formal-disk-at x)
+  induced-map-on-formal-disks :
+    ∀ {X Y : U₀}
+    → (f : X → Y)
+    → (x : X) → formal-disk-at x → formal-disk-at (f x)
+  induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
+    (f x′ , mapping-with f preserves-infinitesimal-proximity x′-is-close-to-x)
+
+  T∞→ = induced-map-on-formal-disks
 
   formal-disk-bundle : (X : U₀) → U₀
   formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
@@ -36,6 +52,10 @@ module FormalDiskBundle where
   T∞ : (X : U₀) → U₀
   T∞ X = formal-disk-bundle X
 
+  T∞-as-dependent-type :
+    (X : U₀) → X → U₀
+  T∞-as-dependent-type X x = formal-disk-at x 
+  
   p-of-T∞ : (X : U₀) → (T∞ X) → X
   p-of-T∞ X = p₁-of-pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
@@ -43,7 +63,93 @@ module FormalDiskBundle where
     ∀ (X : U₀) → pullback-square-with-right ℑ-unit bottom ℑ-unit top p₁ left p₂
   formal-disk-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
 
+  {-
+    we have two versions of the disk bundle, 
+    one constructed as a pullback, the other
+    as the sum over the T∞-as-dependent-type
+  -}
+  module pullback-definition-and-dependent-version-agree (X : U₀) where
 
+    φ : T∞ X → ∑ (T∞-as-dependent-type X)
+    φ (x and y are-in-the-same-fiber-by γ) = (x , (y , γ))
+
+    φ⁻¹ : ∑ (T∞-as-dependent-type X) → T∞ X
+    φ⁻¹ (x , (y , γ)) = x and y are-in-the-same-fiber-by γ
+
+    conclusion : T∞ X ≃ ∑ (T∞-as-dependent-type X)
+    conclusion = φ is-an-equivalence-because
+      (has-left-inverse φ⁻¹ by (λ _ → refl)
+       and-right-inverse φ⁻¹ by (λ _ → refl))
+
+  {-
+    Above, for a morphism f : A → B, we defined the induced
+    dependent morphism  T∞ f : (a : A) → formal-disk-at a → formal-disk-at (f a)
+    if f is an equivalence, T∞ f is an equivalence.
+  -}
+
+  module equivalences-induce-equivalences-on-formal-disks
+    {A B : U₀} (f≃ : A ≃ B) where
+
+    f = underlying-map-of f≃
+
+    ℑf⁎-is-an-equivalence : (x y : A) → (λ (γ : x is-close-to y) → ℑ⁎ f ⁎ γ) is-an-equivalence
+    ℑf⁎-is-an-equivalence =
+      equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
+    
+    T∞f-is-an-equivalence : (a : A) → (T∞→ f a) is-an-equivalence
+    T∞f-is-an-equivalence a =
+      fiber-equivalences-along-an-equivalence-on-the-base.induced-map-is-an-equivalence
+        (λ x → a is-close-to x) (λ y → f a is-close-to y) f≃
+        (λ x →
+           (λ (γ : a is-close-to x) → ℑ⁎ f ⁎ γ) is-an-equivalence-because
+           ℑf⁎-is-an-equivalence a x)
+           
+    conclusion : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
+    conclusion a = (T∞→ f a) is-an-equivalence-because (T∞f-is-an-equivalence a)
+
+  module paths-induce-equivalences-of-formal-disks
+    {A : U₀} {x y : A} (γ : x ≈ y) where
+
+    transport-in-T∞ :
+      formal-disk-at x ≃ formal-disk-at y
+    transport-in-T∞ = transport-as-equivalence (T∞-as-dependent-type A) γ
+
+    conclusion = transport-in-T∞
+
+
+  {-
+    this is a new proof for the triviality of T∞ over left-invertible H-spaces
+    in contrast to the second proof below, it needs univalence
+  -}
+  module triviality-of-the-formel-disk-bundle-using-univalence
+    {V : U₀} (structure-on-V : left-invertible-structure-on V) where
+
+    open left-invertible-structure-on_ structure-on-V
+
+    De : U₀
+    De = formal-disk-at e
+
+    equivalences : (x : V) → De ≃ formal-disk-at x
+    equivalences x =
+        paths-induce-equivalences-of-formal-disks.conclusion
+          (left-neutral x)
+      ∘≃
+        equivalences-induce-equivalences-on-formal-disks.conclusion
+          (right-translation x) e
+
+
+    {- 
+      now, univalences turns this family to a homotopy in the universe
+      from the disk-bundle on V to the map constantly De
+    -}
+    open import Univalence
+
+    constant-family : V → U₀
+    constant-family v = De
+
+    the-homotopy : constant-family ⇒ (T∞-as-dependent-type V)
+    the-homotopy v = univalence (equivalences v)
+    
 
   module triviality-of-the-formel-disk-bundle-over-∞-groups
     {G : U₀} (structure-on-G : left-invertible-structure-on G) where

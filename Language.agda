@@ -24,6 +24,11 @@ module Language where
 
   equal-by-definition : ∀ {A : U₀} {a : A} → a ≈ a
   equal-by-definition = refl
+
+  by-definition-of :
+    ∀ {A Z : U₀} {a : A}
+    → Z → a ≈ a
+  by-definition-of _ = refl
   
   -- language constructs for readable manipulation of equations
   concatenate_on-the-right-to_ : ∀ {A : U₀} {a a′ a″ : A} {η ζ : a ≈ a′}

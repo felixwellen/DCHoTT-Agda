@@ -7,6 +7,7 @@ module CommonEquivalences where
   open import Homotopies
   open import Fiber
   open import Equivalences
+  open import HalfAdjointEquivalences
   open import Language
 
 
@@ -216,8 +217,9 @@ module CommonEquivalences where
                                         • (cancel-the′ counit (f a) left-of γ))))
       in (step1 • step2 • apply-naturality1 • apply-cancellation • apply-conjugation) ⁻¹
 
-    proof : ∀ {a a′ : A} → (λ (γ : a ≈ a′) → f ⁎ γ) is-an-equivalence
-    proof = has-left-inverse f⁻¹⁎ by left-invertible and-right-inverse f⁻¹⁎ by right-invertible
+    abstract 
+      proof : ∀ {a a′ : A} → (λ (γ : a ≈ a′) → f ⁎ γ) is-an-equivalence
+      proof = has-left-inverse f⁻¹⁎ by left-invertible and-right-inverse f⁻¹⁎ by right-invertible
 
 
 -- algebraic manipulations of equations are equivalences
@@ -341,4 +343,98 @@ module CommonEquivalences where
     proof = has-left-inverse (λ γ → γ ⁻¹) by (λ γ → ⁻¹-is-selfinverse γ)
             and-right-inverse (λ γ → γ ⁻¹) by (λ γ → ⁻¹-is-selfinverse γ ⁻¹) 
                              
+{-
+  {- moved to DependentTypes
+    ∑ P - - ∑ Q
+     |       |
+     ↓       ↓ 
+     A ─f──→ B  
 
+    if f is an equivalence and the fiber over a and f(a) are equivalent,
+    there is an equivalence on the total spaces.
+    (this probably also follows from stuff on pullbacks...)
+    (its in the Book, 4.7.7)
+  -}
+  module fiber-equivalences-along-an-equivalence-on-the-base
+    {A B : U₀} (P : A → U₀) (Q : B → U₀)
+    (f≃ : A ≃ha B) (s≃ : (a : A) → P a ≃ha Q ((underlying-map-of-the-half-adjoint f≃) a)) where
+
+    -- some shortahnds
+    f = underlying-map-of-the-half-adjoint f≃
+    f⁻¹ = inverse-of-the-half-adjoint f≃
+    f∘f⁻¹⇒id = right-invertibility-of-the-half-adjoint f≃
+    id⇒f⁻¹∘f = left-invertibility-of-the-half-adjoint f≃
+
+    s : (a : A) → P a → Q (f a)
+    s a = underlying-map-of-the-half-adjoint (s≃ a)
+
+
+    {-
+      the goal is to construct an equivalence φ : ∑ P → ∑ Q
+      by using f and s
+      the situation is surprigingly asymmetric and we use
+      different fiberwise right and left inverses, s⁻¹r and s⁻¹l 
+      for s to construct different right and left inverses for φ
+    -}
+    s⁻¹r : (b : B) → Q b → P (f⁻¹ b)
+    s⁻¹r b =
+      (inverse-of-the-half-adjoint (s≃ (f⁻¹ b)))
+      ∘
+      transport Q (f∘f⁻¹⇒id b ⁻¹)
+
+    s∘s⁻¹r⇒transport :
+      (b : B) → s (f⁻¹ b) ∘ s⁻¹r b ⇒ transport Q (f∘f⁻¹⇒id b ⁻¹)
+    s∘s⁻¹r⇒transport b q =
+        s (f⁻¹ b) (s⁻¹r b q)
+      ≈⟨ right-invertibility-of-the-half-adjoint (s≃ (f⁻¹ b)) _ ⟩
+        transport Q (f∘f⁻¹⇒id b ⁻¹) q
+      ≈∎
+
+
+    s⁻¹l : (a : A) → Q (f a) → P (f⁻¹ (f a))
+    s⁻¹l a = transport P (id⇒f⁻¹∘f a ⁻¹) ∘ inverse-of-the-half-adjoint (s≃ a) 
+    
+    transport⇒s⁻¹l∘s :
+      (a : A) → transport P (id⇒f⁻¹∘f a ⁻¹) ⇒ s⁻¹l a ∘ s a 
+    transport⇒s⁻¹l∘s a p =
+        transport P (id⇒f⁻¹∘f a ⁻¹) p
+      ≈⟨ transport P (id⇒f⁻¹∘f a ⁻¹) ⁎
+           left-invertibility-of-the-half-adjoint (s≃ a) p ⁻¹ ⟩
+        (s⁻¹l a ∘ s a) p
+      ≈∎
+
+    φ : ∑ P → ∑ Q
+    φ (a , p) = ((f a) , s a p)
+
+    φ⁻¹r : ∑ Q → ∑ P
+    φ⁻¹r (b , q) = (f⁻¹ b , s⁻¹r b q)
+
+    φ∘φ⁻¹r⇒id : φ ∘ φ⁻¹r ⇒ id
+    φ∘φ⁻¹r⇒id (b , q) =
+        (f (f⁻¹ b) , s (f⁻¹ b) (s⁻¹r b q))
+      ≈⟨ (λ p → f (f⁻¹ b) , p) ⁎ s∘s⁻¹r⇒transport b q ⟩ 
+        (f (f⁻¹ b) , transport Q (f∘f⁻¹⇒id b ⁻¹) q)
+      ≈⟨ equality-action-on-∑ (f (f⁻¹ b)) b (f∘f⁻¹⇒id b) _ ⟩
+        (b , transport Q (f∘f⁻¹⇒id b) (transport Q (f∘f⁻¹⇒id b ⁻¹) q))
+      ≈⟨ (λ p → b , p) ⁎ transport-invertibility _ (f∘f⁻¹⇒id b) q ⟩ 
+        (b , q)
+      ≈∎
+
+
+    φ⁻¹l : ∑ (λ b → Q (f (f⁻¹ b))) → ∑ P
+    φ⁻¹l (b , q) = (f⁻¹ b , transport P (id⇒f⁻¹∘f (f⁻¹ b)) (s⁻¹l (f⁻¹ b) q))
+
+    φ⁻¹l∘φ⇒id : φ⁻¹l ∘ φ ⇒ id
+    φ⁻¹l∘φ⇒id (a , p) =
+         (φ⁻¹l ∘ φ) (a , p)
+      ≈⟨ by-definition-of φ ⟩
+        φ⁻¹l (f a , s a p)
+      ≈⟨ by-definition-of φ⁻¹l ⟩
+        (f⁻¹ (f a) , s⁻¹l (f⁻¹ (f a)) (transport Q (f∘f⁻¹⇒id (f a) ⁻¹) (s a p)))
+      ≈⟨ {!!} ⟩ 
+        (a , p)
+      ≈∎
+
+    induced-equivalence : ∑ P ≃ ∑ Q
+    induced-equivalence = {!!}
+-}

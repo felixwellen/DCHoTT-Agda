@@ -957,5 +957,3 @@ module PullbackSquare where
     in left-square′
 
 
-
-  
