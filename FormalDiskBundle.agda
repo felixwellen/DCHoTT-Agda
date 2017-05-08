@@ -1,5 +1,4 @@
 {-# OPTIONS --without-K #-}
-{- read the README -}
 
 module FormalDiskBundle where 
   open import Basics
@@ -7,7 +6,7 @@ module FormalDiskBundle where
   open import Homotopies
   open import Language
   open import Equivalences
-  open import CommonEquivalences
+  open import CommonEquivalences  
   open import Pullback
   open import PullbackSquare
   open import Im
@@ -121,7 +120,7 @@ module FormalDiskBundle where
     this is a new proof for the triviality of T∞ over left-invertible H-spaces
     in contrast to the second proof below, it needs univalence
   -}
-  module triviality-of-the-formel-disk-bundle-using-univalence
+  module triviality-of-the-formel-disk-bundle-the-nice-way
     {V : U₀} (structure-on-V : left-invertible-structure-on V) where
 
     open left-invertible-structure-on_ structure-on-V
@@ -137,18 +136,49 @@ module FormalDiskBundle where
         equivalences-induce-equivalences-on-formal-disks.conclusion
           (right-translation x) e
 
+    T∞V = ∑ (T∞-as-dependent-type V)
 
-    {- 
-      now, univalences turns this family to a homotopy in the universe
-      from the disk-bundle on V to the map constantly De
-    -}
-    open import Univalence
+    -- preparation...
+    open import HalfAdjointEquivalences
 
-    constant-family : V → U₀
-    constant-family v = De
+    ha-equivalence-at : (v : V) → De ≃ha (formal-disk-at v)
+    ha-equivalence-at v = equivalence-to-half-adjoint-equivalence (equivalences v)
 
-    the-homotopy : constant-family ⇒ (T∞-as-dependent-type V)
-    the-homotopy v = univalence (equivalences v)
+    equivalences-as-maps : (x : V) → De → formal-disk-at x
+    equivalences-as-maps x =
+      underlying-map-of-the-half-adjoint
+        (ha-equivalence-at x)
+
+    inverses-as-maps : (x : V) → formal-disk-at x → De
+    inverses-as-maps x =
+      inverse-of-the-half-adjoint
+        (ha-equivalence-at x)
+
+    trivialize : T∞V → V × De
+    trivialize (v , dv) =
+      (v , (inverses-as-maps v) dv)    -- $≃ means applying an equivalence
+
+    trivialize⁻¹ : V × De → T∞V
+    trivialize⁻¹ (v , dv) =
+      (v , equivalences-as-maps v dv) 
+
+    conclusion′ : T∞V ≃ V × De
+    conclusion′ = trivialize is-an-equivalence-because
+      (has-left-inverse trivialize⁻¹
+        by (λ {(v , dv) →
+           (v , equivalences-as-maps v (inverses-as-maps v dv))
+          ≈⟨ (λ d → (v , d)) ⁎ right-invertibility-of-the-half-adjoint (ha-equivalence-at v) dv ⟩
+            (v , dv)
+          ≈∎})
+       and-right-inverse trivialize⁻¹
+         by (λ {(v , dv) → (λ d → (v , d)) ⁎ (left-invertibility-of-the-half-adjoint (ha-equivalence-at v) dv ⁻¹)}))
+
+    conclusion  : T∞ V ≃ V × De
+    conclusion =
+        conclusion′
+      ∘≃
+        pullback-definition-and-dependent-version-agree.conclusion V
+    
     
 
   module triviality-of-the-formel-disk-bundle-over-∞-groups
