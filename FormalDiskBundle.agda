@@ -118,7 +118,6 @@ module FormalDiskBundle where
 
   {-
     this is a new proof for the triviality of T∞ over left-invertible H-spaces
-    in contrast to the second proof below, it needs univalence
   -}
   module triviality-of-the-formel-disk-bundle-the-nice-way
     {V : U₀} (structure-on-V : left-invertible-structure-on V) where
@@ -178,7 +177,9 @@ module FormalDiskBundle where
         conclusion′
       ∘≃
         pullback-definition-and-dependent-version-agree.conclusion V
-    
+
+    commutative-triangle : p-of-T∞ V ⇒ π₁ ∘ (underlying-map-of conclusion)
+    commutative-triangle _ = refl
     
 
   module triviality-of-the-formel-disk-bundle-over-∞-groups
