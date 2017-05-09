@@ -143,8 +143,7 @@ module Manifolds where
                             locally-like structure-on-V by v) where
 
          open left-invertible-structure-on_ structure-on-V
-         De = D V e
-
+         De = D V e -- formal-disk-at e
 
          {-
 
@@ -220,9 +219,9 @@ module Manifolds where
              is-trivial-by top-map-of w*T∞M-is-trivial
              and w*T∞M-is-trivial
 
-  module the-formal-disk-bundle-over-a-manifold-is-associated 
-         {V : U₀} (W M : U₀) (w : W ─ét→ M) 
-         (structure-on-V : left-invertible-structure-on V) (v : W ─ét→ V)
-         (M-is-a-manifold : M is-a-manifold-with-cover w
-                            locally-like structure-on-V by v) where
-
+{-
+         classifying-morphism : M → BAut De
+         classifying-morphism =
+           {!all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M)
+             (T∞M-is-a-fiber-bundle W M w structure-on-V v M-is-a-manifold)!}
+-}

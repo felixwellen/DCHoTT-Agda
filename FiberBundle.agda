@@ -191,6 +191,7 @@ module FiberBundle where
                      ι-BAut-is-1-mono (proof-that covering is-1-epi)
                      the-square-commutes
 
+         classifying-morphism = diagonal
 
        {-
          the diagonal is a morphism over U₀

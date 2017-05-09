@@ -62,6 +62,7 @@ module EtaleMaps where
   D : ∀ (X : U₀) → (x₀ : X) → U₀
   D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
 
+  
 
   -- composition of etale maps
 {-
