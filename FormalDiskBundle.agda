@@ -36,6 +36,31 @@ module FormalDiskBundle where
     → (x : X) → U₀
   formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
 
+  -- formal disc at a point as pullback
+  --  
+  -- D ---> ∗
+  -- | ⌟    |
+  -- |      x₀
+  -- ↓      ↓
+  -- X ---> ℑ X
+  D : ∀ (X : U₀) → (x₀ : X) → U₀
+  D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
+
+  -- the definitions of the formal disk agree
+  module pullback-and-sum-definition-of-formal-disks-are-equivalent
+    {X : U₀} (x₀ : X) where
+
+    D-pullback = D X x₀
+    D-sum = formal-disk-at x₀
+
+    conclusion : D-pullback ≃ D-sum
+    conclusion = (λ {(∗ and x are-in-the-same-fiber-by γ) → (x , γ)})
+      is-an-equivalence-because
+        (has-left-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ)})
+           by (λ {(∗ and x are-in-the-same-fiber-by γ) → refl})
+         and-right-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ)})
+           by (λ {(x , γ) → refl}))
+
   induced-map-on-formal-disks :
     ∀ {X Y : U₀}
     → (f : X → Y)

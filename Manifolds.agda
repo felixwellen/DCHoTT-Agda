@@ -213,7 +213,7 @@ module Manifolds where
          T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a De -fiber-bundle
          T∞M-is-a-fiber-bundle =
            let
-             v́-as-surjection = ((underlying-map-of w) is-1-epi-by M-is-a-manifold)
+             v́-as-surjection = (underlying-map-of w) is-1-epi-by M-is-a-manifold
            in
              on W the-pullback-along v́-as-surjection
              is-trivial-by top-map-of w*T∞M-is-trivial

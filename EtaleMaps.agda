@@ -51,17 +51,6 @@ module EtaleMaps where
     and-inducing-an-equivalence-by proof
 
 
-  -- example:
-  -- formal disc at a point
-  --  
-  -- D ---> ∗
-  -- | ⌟    |
-  -- |      x₀
-  -- ↓      ↓
-  -- X ---> ℑ X
-  D : ∀ (X : U₀) → (x₀ : X) → U₀
-  D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
-
   
 
   -- composition of etale maps
