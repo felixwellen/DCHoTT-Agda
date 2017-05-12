@@ -572,10 +572,12 @@ module PullbackSquare where
     → (eA : A′ ≃ A) → (eB : B′ ≃ B)
     → f ∘ (underlying-map-of eA) ⇒ (underlying-map-of eB) ∘ f′
     → pullback-square-with-right f bottom (underlying-map-of eB) top (underlying-map-of eA) left f′
-  pullback-square-from-equivalence-of-maps {A} {_} {_} {_} f f′ 
+  pullback-square-from-equivalence-of-maps {A} {A′} {_} {_} f f′ 
     (eA is-an-equivalence-because equivalency-of-eA)
     (eB is-an-equivalence-because equivalency-of-eB) γ =
     let
+      -- idea: take an id-square and replace
+      -- the identities by equivalences
       eB⁻¹ = inverse-of eB given-by equivalency-of-eB
       eB⁻¹∘eB⇒id = (_is-an-equivalence.unit equivalency-of-eB) 
 
@@ -586,11 +588,12 @@ module PullbackSquare where
       fill-in-eB = rotate-cospan
                      (substitute-equivalent eB equivalency-of-eB id-square)
 
-      fill-in-the-rest : pullback-square-with-right f bottom eB top eA left f′
-      fill-in-the-rest = substitute-equivalent-cone 
+      □₁ : pullback-square-with-right f bottom eB top eA left f′
+      □₁ = substitute-equivalent-cone 
                            eA f′ eA equivalency-of-eA (λ a → refl) 
                            (λ a′ → eB⁻¹ ⁎ γ a′ • eB⁻¹∘eB⇒id (f′ a′)) fill-in-eB
-    in fill-in-the-rest
+                           
+    in □₁
 
   {-
   

@@ -5,7 +5,8 @@ module OneImage where
   open import EqualityAndPaths
   open import Homotopies
   open import Fiber
-  open import Equivalences
+  open import Equivalences renaming (underlying-map-of to underlying-map-of-the-equivalence)
+  open import EquivalenceCharacterization
   open import Contractibility
   open import PropositionalTruncation
   open import Univalence
@@ -100,6 +101,12 @@ module OneImage where
     in ∥-∥-recursion 
          truncated-fiber-of-π (∥-∥-is-truncation _) map-on-fibers (to-point-in-truncated-fiber p)
     
+  -- one example...
+  equivalences-are-1-epi :
+    ∀ {A B : U₀} (f : A ≃ B)
+    → (underlying-map-of-the-equivalence f) is-1-epi
+  equivalences-are-1-epi f b =
+    ∣ (right-inverse-of-the-equivalence f b) is-in-the-fiber-by (counit-of-the-equivalence f b ⁻¹) ∣ 
 
   _is-1-mono′ : 
     ∀ {i} {A B : U i} 

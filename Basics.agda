@@ -116,6 +116,9 @@ data One : U₀ where
 id : ∀ {i} {A : U i} → A → A
 id a = a
 
+identity-on : (A : U₀) → A → A
+identity-on A = (λ (x : A) → x)
+
 infixr 70 _∘_
 _∘_ : ∀ {i j k} {A : U i} {B : U j} {C : U k} → (B → C) → (A → B) → (A → C)
 g ∘ f = λ x → g(f(x))

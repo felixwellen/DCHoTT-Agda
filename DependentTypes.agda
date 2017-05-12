@@ -368,7 +368,28 @@ module DependentTypes where
     conclusion =
       contractible-fibers-characterize-equivalences.from-fiber-condition
         f′ all-fibers-are-contractible
-    
+
+
+    -- this is a better version of the
+    -- deduce-equivalence... function in PullbackSquare
+    -- since it preserves the 2-cell
+    reverse-statement :
+      ∀ {Z : U₀}
+      → (z₁ : Z → A) (z₂ : Z → C)
+      → (γ : f ∘ z₁ ⇒ g ∘ z₂)
+      → z₂ is-an-equivalence
+      → pullback-square-with-right f
+          bottom g
+          top z₁
+          left z₂
+    reverse-statement {Z} z₁ z₂ γ z₂-is-an-equivalence =
+      let
+        ψ : Z → pullback f g
+        ψ = induced-map-to-pullback z₁ z₂ γ
+        ψ-is-an-equivalence : ψ is-an-equivalence
+        ψ-is-an-equivalence = 2-out-of-3.the-left-map-is-an-equivalence ψ f′ z₂-is-an-equivalence conclusion 
+      in the-square-commuting-by γ and-inducing-an-equivalence-by ψ-is-an-equivalence
+      
 
   {-
     ∑ P - - ∑ Q

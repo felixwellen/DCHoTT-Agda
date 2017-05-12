@@ -40,7 +40,7 @@ module Equivalences where
   
   -- projections
   
-  underlying-map-of : ∀ {A B : U₀} 
+  underlying-map-of : ∀ {i} {A B : U i} 
                       → A ≃ B → (A → B)
   underlying-map-of f = _≃_.the-equivalence f
   

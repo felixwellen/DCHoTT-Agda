@@ -77,10 +77,11 @@ module EqualityAndPaths where
   apply-preserves-refl : {A B : Uω} {x : A} (f : A → B) → f ⁎ refl {a = x} ≈ refl {a = f(x)}
   apply-preserves-refl f = refl
   
-  application-commutes-with-composition : ∀ {A B C : U₀} {a a′ : A}
-                                          → (f : A → B) → (g : B → C)
-                                          → (γ : a ≈ a′)
-                                          → g ⁎ (f ⁎ γ) ≈ (g ∘ f) ⁎ γ
+  application-commutes-with-composition :
+    ∀ {A B C : U₀} {a a′ : A}
+      → (f : A → B) → (g : B → C)
+      → (γ : a ≈ a′)
+      → g ⁎ (f ⁎ γ) ≈ (g ∘ f) ⁎ γ
   application-commutes-with-composition f g refl = refl
   
   apply-commutes-with-evaluation : ∀ {A B C : U₀} {a a′ : A}
@@ -247,3 +248,24 @@ module EqualityAndPaths where
     ≈⟨ refl ⟩
      refl
     ≈∎
+
+
+  calculation-for-im :
+    ∀ {A : U₀} {x y : A}
+    → (f : A → A)
+    → (γ : f(x) ≈ y) (η : f(x) ≈ x)
+    → (f ⁎ (η ⁻¹ • γ) ⁻¹) • γ ≈ (f ⁎ γ) ⁻¹ • (f ⁎ η) • γ  
+  calculation-for-im f refl η =
+     f ⁎ (η ⁻¹ • refl) ⁻¹ • refl
+    ≈⟨ refl-is-right-neutral (f ⁎ (η ⁻¹ • refl) ⁻¹) ⁻¹ ⟩
+     f ⁎ (η ⁻¹ • refl) ⁻¹
+    ≈⟨ (λ γ →  γ ⁻¹) ⁎ application-commutes-with-concatenation f (η ⁻¹) refl ⟩ 
+     ((f ⁎ (η ⁻¹)) • refl) ⁻¹
+    ≈⟨ (λ γ → γ ⁻¹) ⁎ refl-is-right-neutral (f ⁎ (η ⁻¹)) ⁻¹ ⟩ 
+     (f ⁎ (η ⁻¹)) ⁻¹
+    ≈⟨ (λ γ → γ ⁻¹) ⁎ application-commutes-with-inversion f η • ⁻¹-is-selfinverse (f ⁎ η) ⟩ 
+     f ⁎ η 
+    ≈⟨ refl-is-right-neutral (f ⁎ η) ⟩ 
+     f ⁎ η • refl
+    ≈∎
+

@@ -35,8 +35,12 @@ module Manifolds where
     → U₀
   M is-a-manifold-with-cover w locally-like structure-on-V by v =
     underlying-map-of w is-1-epi
-    
 
+  left-invertible-H-spaces-are-manifolds :
+    ∀ {V : U₀} (structure-on-V : left-invertible-structure-on V)
+    → V is-a-manifold-with-cover id-as-étale-map locally-like structure-on-V by id-as-étale-map
+  left-invertible-H-spaces-are-manifolds _ = equivalences-are-1-epi id-as-equivalence
+  
   module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
 
     f = underlying-map-of f́
@@ -219,9 +223,17 @@ module Manifolds where
              is-trivial-by top-map-of w*T∞M-is-trivial
              and w*T∞M-is-trivial
 
-{-
-         classifying-morphism : M → BAut De
+         classifying-morphism′ : M → BAut De
+         classifying-morphism′ =
+           all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M) T∞M-is-a-fiber-bundle
+
+         classifying-morphism : M → BAut (formal-disk-at e)
          classifying-morphism =
-           {!all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M)
-             (T∞M-is-a-fiber-bundle W M w structure-on-V v M-is-a-manifold)!}
--}
+             underlying-map-of-the-equivalence
+               (equivalent-spaces-have-equivalent-BAut.equivalence
+                 (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e))
+           ∘ classifying-morphism′
+
+           
+
+         

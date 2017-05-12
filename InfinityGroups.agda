@@ -3,6 +3,7 @@
 module InfinityGroups where 
   open import Basics
   open import EqualityAndPaths
+  open import Equivalences
   open import Fiber
   open import OneImage
 
@@ -27,4 +28,16 @@ module InfinityGroups where
   BO1 = Bool
 
   module kernel (BG : U₀) (eG : BG) (BH : U₀) (eH : BH) (Bφ : BG → BH) where
-      delooping = fiber-of Bφ at eH
+    delooping = fiber-of Bφ at eH
+    -- discontinued...
+      
+  module equivalent-spaces-have-equivalent-BAut
+    {A B : U₀} (f : A ≃ B) where
+    -- univalence should not be necessary...
+
+    open import Univalence
+
+    equivalence : BAut A ≃ BAut B
+    equivalence = transport-as-equivalence (λ X → BAut X) (univalence f)
+    
+    
