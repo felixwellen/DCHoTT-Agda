@@ -5,6 +5,7 @@ module InfinityGroups where
   open import EqualityAndPaths
   open import Equivalences
   open import Homotopies
+  open import PropositionalTruncation
   open import FunctionExtensionality
   open import Fiber
   open import OneImage
@@ -25,6 +26,10 @@ module InfinityGroups where
 
   ι-BAut-is-1-mono : ∀ {A : U₀} → (ι-BAut A) is-1-mono
   ι-BAut-is-1-mono {A} = ι-im₁-is-1-mono (λ ∗₃ → A)
+
+  -- the 'unit', i.e. 'refl {e-BAut A}' is the unit of 'Aut A'
+  e-BAut : (A : U₀) → BAut A
+  e-BAut A = (A , ∣ (∗ , refl) ∣ )
 
   BO1 : U₀
   BO1 = Bool

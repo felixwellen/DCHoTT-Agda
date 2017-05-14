@@ -108,6 +108,13 @@ module Im1 where
          (λ a → naturality-square-for-ℑ₁ _ a • ℑ₁-unit ⁎ (H a) • naturality-square-for-ℑ₁ _ a ⁻¹)
 
 
+  ℑ₁⁎_⁎_ :
+    ∀ {A B : U₀} {x y : A}
+    → (f : A → B)
+    → ((ℑ₁-unit x ≈ ℑ₁-unit y) → (ℑ₁-unit (f(x)) ≈ ℑ₁-unit (f(y))))
+  ℑ₁⁎ f ⁎ γ = naturality-square-for-ℑ₁ f _ ⁻¹ • ℑ₁→ f ⁎ γ • naturality-square-for-ℑ₁ f _
+
+
   -- define 1-coreduced connectedness
   _is-ℑ₁-connected :
     ∀ {A B : U₀} (f : A → B)

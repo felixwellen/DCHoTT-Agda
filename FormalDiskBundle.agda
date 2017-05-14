@@ -10,29 +10,12 @@ module FormalDiskBundle where
   open import Pullback
   open import PullbackSquare
   open import Im
-  open import Im1
   open import InfinityGroups
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
   open import LeftInvertibleHspace
   open import DependentTypes
   open import Fiber
-  -- we will start with the rarely used notion (in this repo)
-  -- of first order infinitesimal closedness
-
-  _is-first-order-infinitesimally-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
-  x is-first-order-infinitesimally-close-to x′ = ℑ₁-unit x ≈ ℑ₁-unit x′
-  
-  first-order-disk-at_ :
-    ∀ {X : U₀}
-    → (x : X) → U₀
-  first-order-disk-at x =
-    ∑ (λ x′ → x is-first-order-infinitesimally-close-to x′)
-
-
-
-  -- we will now turn to the infinitesimal notion used throughout this repo
 
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
