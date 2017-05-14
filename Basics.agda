@@ -23,7 +23,6 @@ U i = Set i
 
 U₀ = U lzero
 U₁ = U (lsuc lzero)
-Uω = Set
 
 domain : ∀ {A B : U₀} → (A → B) → U₀
 domain {A} {_} _ = A

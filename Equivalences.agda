@@ -45,25 +45,25 @@ module Equivalences where
   underlying-map-of f = _≃_.the-equivalence f
   
   left-inverse-of-the-equivalence : 
-    ∀ {A B : U₀} 
+    ∀ {i} {A B : U i} 
     → A ≃ B → (B → A)
   left-inverse-of-the-equivalence 
     (_ is-an-equivalence-because (has-left-inverse left-inverse by _ and-right-inverse _ by _)) = left-inverse
   
   right-inverse-of-the-equivalence : 
-    ∀ {A B : U₀} 
+    ∀ {i} {A B : U i} 
     → A ≃ B → (B → A)
   right-inverse-of-the-equivalence 
     (_ is-an-equivalence-because (has-left-inverse _ by _ and-right-inverse right-inverse by _)) = right-inverse
   
   unit-of-the-equivalence : 
-    ∀ {A B : U₀} 
+    ∀ {i} {A B : U i} 
     → (f : A ≃ B) → (left-inverse-of-the-equivalence f) ∘ (underlying-map-of f) ∼ id
   unit-of-the-equivalence 
     (_ is-an-equivalence-because (has-left-inverse _ by unit and-right-inverse _ by _)) = unit
   
   counit-of-the-equivalence : 
-    ∀ {A B : U₀} 
+    ∀ {i} {A B : U i} 
     → (f : A ≃ B) → id ∼ (underlying-map-of f) ∘ (right-inverse-of-the-equivalence f) 
   counit-of-the-equivalence 
     (_ is-an-equivalence-because (has-left-inverse _ by _ and-right-inverse _ by counit)) = counit

@@ -10,11 +10,29 @@ module FormalDiskBundle where
   open import Pullback
   open import PullbackSquare
   open import Im
+  open import Im1
   open import InfinityGroups
   open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
   open import LeftInvertibleHspace
   open import DependentTypes
+  open import Fiber
+  -- we will start with the rarely used notion (in this repo)
+  -- of first order infinitesimal closedness
+
+  _is-first-order-infinitesimally-close-to_ :
+    {X : U₀} → (x x′ : X) → U₀
+  x is-first-order-infinitesimally-close-to x′ = ℑ₁-unit x ≈ ℑ₁-unit x′
+  
+  first-order-disk-at_ :
+    ∀ {X : U₀}
+    → (x : X) → U₀
+  first-order-disk-at x =
+    ∑ (λ x′ → x is-first-order-infinitesimally-close-to x′)
+
+
+
+  -- we will now turn to the infinitesimal notion used throughout this repo
 
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
@@ -36,7 +54,7 @@ module FormalDiskBundle where
     → (x : X) → U₀
   formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
 
-  -- formal disc at a point as pullback
+  -- formal disk at a point as pullback
   --  
   -- D ---> ∗
   -- | ⌟    |
@@ -105,11 +123,24 @@ module FormalDiskBundle where
       (has-left-inverse φ⁻¹ by (λ _ → refl)
        and-right-inverse φ⁻¹ by (λ _ → refl))
 
+    on-fibers′ : (x : X) → fiber-of (∑π₁-from (T∞-as-dependent-type X)) at x ≃ formal-disk-at x
+    on-fibers′ x = fiber-of-a-∑ x
+
+    on-fibers : (x : X) → fiber-of (p-of-T∞ X) at x ≃ formal-disk-at x
+    on-fibers x =
+        on-fibers′ x
+      ∘≃ (
+        pullbacks-are-fiberwise-equivalences.equivalence-at_
+          (pullback-square-from-equivalence-of-maps
+            (∑π₁-from T∞-as-dependent-type X) (p-of-T∞ X) conclusion id-as-equivalence (λ _ → refl)) x)
+
+
   {-
     Above, for a morphism f : A → B, we defined the induced
     dependent morphism  T∞ f : (a : A) → formal-disk-at a → formal-disk-at (f a)
     if f is an equivalence, T∞ f is an equivalence.
   -}
+
 
   module equivalences-induce-equivalences-on-formal-disks
     {A B : U₀} (f≃ : A ≃ B) where

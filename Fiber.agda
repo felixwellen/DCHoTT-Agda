@@ -19,7 +19,7 @@ module Fiber where
   fiber-map f (x is-in-the-fiber-by _) = x
     
   as-point-in-the-domain : 
-    ∀ {i} {A B : U i} {f : A → B} {b : B}
+    ∀ {i j} {A : U i} {B : U j} {f : A → B} {b : B}
     → (fiber-of f at b) → A
   as-point-in-the-domain (a is-in-the-fiber-by _) = a
 

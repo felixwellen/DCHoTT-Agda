@@ -26,7 +26,7 @@ module Language where
   equal-by-definition = refl
 
   by-definition-of :
-    ∀ {A Z : U₀} {a : A}
+    ∀ {i j} {A : U i} {Z : U j} {a : A}
     → Z → a ≈ a
   by-definition-of _ = refl
   

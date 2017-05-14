@@ -4,6 +4,7 @@ module Manifolds where
   open import Basics 
   open import EqualityAndPaths
   open import PropositionalTruncation
+  open import DependentTypes
   open import Equivalences renaming (underlying-map-of to underlying-map-of-the-equivalence)
   open import Pullback
   open import PullbackSquare
@@ -227,13 +228,39 @@ module Manifolds where
          classifying-morphism′ =
            all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M) T∞M-is-a-fiber-bundle
 
-         classifying-morphism : M → BAut (formal-disk-at e)
-         classifying-morphism =
-             underlying-map-of-the-equivalence
+         φ : BAut De → BAut (formal-disk-at e)
+         φ = underlying-map-of-the-equivalence
                (equivalent-spaces-have-equivalent-BAut.equivalence
                  (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e))
+
+         classifying-morphism : M → BAut (formal-disk-at e)
+         classifying-morphism =
+             φ
            ∘ classifying-morphism′
 
-           
+         commutes-with-the-dependent-replacement-of-T∞′ :
+           (dependent-replacement (p-of-T∞ M)) ⇒ (ι-BAut De) ∘ classifying-morphism′ 
+         commutes-with-the-dependent-replacement-of-T∞′ x =
+           all-fiber-bundle-are-associated.as-U₀-morphism (p-of-T∞ M)
+             T∞M-is-a-fiber-bundle x
 
-         
+         -- the following makes a probably unnecessary use of univalence
+         open import Univalence
+         commutes-with-the-dependent-replacement-of-T∞ :
+           (λ (x : M) → formal-disk-at x) ⇒ (ι-BAut (formal-disk-at e)) ∘ classifying-morphism
+         commutes-with-the-dependent-replacement-of-T∞ x =
+             formal-disk-at x
+           ≈⟨ univalence
+                (pullback-definition-and-dependent-version-agree.on-fibers M x ⁻¹≃) ⟩
+             (dependent-replacement (p-of-T∞ M)) x
+           ≈⟨ commutes-with-the-dependent-replacement-of-T∞′ x ⟩
+             ((ι-BAut De) ∘ classifying-morphism′) x
+           ≈⟨ equivalent-spaces-have-equivalent-BAut.homotopy
+                (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e)
+                (classifying-morphism′ x)
+             ⟩
+             (ι-BAut (formal-disk-at e) ∘ φ ∘ classifying-morphism′) x
+           ≈⟨ by-definition-of classifying-morphism ⟩
+             (ι-BAut (formal-disk-at e) ∘ classifying-morphism) x
+           ≈∎
+

@@ -125,6 +125,23 @@ module OneImage where
                             is-equivalence-invariant-by-univalence (fiber-of-a-∑ b ⁻¹≃))
                              (∥-∥-is-truncation (∑ (λ a → f a ≈ b)))
 
+
+  1-monos-are-monos :
+    ∀ {i j k} {A : U i} {B : U j} {C : U k} (f g : A → B) (m : B → C)
+    → m is-1-mono → m ∘ f ⇒ m ∘ g
+    → f ⇒ g    
+  1-monos-are-monos f g m m-is-1-mono H a =
+    let
+      fa-as-point-in-the-fiber : fiber-of m at (m(g a))
+      fa-as-point-in-the-fiber = f a is-in-the-fiber-by H a
+      ga-as-point-in-the-fiber : fiber-of m at (m(g a))
+      ga-as-point-in-the-fiber = g a is-in-the-fiber-by refl
+      fa≈ga : fa-as-point-in-the-fiber ≈ ga-as-point-in-the-fiber
+      fa≈ga = m-is-1-mono (m (g a)) fa-as-point-in-the-fiber
+                ga-as-point-in-the-fiber
+      
+    in ι-fiber ⁎ fa≈ga
+  
 {-
   compatibility :
     ∀ {A B : U₀} 
@@ -132,6 +149,8 @@ module OneImage where
     → f is-1-mono → f is-1-mono′
   compatibility f f-is-1-mono b (a is-in-the-fiber-by γ) (a′ is-in-the-fiber-by η) = {!f-is-1-mono a a′ (γ • η ⁻¹)!}
 -}  
+
+  
 
   a-1-monoism-factoring-over-the-point-is-trivial :
     ∀ {A B : U₀} (f : A → B)
@@ -198,3 +217,10 @@ module OneImage where
     lower-triangle b = as-equality-in-the-codomain 
                        (induced-map-on-the-truncated-fiber b (e-is-1-epi b))
 
+{-
+    lifts-are-unique :
+      ∀ (lift′ : B → X)
+      → f ⇒ lift′ ∘ e → m ∘ lift′ ⇒ g
+      → lift′ ⇒ lift
+    lifts-are-unique lift′ H1 H2 b = {!!}
+-}

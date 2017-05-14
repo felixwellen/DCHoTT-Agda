@@ -16,7 +16,7 @@ module EqualityAndPaths where
   transport : ∀ {i j} {A : U i}  {x y : A} → (P : A → U j) → (γ : x ≈ y) → (P x → P y)
   transport P refl = id
   
-  apd : ∀ {i} {A : Uω} {x y : A} → (P : A → U i) → (s : (a : A) → P a) 
+  apd : ∀ {i j} {A : U j} {x y : A} → (P : A → U i) → (s : (a : A) → P a) 
                        → (γ : x ≈ y) → (transport P γ (s x) ≈ s y)
   apd P s refl = refl
   
@@ -66,7 +66,7 @@ module EqualityAndPaths where
   invert-both-sides refl = refl                  
   
   -- application extends to paths
-  apply_to-path : {A B : Uω} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
+  apply_to-path : {A B : U₀} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
   apply f to-path refl = refl
   
   
@@ -74,7 +74,7 @@ module EqualityAndPaths where
   _⁎_ : ∀ {i j} {A : U i} {B : U j} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
   _⁎_ {_} {_} {_} {_} {x} {.x} f  refl = refl {a = f(x)} 
   
-  apply-preserves-refl : {A B : Uω} {x : A} (f : A → B) → f ⁎ refl {a = x} ≈ refl {a = f(x)}
+  apply-preserves-refl : {A B : U₀} {x : A} (f : A → B) → f ⁎ refl {a = x} ≈ refl {a = f(x)}
   apply-preserves-refl f = refl
   
   application-commutes-with-composition :

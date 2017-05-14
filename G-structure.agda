@@ -5,6 +5,7 @@ module G-structure where
   open import EqualityAndPaths
   open import Equivalences
   open import Homotopies
+  open import Univalence
   open import LeftInvertibleHspace
   open import FormalDiskBundle
   open import FiberBundle
@@ -14,17 +15,26 @@ module G-structure where
   open import EtaleMaps
   open import Manifolds
 
+  record group-over-structure-group-of_ {V : U₀}
+    (structure-on-V : left-invertible-structure-on V) : U₁ where
+    constructor group-given-by-delooping_with-unit_and-morphism_
+    field
+      BG : U₀
+      Be : BG
+      Bφ : BG → BAut (formal-disk-at (left-invertible-structure-on_.e structure-on-V))
+
 
   module G-structures-on-V-manifolds
     {V M W : U₀} (w : W ─ét→ M) (v : W ─ét→ V)
     (structure-on-V : left-invertible-structure-on V)
-    (BG : U₀) (Bι : BG → BAut (formal-disk-at (left-invertible-structure-on_.e structure-on-V)))
+    (reduction : group-over-structure-group-of structure-on-V)
     (M-is-a-manifold : M is-a-manifold-with-cover w
                       locally-like structure-on-V by v) where
     
 
     open left-invertible-structure-on_ structure-on-V
-  
+    open group-over-structure-group-of_ reduction
+
     De = formal-disk-at e
 
     χ : M → BAut De
@@ -51,7 +61,7 @@ module G-structure where
     -}
 
     G-structures : U₁
-    G-structures = ∑ (λ (φ : M → BG) → Bι ∘ φ ⇒ χ)
+    G-structures = ∑ (λ (φ : M → BG) → Bφ ∘ φ ⇒ χ)
     
 
   {-
@@ -59,19 +69,65 @@ module G-structure where
       there is always a 1-structure (for the trivial group 1)
   -}
   module trivial-structure-on-left-invertible-spaces
-    {V : U₀} (structure-on-V : left-invertible-structure-on V) where
+    {V : U₀}
+    (structure-on-V : left-invertible-structure-on V) 
+    (group-over-BAutD : group-over-structure-group-of structure-on-V)
+    where
 
     open left-invertible-structure-on_ structure-on-V
 
     De = formal-disk-at e
 
-    ψ : (x : V) → De ≃ (formal-disk-at x)
-    ψ = triviality-of-the-formel-disk-bundle-the-nice-way.equivalences structure-on-V
-
-    trivial-structure-on-V : U₁
-    trivial-structure-on-V =
+    G-structures-on-V : U₁
+    G-structures-on-V =
       G-structures-on-V-manifolds.G-structures
       id-as-étale-map id-as-étale-map
       structure-on-V
-      One (λ x → (De , ∣ (x , refl) ∣ ))
+      group-over-BAutD
       (left-invertible-H-spaces-are-manifolds structure-on-V)
+
+    ψ : (x : V) → De ≃ (formal-disk-at x)
+    ψ = triviality-of-the-formel-disk-bundle-the-nice-way.equivalences structure-on-V
+
+    open group-over-structure-group-of_ group-over-BAutD
+
+    -- calculate the classifying morphism for V
+    -- i.e. give an explicit description
+    χ-V : V → BAut De
+    χ-V x = ((formal-disk-at x) , ∣ (∗ , univalence (ψ x)) ∣)
+
+    V-is-a-manifold = (left-invertible-H-spaces-are-manifolds structure-on-V)
+
+    χ′ = G-structures-on-V-manifolds.χ id-as-étale-map id-as-étale-map
+              structure-on-V group-over-BAutD
+              V-is-a-manifold
+    χ-V-is-the-classifying-morphism :
+      χ-V ⇒ χ′
+    χ-V-is-the-classifying-morphism = 1-monos-are-monos χ-V χ′ (ι-BAut De) (ι-im₁-is-1-mono (λ ∗₃ → De))
+      (λ (x : V) →
+           the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.commutes-with-the-dependent-replacement-of-T∞
+           V V id-as-étale-map structure-on-V id-as-étale-map V-is-a-manifold
+           x)
+{-    
+    trivialization-structure : G-structures-on-V
+    trivialization-structure =
+      ((λ x → Be) , (λ x →
+        {! Bφ(Be)
+        ≈⟨ ? ⟩
+          
+        ≈∎!}))
+
+    trivial_-structure-on-V :
+      ∀ (reduction : group-over-structure-group-of structure-on-V)
+      → {!!}
+    trivial_-structure-on-V = {!!}
+-}
+
+  {-
+    We will now work towards the definition of 
+    torision-free G-structures.
+    For this, we need to be able to compare
+    G-structures on first-order-disks
+  -}
+
+  

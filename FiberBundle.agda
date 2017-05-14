@@ -193,6 +193,7 @@ module FiberBundle where
 
          classifying-morphism = diagonal
 
+
        {-
          the diagonal is a morphism over U₀
 

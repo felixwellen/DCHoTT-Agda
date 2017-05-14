@@ -21,7 +21,7 @@ module FunctionExtensionality where
               → ((a : A) → f(a) ≈ g(a)) → f ≈ g
   fun-ext = function-extensionality _ _ _ _
   
-  equality-to-homotopy : ∀ {A B : U₀} {f g : A → B}
+  equality-to-homotopy : ∀ {i} {A B : U i} {f g : A → B}
                          → f ≈ g → (a : A) → f a ≈ g a
   equality-to-homotopy refl a = refl
   

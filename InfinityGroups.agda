@@ -4,6 +4,8 @@ module InfinityGroups where
   open import Basics
   open import EqualityAndPaths
   open import Equivalences
+  open import Homotopies
+  open import FunctionExtensionality
   open import Fiber
   open import OneImage
 
@@ -39,5 +41,29 @@ module InfinityGroups where
 
     equivalence : BAut A ≃ BAut B
     equivalence = transport-as-equivalence (λ X → BAut X) (univalence f)
-    
-    
+
+    compute-transport-of-dependent-function-type :
+      ∀ {A B : U₀} {P : (X : U₀) → U₁} (Q : (X : U₀) → ((P X) → U₀))
+      → (γ : A ≈ B)
+      → (f : P A → U₀) → f ∘ (transport P (γ ⁻¹)) ≈ transport _ γ f
+    compute-transport-of-dependent-function-type _ refl _  = refl
+
+
+    φ = underlying-map-of equivalence
+    φ⁻¹ = left-inverse-of-the-equivalence equivalence
+    φ⁻¹∘φ≈id : φ⁻¹ ∘ φ ≈ id
+    φ⁻¹∘φ≈id = fun-ext (unit-of-the-equivalence equivalence)
+
+    homotopy : ι-BAut A ⇒ ι-BAut B ∘ φ
+    homotopy = equality-to-homotopy
+       (ι-BAut A
+      ≈⟨ (λ x → ι-BAut A ∘ x) ⁎ φ⁻¹∘φ≈id ⁻¹ ⟩
+       ι-BAut A ∘ φ⁻¹ ∘ φ
+      ≈⟨ (λ x → x ∘ φ) ⁎
+           compute-transport-of-dependent-function-type ι-BAut (univalence f)
+           (ι-BAut A) ⟩
+       transport (λ z → BAut z → U₀) (univalence f) (ι-BAut A) ∘ φ
+      ≈⟨ (λ x → x ∘ φ) ⁎ apd _ ι-BAut (univalence f) ⟩
+       ι-BAut B ∘ φ
+      ≈∎)
+

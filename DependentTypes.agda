@@ -474,3 +474,4 @@ module DependentTypes where
         φ = underlying-map-of φ≃
       in the-map induced-map is-an-equivalence-since-it-is-homotopic-to f′ ∘ φ by
          (λ _ → refl) which-is-an-equivalence-by proof-of-equivalency (f′≃ ∘≃ φ≃)
+
