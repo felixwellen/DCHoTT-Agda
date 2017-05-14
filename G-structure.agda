@@ -164,12 +164,21 @@ module G-structure where
       ι-D₁ : (x₀ : M) → D₁ x₀ → M
       ι-D₁ x₀ (x , dx) = x
 
+      ∗D : (x₀ : M) → formal-disk-at x₀
+      ∗D x₀ = (x₀ , refl) 
+
+      ∗D₁ : (x₀ : M) → D₁ x₀
+      ∗D₁ x₀ = (x₀ , refl) 
+{-
       an-equivalence-of-formal-disks-induces-an-equivalence-on-first-order-disks :
         ∀ {x y : M}
         → formal-disk-at x ≃ formal-disk-at y → D₁ x ≃ D₁ y
-      an-equivalence-of-formal-disks-induces-an-equivalence-on-first-order-disks ψ =
-        {!!}
-
+      an-equivalence-of-formal-disks-induces-an-equivalence-on-first-order-disks {x} {y} ψ≃ =
+        let
+          ψ : D₁ x → D₁ y
+          ψ = {!!} 
+        in {!!}
+-}
 {-
     trivial_-structure-on-V :
       ∀ (reduction : group-over-structure-group-of structure-on-V)
