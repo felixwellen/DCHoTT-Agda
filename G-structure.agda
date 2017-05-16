@@ -138,8 +138,7 @@ module G-structure where
     G-structures on first-order-disks
   -}
     D₁e = first-order-disk-at e
-    ι-D₁e : D₁e → V
-    ι-D₁e (v , dv) = v
+    ι-D₁e = ι-D₁ e
 
     restricted-to-D₁ :
       D₁e → BG
@@ -158,27 +157,12 @@ module G-structure where
                       locally-like structure-on-V by v)
                  where
 
-      D₁ : (x₀ : M) → U₀
-      D₁ x₀ = first-order-disk-at x₀
-      
-      ι-D₁ : (x₀ : M) → D₁ x₀ → M
-      ι-D₁ x₀ (x , dx) = x
-
       ∗D : (x₀ : M) → formal-disk-at x₀
       ∗D x₀ = (x₀ , refl) 
 
-      ∗D₁ : (x₀ : M) → D₁ x₀
-      ∗D₁ x₀ = (x₀ , refl) 
-{-
-      an-equivalence-of-formal-disks-induces-an-equivalence-on-first-order-disks :
-        ∀ {x y : M}
-        → formal-disk-at x ≃ formal-disk-at y → D₁ x ≃ D₁ y
-      an-equivalence-of-formal-disks-induces-an-equivalence-on-first-order-disks {x} {y} ψ≃ =
-        let
-          ψ : D₁ x → D₁ y
-          ψ = {!!} 
-        in {!!}
--}
+      
+
+
 {-
     trivial_-structure-on-V :
       ∀ (reduction : group-over-structure-group-of structure-on-V)

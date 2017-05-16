@@ -41,6 +41,11 @@ module PropositionalTruncation where
       ∀ {i} (A : U i) → ∥ A ∥ is-a-proposition
     ∥-∥-is-truncation A = λ a a′ → -1-truncated a a′
 
+    ∥→_∥→ :
+      ∀ {i j} {A : U i} {B : U j}
+      → (A → B) → ∥ A ∥ → ∥ B ∥
+    ∥→ f ∥→ = ∥-∥-recursion _ (∥-∥-is-truncation _) (λ a → ∣ (f a) ∣)
+
     {-
     fill in the following, if needed
     postulate

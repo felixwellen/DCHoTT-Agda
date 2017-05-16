@@ -68,6 +68,10 @@ record ∑ {i j} {A : U i} (P : A → U j) : U (i ⊔ j) where
   → (x : ∑ P) → P (∑π₁ x)
 ∑π₂ (a , p) = p  
 
+∑π₂-from_ :
+  ∀ {i} {j} {A : U i} (P : A → U j)
+  → (x : ∑ P) → P (∑π₁ x)
+∑π₂-from P = ∑π₂
 
 Π-to-∑ : ∀ {A : U₀} {P : A → U₀}
          → Π P → A → ∑ P

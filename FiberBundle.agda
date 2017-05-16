@@ -6,6 +6,8 @@ module FiberBundle where
   open import PropositionalTruncation
   open import PullbackSquare
   open import Homotopies
+  open import Equivalences
+  open import Fiber
   open import Im
   open import FormalDiskBundle
   open import EtaleMaps
@@ -210,3 +212,26 @@ module FiberBundle where
                             (λ x → F , ∣ ∗ , refl ∣) v ι-BAut-is-1-mono
                             proof-that covering is-1-epi
                             the-square-commutes ⁻¹⇒
+
+
+       {-
+         as a by product, we know that all fibers of the bundle
+         are merely equivalent to F
+
+       -}
+
+         all-fibers-are-merely-equivalent :
+           ∀ (b : B)
+           → ∥ F ≃ fiber-of φ at b  ∥
+         all-fibers-are-merely-equivalent b =
+           let
+             F′-in-BAut : U₀
+             F′-in-BAut = ∑π₁ (diagonal b)
+             ∣F′≃F∣ : ∥ F ≃ F′-in-BAut ∥
+             ∣F′≃F∣ = ∥→ (transport-as-equivalence (λ (A : U₀) → A))  ∥→
+                      ( ∥→ ∑π₂-from (λ ∗ → F ≈ F′-in-BAut) ∥→ ((∑π₂ (diagonal b))))
+             -- now, use the homotopy from above to see
+             --    fiber-of φ at b ≃ F′-in-BAut
+             fiber≃F′ : fiber-of φ at b ≃ F′-in-BAut
+             fiber≃F′ = (transport-as-equivalence (λ (A : U₀) → A)) (as-U₀-morphism b)
+           in ∥→ (λ f → fiber≃F′ ⁻¹≃ ∘≃ f) ∥→ ∣F′≃F∣ 
