@@ -5,6 +5,7 @@ module Manifolds where
   open import EqualityAndPaths
   open import PropositionalTruncation
   open import DependentTypes
+  open import Fiber
   open import Equivalences renaming (underlying-map-of to underlying-map-of-the-equivalence)
   open import Pullback
   open import PullbackSquare
@@ -264,3 +265,15 @@ module Manifolds where
              (ι-BAut (formal-disk-at e) ∘ classifying-morphism) x
            ≈∎
 
+
+         -- conclude, that the formal disks are equivalent
+         all-formal-disks-are-merely-equivalent :
+           ∀ (x : M)
+           → ∥ De ≃ formal-disk-at x ∥
+         all-formal-disks-are-merely-equivalent x =
+           let
+             ψ : fiber-of (p-of-T∞ M) at x ≃ formal-disk-at x 
+             ψ = pullback-definition-and-dependent-version-agree.on-fibers M x
+           in ∥→ (λ (f : De ≃ (fiber-of p-of-T∞ M at x)) → ψ ∘≃ f) ∥→ 
+            (all-fiber-bundle-are-associated.all-fibers-are-merely-equivalent
+              (p-of-T∞ M) T∞M-is-a-fiber-bundle x)

@@ -33,10 +33,10 @@ module FirstOrderDisks where
   -- equivalence of formal-disks is stronger than first-order-disk-equivalence
 
   postulate
-    specialize-to-first-order :
-      ∀ {X Y : U₀} → (f : X → Y)
-      → (x : X)
-      → formal-disk-at x ≃ formal-disk-at (f x) → D₁ x ≃ D₁ (f x)
+    equivalence-of-formal-disks-implies-equivalence-of-first-order-disks :
+      ∀ {X Y : U₀} 
+      → (x : X) → (y : Y)
+      → formal-disk-at x ≃ formal-disk-at y → D₁ x ≃ D₁ y
 
 
 

@@ -141,7 +141,7 @@ module OneImage where
                 ga-as-point-in-the-fiber
       
     in ι-fiber ⁎ fa≈ga
-  
+
 {-
   compatibility :
     ∀ {A B : U₀} 

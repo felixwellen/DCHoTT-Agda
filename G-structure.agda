@@ -3,7 +3,7 @@
 module G-structure where
   open import Basics
   open import EqualityAndPaths
-  open import Equivalences
+  open import Equivalences renaming (underlying-map-of to as-plain-map)
   open import Homotopies
   open import Univalence
   open import LeftInvertibleHspace
@@ -140,9 +140,9 @@ module G-structure where
     D₁e = first-order-disk-at e
     ι-D₁e = ι-D₁ e
 
-    restricted-to-D₁ :
+    trivial-structure-restricted-to-D₁e :
       D₁e → BG
-    restricted-to-D₁ =
+    trivial-structure-restricted-to-D₁e =
       let
         ψ : V → BG
         ψ = (∑π₁ trivial-structure)
@@ -160,8 +160,38 @@ module G-structure where
       ∗D : (x₀ : M) → formal-disk-at x₀
       ∗D x₀ = (x₀ , refl) 
 
+      χ-M : M → BAut De
+      χ-M =
+        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism
+          W M w structure-on-V v M-is-a-V-manifold
       
+      all-D₁s-are-merely-equivalent :
+        ∀ (x : M)
+        → ∥  D₁e ≃ D₁ x ∥
+      all-D₁s-are-merely-equivalent x =
+        ∥→  equivalence-of-formal-disks-implies-equivalence-of-first-order-disks e x ∥→
+        ( ∥→ (λ f → f ∘≃ (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e ⁻¹≃)) ∥→
+        (the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent
+          W M w structure-on-V v M-is-a-V-manifold x ) )
+      
+      G-structures-on-M =
+        G-structures-on-V-manifolds.G-structures
+        w v structure-on-V group-over-BAutD M-is-a-V-manifold
 
+{-
+      _is-torsion-free :
+        G-structures-on-M → U₁
+      (lift , homotopy) is-torsion-free =
+        -- ∀ (x : M) → ∥ lift ∘ (ι-D₁ x) ⇒ trivial-structure-restricted-to-D₁ ∥
+        let
+          equivalence-as-map : (x : M) → ∥ (D₁e → D₁ x) ∥ 
+          equivalence-as-map x = (∥→  as-plain-map ∥→) (all-D₁s-are-merely-equivalent x)
+          D₁e-at : (x : M) → ∥ (D₁e → BG) ∥
+          D₁e-at x = ∥→ (λ f → lift ∘ ι-D₁ x ∘ f) ∥→ (equivalence-as-map x)
+          compare-with-trivial : (x : M) → {!!}
+          compare-with-trivial x = {!!}
+        in {!∀ (x : M)  → ∥→ (λ f → f ⇒ f) ∥→  (equivalence-as-map x)!}
+-}
 
 {-
     trivial_-structure-on-V :
