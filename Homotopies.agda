@@ -81,14 +81,14 @@ H ⁻¹⇒ = reverse-homotopy H
 
 -- 2-categorical stuff
 _right-whisker_ : ∀ {i} {A B C : U i} {f g : A → B} 
-                      → f ∼ g → (h : B → C) → h ∘ f ⇒ h ∘ g
+                      → f ⇒ g → (h : B → C) → h ∘ f ⇒ h ∘ g
 _right-whisker_ {i} {A} {B} {C} {f} {g} H h = λ (a : A) → h ⁎ H a
-_left-whisker_ : ∀ {i} {A B C : U i} {f g : B → C} 
+_left-whisker_ : ∀ {i j k} {A : U i} {B : U j} {C : U k} {f g : B → C} 
                       →  (h : A → B) → f ⇒ g → f ∘ h ⇒ g ∘ h
-_left-whisker_ {i} {A} {B} {C} {f} {g} h H = λ (a : A) → H (h a)
+_left-whisker_ {i} {_} {_} {A} {B} {C} {f} {g} h H = λ (a : A) → H (h a)
 
 pre-whisker_to_ :
-  ∀ {i} {A B C : U i} {f g : B → C} 
+  ∀ {i j k} {A : U i} {B : U j} {C : U k} {f g : B → C} 
   →  (h : A → B) → f ⇒ g → f ∘ h ⇒ g ∘ h
 pre-whisker_to_ = _left-whisker_
 

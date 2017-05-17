@@ -134,18 +134,19 @@ module G-structure where
     We will now work towards the definition of 
     torision-free G-structures.
     For this, we need to be able to compare
-    G-structures on first-order-disks
+    G-structures on formal disks
   -}
-    D₁e = first-order-disk-at e
-    ι-D₁e = ι-D₁ e
+    D-at = formal-disk-at_
+    ι-D = inclusion-of-formal-disk-at
+    ι-De = inclusion-of-formal-disk-at e
 
     trivial-structure-restricted-to-D₁e :
-      D₁e → BG
+      formal-disk-at e → BG
     trivial-structure-restricted-to-D₁e =
       let
         ψ : V → BG
         ψ = (∑π₁ trivial-structure)
-      in ψ ∘ ι-D₁e
+      in ψ ∘ ι-De
 
     {-
       now, for a general V-manifold
@@ -164,11 +165,10 @@ module G-structure where
         the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism
           W M w structure-on-V v M-is-a-V-manifold
       
-      all-D₁s-are-merely-equivalent :
+      all-Ds-are-merely-equivalent :
         ∀ (x : M)
-        → ∥  D₁e ≃ D₁ x ∥
-      all-D₁s-are-merely-equivalent x =
-        ∥→  equivalence-of-formal-disks-implies-equivalence-of-first-order-disks e x ∥→
+        → ∥  D-at e ≃ D-at x ∥
+      all-Ds-are-merely-equivalent x =
         ( ∥→ (λ f → f ∘≃ (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e ⁻¹≃)) ∥→
         (the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent
           W M w structure-on-V v M-is-a-V-manifold x ) )
@@ -178,7 +178,7 @@ module G-structure where
         w v structure-on-V group-over-BAutD M-is-a-V-manifold
 
       _is-torsion-free :
-        G-structures-on-M → U₀
+        G-structures-on-M → U₁
       (lift , homotopy) is-torsion-free =
         {- 
           to decide if a G-structure is torsion free,
@@ -203,36 +203,34 @@ module G-structure where
 
         -}
         let
+          -- classifying map of T∞V
+          ξ = G-structures-on-V-manifolds.χ id-as-étale-map id-as-étale-map
+              structure-on-V group-over-BAutD
+              V-is-a-manifold
+
+          -- the triangle type discussed above
           triangles-at : BAut De → U₁
           triangles-at = λ {(Dx , _) → ∑ λ (f : Dx →  BG) 
                                      → ∑ λ (g : Dx →  BAut De)
                                            → Bφ ∘ f ⇒ g}
+
           triangle-of-the-trivial-G-structure :
             triangles-at (e-BAut De)
           triangle-of-the-trivial-G-structure =
-            ({!!} , ({!trivial-structure-restricted-to-D₁e!} , {!!}))
-        in {!!}
+            (trivial-structure-restricted-to-D₁e ,
+              (ξ ∘ ι-De  , (pre-whisker ι-De to (∑π₂ trivial-structure))))
 
-{-
-      -- not really the right definition. probably.      _is-torsion-free :
-        G-structures-on-M → U₀
-      (lift , homotopy) is-torsion-free =
-        let
-          D₁-at : (x : M) → (D₁ x → BG)
-          D₁-at x = lift ∘ ι-D₁ x
-          _is-trivial : {A : U₀} → (f : A → BG) → U₀
-          _is-trivial f = f ⇒ (λ ∗ → Be)
-        in ∀ (x : M) → (D₁-at x) is-trivial
--}
+          D-at_as-point-in-BAut-De :
+            ∀ (x : M) → BAut De
+          D-at_as-point-in-BAut-De x =
+            (D-at x , ∥→ (λ z → (∗ , univalence z)) ∥→  (all-Ds-are-merely-equivalent x))
 
+          triangle-from-the-G-structure-at :
+            ∀ (x : M) → triangles-at (D-at x as-point-in-BAut-De)
+          triangle-from-the-G-structure-at x =
+            (lift ∘ ι-D x , (χ-M ∘ ι-D x , (pre-whisker (ι-D x) to homotopy)))
 
-
-{-
-    trivial_-structure-on-V :
-      ∀ (reduction : group-over-structure-group-of structure-on-V)
-      → {!!}
-    trivial_-structure-on-V = {!!}
--}
-
-
-  
+        in  ∀ (x : M)
+          → ∀ (γ : D-at x as-point-in-BAut-De ≈ e-BAut De)
+          → transport triangles-at γ (triangle-from-the-G-structure-at x)
+            ≈ triangle-of-the-trivial-G-structure 

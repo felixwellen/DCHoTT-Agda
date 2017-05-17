@@ -238,13 +238,13 @@ module Equivalences where
                             right-inverse-of-g by counit-for-g))
    (f is-an-equivalence-because (has-left-inverse left-inverse-of-f by unit-for-f and-right-inverse right-inverse-of-f by counit-for-f)) = g ∘ f is-an-equivalence-because 
      (has-left-inverse left-inverse-of-f ∘ left-inverse-of-g by (_right-whisker_ {i} {A} {B} {A} {left-inverse-of-g ∘ (g ∘ f)} {f} 
-                        (_left-whisker_ {i} {A} {B} {B} {left-inverse-of-g ∘ g} {id} 
+                        (_left-whisker_ {i} {_} {_} {A} {B} {B} {left-inverse-of-g ∘ g} {id} 
                                     f  
                                     unit-for-g)  
                         left-inverse-of-f) •∼ 
                       unit-for-f and-right-inverse right-inverse-of-f ∘ right-inverse-of-g by
                         (counit-for-g •∼ (_right-whisker_ {i} {C} {B} {C} {right-inverse-of-g} {f ∘ (right-inverse-of-f ∘ right-inverse-of-g)} 
-                          (_left-whisker_ {i} {C} {B} {B} {id} {f ∘ right-inverse-of-f} 
+                          (_left-whisker_ {i} {_} {_} {C} {B} {B} {id} {f ∘ right-inverse-of-f} 
                           right-inverse-of-g 
                         counit-for-f))
                      g) )

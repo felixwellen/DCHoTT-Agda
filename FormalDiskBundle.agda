@@ -37,6 +37,12 @@ module FormalDiskBundle where
     → (x : X) → U₀
   formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
 
+  inclusion-of-formal-disk-at :
+    ∀ {X : U₀}
+    → (x : X)
+    → formal-disk-at x → X
+  inclusion-of-formal-disk-at x (y , γ) = y
+
   -- formal disk at a point as pullback
   --  
   -- D ---> ∗
