@@ -178,20 +178,17 @@ module G-structure where
         G-structures-on-V-manifolds.G-structures
         w v structure-on-V group-over-BAutD M-is-a-V-manifold
 
-{-
+
       _is-torsion-free :
-        G-structures-on-M → U₁
+        G-structures-on-M → U₀
       (lift , homotopy) is-torsion-free =
-        -- ∀ (x : M) → ∥ lift ∘ (ι-D₁ x) ⇒ trivial-structure-restricted-to-D₁ ∥
         let
-          equivalence-as-map : (x : M) → ∥ (D₁e → D₁ x) ∥ 
-          equivalence-as-map x = (∥→  as-plain-map ∥→) (all-D₁s-are-merely-equivalent x)
-          D₁e-at : (x : M) → ∥ (D₁e → BG) ∥
-          D₁e-at x = ∥→ (λ f → lift ∘ ι-D₁ x ∘ f) ∥→ (equivalence-as-map x)
-          compare-with-trivial : (x : M) → {!!}
-          compare-with-trivial x = {!!}
-        in {!∀ (x : M)  → ∥→ (λ f → f ⇒ f) ∥→  (equivalence-as-map x)!}
--}
+          D₁-at : (x : M) → (D₁ x → BG)
+          D₁-at x = lift ∘ ι-D₁ x
+          _is-trivial : {A : U₀} → (f : A → BG) → U₀
+          _is-trivial f = f ⇒ (λ ∗ → Be)
+        in ∀ (x : M) → (D₁-at x) is-trivial
+
 
 {-
     trivial_-structure-on-V :
