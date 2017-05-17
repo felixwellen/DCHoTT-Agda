@@ -14,7 +14,6 @@ module G-structure where
   open import OneImage
   open import EtaleMaps
   open import Manifolds
-  open import FirstOrderDisks
 
   formal-disk-of :
     ∀ {V : U₀}
@@ -61,7 +60,7 @@ module G-structure where
   
          ↗ BG 
         φ   |
-       /   Bι
+       /   Bφ
       /     ↓ 
       M ─→ BAut(D)
   
@@ -178,8 +177,44 @@ module G-structure where
         G-structures-on-V-manifolds.G-structures
         w v structure-on-V group-over-BAutD M-is-a-V-manifold
 
-
       _is-torsion-free :
+        G-structures-on-M → U₀
+      (lift , homotopy) is-torsion-free =
+        {- 
+          to decide if a G-structure is torsion free,
+          we have to compare it locally to the trivial G-structure.
+          This means comparing all triangles obtained by restricting the
+          G-Structure to the formal disk at some point x
+          
+  
+                ↗ BG                       ↗ BG       
+               /   |                      φ   |       
+              /   Bφ         ≈           /   Bφ       
+             /     ↓                    /     ↓       
+          D x ──→ BAut(De)     D x ──→ M ──→ BAut(De) 
+
+          to the De-triangle of the trivial G-Structure 
+
+                ↗ BG       
+              B1   |       
+              /   Bφ       
+             /     ↓       
+          D e ──→ BAut(De) 
+
+        -}
+        let
+          triangles-at : BAut De → U₁
+          triangles-at = λ {(Dx , _) → ∑ λ (f : Dx →  BG) 
+                                     → ∑ λ (g : Dx →  BAut De)
+                                           → Bφ ∘ f ⇒ g}
+          triangle-of-the-trivial-G-structure :
+            triangles-at (e-BAut De)
+          triangle-of-the-trivial-G-structure =
+            ({!!} , ({!trivial-structure-restricted-to-D₁e!} , {!!}))
+        in {!!}
+
+{-
+      -- not really the right definition. probably.      _is-torsion-free :
         G-structures-on-M → U₀
       (lift , homotopy) is-torsion-free =
         let
@@ -188,6 +223,8 @@ module G-structure where
           _is-trivial : {A : U₀} → (f : A → BG) → U₀
           _is-trivial f = f ⇒ (λ ∗ → Be)
         in ∀ (x : M) → (D₁-at x) is-trivial
+-}
+
 
 
 {-
