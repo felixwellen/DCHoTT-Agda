@@ -274,6 +274,19 @@ module DependentTypes where
            and-right-inverse induced-map⁻¹ by right-invertible)
 
 
+  fibered-morphisms-are-slice-homs :
+    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
+    → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ) ≃ Π (λ (s : S) → fiber-of φₜ at (φₛ s))
+  fibered-morphisms-are-slice-homs φₛ φₜ =
+    let
+      inverse = (λ ψₛ → ((λ s → ι-fiber (ψₛ s)) , (λ s → fiber-of.γ (ψₛ s))))
+    in (λ {(ψ , H) s → (ψ s) is-in-the-fiber-by H s}) is-an-equivalence-because
+     (has-left-inverse inverse
+        by (λ {(ψ , H) → refl})
+      and-right-inverse inverse
+        by (λ ψₛ → refl))
+
+
   -- this would should better be in some pullback-module,
   -- but due to some dependecy issues, it is here...
   module pullback-preserves-equivalences

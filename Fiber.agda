@@ -7,9 +7,12 @@ module Fiber where
   open import Homotopies
   open import Equivalences
 
-  data fiber-of {i j} {X : U i} {Y : U j} (f : X → Y) (y₀ : Y) : U (i ⊔ j) where
-    _is-in-the-fiber-by_ : (x : X) → f(x) ≈ y₀ → fiber-of f y₀
-
+  record fiber-of {i j} {X : U i} {Y : U j} (f : X → Y) (y₀ : Y) : U (i ⊔ j) where
+    constructor _is-in-the-fiber-by_ 
+    field
+      x : X
+      γ : f(x) ≈ y₀
+      
   fiber-of_at_ : ∀ {i} {j} {X : U i} {Y : U j}
                  → (f : X → Y) → (y₀ : Y) → U (i ⊔ j)
   fiber-of f at y₀ = fiber-of f y₀

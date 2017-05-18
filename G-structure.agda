@@ -232,5 +232,5 @@ module G-structure where
 
         in  ∀ (x : M)
           → ∀ (γ : D-at x as-point-in-BAut-De ≈ e-BAut De)
-          → transport triangles-at γ (triangle-from-the-G-structure-at x)
-            ≈ triangle-of-the-trivial-G-structure 
+          → ∥ transport triangles-at γ (triangle-from-the-G-structure-at x)
+              ≈ triangle-of-the-trivial-G-structure ∥ 
