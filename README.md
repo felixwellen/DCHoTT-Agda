@@ -2,11 +2,11 @@
 Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal shape modality.
 The following is proved and could also be interpreted as theorems about general modalities:
 
-- The formal disk bundle over a group is trivial
-- The formal disk bundle over a G-manifold is locally trivial. 
+- The formal disk bundle over a group is trivial.
+- The formal disk bundle over a V-manifold is locally trivial. 
 - All F - fiber bundles are associated to an Aut(F) principal bundle.
 
-The only properties we need of a groups are existence of an operation G x G -> G,
+The only properties we need of a groups are existence of an operation V x V -> V,
 a neutral element for this operation without further compatibility requirements and invertibility of all right translations.
 [Here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf) (theorem 3.6, 1) and some part of 2) is a short account of the question this code solves.
 The classical, category theoretic, version of the theory and together with a lot of opportunities to extend the formalized version is [here](https://arxiv.org/abs/1701.06238).
@@ -19,6 +19,7 @@ If you want to have a look at what has been formalized, the following files are 
 
 - FormalDiskBundle.agda
 - Manifolds.agda
+- G-structure.agda
 - FiberBundle.agda
 - Im.agda
 
