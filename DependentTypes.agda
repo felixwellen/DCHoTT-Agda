@@ -286,7 +286,13 @@ module DependentTypes where
       and-right-inverse inverse
         by (λ ψₛ → refl))
 
-
+  if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic :
+    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
+    → (ψ ψ′ : Π (λ (s : S) → fiber-of φₜ at (φₛ s)))
+    → ψ ≈ ψ′ → (λ s → ι-fiber (ψ s)) ⇒ (λ s → ι-fiber (ψ′ s))
+  if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic φₛ φₜ ψ ψ′ γ =
+    λ s → ι-fiber ⁎ (λ f → f s) ⁎ γ
+  
   -- this would should better be in some pullback-module,
   -- but due to some dependecy issues, it is here...
   module pullback-preserves-equivalences
