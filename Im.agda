@@ -753,7 +753,7 @@ module Im where
     -}
 
     {-
-      by currying and using that Π-types of coreduced fibrations are coreduced,
+      by currying and using that Π-types of coreduced dependent types are coreduced,
       we can prove a specialized induction rule for products:
     -}
 
@@ -797,12 +797,12 @@ module Im where
     π₁-triangle :
       ℑ→ π₁ ∘ φ ⇒ π₁
     π₁-triangle = ℑ×-induction (λ _ _ →
-                                    coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
-                               (λ { (a , b) → (ℑ→ π₁ ∘ φ) (ℑ-unit a , ℑ-unit b)
-                                              ≈⟨ ℑ→ π₁ ⁎ ℑ-commutes-with-pair-construction a b ⟩
-                                               ℑ→ π₁ (ℑ-unit (a , b))
-                                              ≈⟨ naturality-of-ℑ-unit π₁ (a , b) ⟩
-                                               π₁ (ℑ-unit a , ℑ-unit b) ≈∎ })
+                coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
+                  (λ { (a , b) → (ℑ→ π₁ ∘ φ) (ℑ-unit a , ℑ-unit b)
+                          ≈⟨ ℑ→ π₁ ⁎ ℑ-commutes-with-pair-construction a b ⟩
+                             ℑ→ π₁ (ℑ-unit (a , b))
+                          ≈⟨ naturality-of-ℑ-unit π₁ (a , b) ⟩
+                             π₁ (ℑ-unit a , ℑ-unit b) ≈∎ })
 
 
     {-
