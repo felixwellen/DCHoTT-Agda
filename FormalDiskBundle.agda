@@ -16,7 +16,8 @@ module FormalDiskBundle where
   open import LeftInvertibleHspace
   open import DependentTypes
   open import Fiber
-
+  open import Contractibility
+  
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
   x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
@@ -42,7 +43,7 @@ module FormalDiskBundle where
     → (x : X)
     → formal-disk-at x → X
   inclusion-of-formal-disk-at x (y , γ) = y
-
+  
   vector-fields-on_ :
     ∀ (X : U₀)
     → U₀
@@ -58,6 +59,39 @@ module FormalDiskBundle where
   -- X ---> ℑ X
   D : ∀ (X : U₀) → (x₀ : X) → U₀
   D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
+
+{-
+  this is probably some work, 
+  since in the end one has to show
+  that the 2-cell of the constructed pullback
+  is the naturality 2-cell...
+
+
+  inclusions-of-formal-disks-are-étale :
+    ∀ {X : U₀}
+    → (x : X) → (inclusion-of-formal-disk-at x) is-an-étale-map
+  inclusions-of-formal-disks-are-étale {X} x =
+    let
+      ι-D : D X x → X
+      ι-D = λ {(x₀ and y are-in-the-same-fiber-by γ) → y} 
+      □ : pullback-square-with-right (λ _ → ℑ-unit x)
+            bottom ℑ-unit
+            top (λ _ → ∗)
+            left ι-D
+      □ = substitute-equivalent-cone
+        ((λ _ → ∗)) _ id id-is-an-equivalence
+        (λ a → _is-contractible.contraction One-is-contractible (p₁-of-pullback _ _ a) ⁻¹) (λ _ → refl)
+        (complete-to-pullback-square (λ _ → ℑ-unit x) (ℑ-unit-at X))
+      ψ≃ : ℑ One ≃ One
+      ψ≃ = two-contractible-types-are-equivalent
+        ℑ-One-is-contractible One-is-contractible
+      □′ : pullback-square-with-right (ℑ→ ι-D)
+            bottom ℑ-unit
+            top (ℑ-unit-at (D X x))
+            left ι-D
+      □′ = {!substitute-equivalent (underlying-map-of ψ≃) (proof-of-equivalency ψ≃) □ !}
+    in {!!}
+-}  
 
   -- the definitions of the formal disk agree
   module pullback-and-sum-definition-of-formal-disks-are-equivalent
