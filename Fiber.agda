@@ -27,7 +27,12 @@ module Fiber where
   as-point-in-the-domain (a is-in-the-fiber-by _) = a
 
   ι-fiber = as-point-in-the-domain
-  
+
+  fibers-equalize :
+    ∀ {A B : U₀} (f : A → B)
+    → (b : B) → f ∘ ι-fiber ⇒ (λ (_ : fiber-of f at b) → b)
+  fibers-equalize f b (a is-in-the-fiber-by γ) = γ
+
   as-equality-in-the-codomain :
     ∀ {i} {A B : U i} {f : A → B} {b : B}
     → (x : fiber-of f at b) → f(as-point-in-the-domain x) ≈ b

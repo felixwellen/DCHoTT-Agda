@@ -273,6 +273,8 @@ module DependentTypes where
           (has-left-inverse induced-map⁻¹ by left-invertible
            and-right-inverse induced-map⁻¹ by right-invertible)
 
+  
+
 
   fibered-morphisms-are-slice-homs :
     ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
@@ -286,6 +288,20 @@ module DependentTypes where
       and-right-inverse inverse
         by (λ ψₛ → refl))
 
+{-
+  fibered-morphisms-are-slice-homs′ :
+    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
+    → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ) ≃ Π (λ (x : X) → fiber-of φₛ at x → fiber-of φₜ at x)
+  fibered-morphisms-are-slice-homs′ φₛ φₜ =
+    let
+      inverse : Π (λ (x : _) → fiber-of φₛ at x → fiber-of φₜ at x) → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ)
+      inverse = λ f → ((λ s → ι-fiber (f (φₛ s) (s is-in-the-fiber-by refl))) , (λ s → fibers-equalize φₜ (φₛ s) (f (φₛ s) (s is-in-the-fiber-by refl))))
+    in (λ {(ψ , H) → λ x → λ {(s is-in-the-fiber-by γ) → ψ s is-in-the-fiber-by (H s • γ)}})
+      is-an-equivalence-because
+        (has-left-inverse inverse by (λ {(ψ , H) → {!!}})
+         and-right-inverse inverse by {!!})
+  -}
+  
   if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic :
     ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
     → (ψ ψ′ : Π (λ (s : S) → fiber-of φₜ at (φₛ s)))
@@ -293,7 +309,7 @@ module DependentTypes where
   if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic φₛ φₜ ψ ψ′ γ =
     λ s → ι-fiber ⁎ (λ f → f s) ⁎ γ
   
-  -- this would should better be in some pullback-module,
+  -- this should better be in some pullback-module,
   -- but due to some dependecy issues, it is here...
   module pullback-preserves-equivalences
     {A B C : U₀} (f : A → B) (g : C → B) (f-is-an-equivalence : f is-an-equivalence) where
