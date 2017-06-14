@@ -69,6 +69,13 @@ module FormalDiskBundle where
     → (X → U₀)
   J∞ E x = formal-disk-at x → E(x)
 
+  J∞→ :
+    ∀ {X : U₀}
+    → {E : X → U₀} {F : X → U₀}
+    → (φ : (x : X) → E x → F x)
+    → ((x : X) → J∞ E x → J∞ F x)
+  J∞→ {_} {E} {_} φ x = λ (f : formal-disk-at x → E x) → φ x ∘ f
+
   {-
 
     a section of the bundle is mapped to
