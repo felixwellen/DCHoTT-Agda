@@ -20,6 +20,25 @@ module DependentTypes where
       base-change : A′ → A
       morphism-of-fibers : (a′ : A′) → (E′(a′) → E(base-change a′))
 
+  record equivalence-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
+    constructor over_we-have-a-morphism-of-fibers_
+    field 
+      base-change : A′ ≃ A
+      morphism-of-fibers : (a′ : A′) → (E′(a′) ≃ E(base-change $≃ a′))
+
+
+  _→χ_ :
+    ∀ {A′ A : U₀}
+    → (E′ : A′ → U₀) (E : A → U₀)
+    → U₀
+  E′ →χ E = morphism-of-dependent-types _ _ E′ E
+
+  _≃χ_ :
+    ∀ {A′ A : U₀}
+    → (E′ : A′ → U₀) (E : A → U₀)
+    → U₀
+  E′ ≃χ E = equivalence-of-dependent-types _ _ E′ E
+
   base-change-of :
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)

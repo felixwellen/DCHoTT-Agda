@@ -98,6 +98,17 @@ module FormalDiskBundle where
     → (X → U₀)
   T∞′ E x = (formal-disk-at x) × E(x)
 
+{-
+  T∞′-of-the-inclusion-of_is-the-formal-disk :
+    ∀ {X : U₀}
+    → (x₀ : X)
+    → (T∞′ (dependent-replacement (λ ∗ → x₀))) ≃χ (λ (x : X) → x is-infinitesimally-close-to x₀)
+  T∞′-of-the-inclusion-of x₀ is-the-formal-disk =
+    let
+      map-to = {!!}
+    in over id-as-equivalence
+      we-have-a-morphism-of-fibers (λ x → {!!})
+  -}
   {-
     T is fiberwise left adjoint to J:
       ∀ (x : X) E(x) → J∞(F)(x) ≃ T∞(E)(x) → F(x)
