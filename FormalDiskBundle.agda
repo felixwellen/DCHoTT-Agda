@@ -60,6 +60,56 @@ module FormalDiskBundle where
   D : ∀ (X : U₀) → (x₀ : X) → U₀
   D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
 
+  {-
+    the jet bundle
+  -}
+  J∞ :
+    ∀ {X : U₀}
+    → (E : X → U₀)
+    → (X → U₀)
+  J∞ E x = formal-disk-at x → E(x)
+
+  {-
+
+    a section of the bundle is mapped to
+    the dependent function of its jets
+
+  -}
+
+  j∞ : ∀ {X : U₀}
+    → (E : X → U₀)
+    → Π E → Π (J∞ E)
+  j∞ {X} E s = λ (x : X) (γ : formal-disk-at x) → s x
+
+  {-
+    the relative formal disk bundle
+  -}
+
+  T∞′ : 
+    ∀ {X : U₀}
+    → (E : X → U₀)
+    → (X → U₀)
+  T∞′ E x = (formal-disk-at x) × E(x)
+
+  {-
+    T is fiberwise left adjoint to J:
+      ∀ (x : X) E(x) → J∞(F)(x) ≃ T∞(E)(x) → F(x)
+  -}
+
+  fiberwise-adjunction-of-T∞-and-J∞ :
+    ∀ {X : U₀}
+    → (E : X → U₀) (F : X → U₀)
+    → (x : X) → (E(x) → J∞(F)(x)) ≃ (T∞′(E)(x) → F(x))
+  fiberwise-adjunction-of-T∞-and-J∞ E F x =
+    let
+      map-to : (E(x) → J∞(F)(x)) → (T∞′(E)(x) → F(x))
+      map-to f = λ {(dx , eₓ) → f eₓ dx}
+      map-from : (T∞′(E)(x) → F(x)) → (E(x) → J∞(F)(x))
+      map-from f = λ eₓ dx → f (dx , eₓ)
+    in map-to is-an-equivalence-because
+       (has-left-inverse map-from by (λ _ → refl)
+        and-right-inverse map-from by (λ _ → refl))
+
 {-
   this is probably some work, 
   since in the end one has to show
@@ -115,6 +165,12 @@ module FormalDiskBundle where
   induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
     (f x′ , mapping-with f preserves-infinitesimal-proximity x′-is-close-to-x)
 
+  d :
+    ∀ {X Y : U₀}
+    → (f : X → Y)
+    → (x : X) → formal-disk-at x → formal-disk-at (f x)
+  d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
+  
   T∞→ = induced-map-on-formal-disks
 
   formal-disk-bundle : (X : U₀) → U₀
