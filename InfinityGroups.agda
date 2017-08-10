@@ -34,9 +34,6 @@ module InfinityGroups where
   BO1 : U₀
   BO1 = Bool
 
-  module kernel (BG : U₀) (eG : BG) (BH : U₀) (eH : BH) (Bφ : BG → BH) where
-    delooping = fiber-of Bφ at eH
-    -- discontinued...
       
   module equivalent-spaces-have-equivalent-BAut
     {A B : U₀} (f : A ≃ B) where

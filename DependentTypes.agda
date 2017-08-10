@@ -15,13 +15,13 @@ module DependentTypes where
 
   
   record morphism-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
-    constructor over_we-have-a-morphism-of-fibers_
+    constructor over_there-is-the-morphism_
     field 
       base-change : A′ → A
       morphism-of-fibers : (a′ : A′) → (E′(a′) → E(base-change a′))
 
   record equivalence-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
-    constructor over_we-have-a-morphism-of-fibers_
+    constructor over_there-is-the-equivalence_
     field 
       base-change : A′ ≃ A
       morphism-of-fibers : (a′ : A′) → (E′(a′) ≃ E(base-change $≃ a′))
@@ -43,7 +43,7 @@ module DependentTypes where
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (A′ → A)
-  base-change-of (over base-change we-have-a-morphism-of-fibers _) = 
+  base-change-of (over base-change there-is-the-morphism _) = 
     base-change
 
   _on-the-fiber-over_ :
@@ -51,13 +51,13 @@ module DependentTypes where
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (a′ : A′)
     → (E′(a′) → E((base-change-of F) a′))
-  (over _ we-have-a-morphism-of-fibers f) on-the-fiber-over a′ = f a′
+  (over _ there-is-the-morphism f) on-the-fiber-over a′ = f a′
 
   _is-an-equivalence-on-all-fibers : 
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → U₀
-  (over f we-have-a-morphism-of-fibers e) is-an-equivalence-on-all-fibers = 
+  (over f there-is-the-morphism e) is-an-equivalence-on-all-fibers = 
     ∀ (a′ : _) → e(a′) is-an-equivalence
 
   dependent-type_as-map :
@@ -70,7 +70,7 @@ module DependentTypes where
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (∑ E′ → ∑ E)
-  the-map-on-total-spaces-induced-by (over φ we-have-a-morphism-of-fibers f) = 
+  the-map-on-total-spaces-induced-by (over φ there-is-the-morphism f) = 
     λ {(a′ , e′) → ( φ(a′), (f a′)(e′) ) }
 
   dependent-replacement :

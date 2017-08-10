@@ -28,7 +28,6 @@ module LeftInvertibleHspace where
       left-invertible : ∀ (x₀ : X) → (λ x → μ (x , x₀)) is-an-equivalence
 
   
-    
 
     open _is-an-equivalence 
     
@@ -148,8 +147,10 @@ module LeftInvertibleHspace where
 
 
   
+  operation-on_ : {X : U₀} (structure-on-X : left-invertible-structure-on X) → (X × X → X)
+  operation-on structure-on-X = left-invertible-structure-on_.μ structure-on-X
 
-  module loop-spaces-are-non-associative-groups (BG : U₀) (e : BG) where
+  module loop-spaces-are-left-invertible-spaces (BG : U₀) (e : BG) where
 
     right-compose-with :
       ∀ {x y z : BG} → 
@@ -207,7 +208,59 @@ module LeftInvertibleHspace where
                           left-invertible = right-composing-is-an-equivalence} 
 
 
-    
+  record _→le_ {A B : U₀} 
+                (structure-on-A : left-invertible-structure-on A)
+                (structure-on-B : left-invertible-structure-on B) : U₀
+                where
+    field
+      f : A → B
+      homomorphism-square : (operation-on structure-on-B) ∘ (f ×→ f) ⇒ f ∘ (operation-on structure-on-A)
+
+
+  {-
+    the kernel of a morphism of left invertible H-spaces
+    is again a left invertible H-space
+  -}
+  module kernel {A B : U₀}
+                (A′ : left-invertible-structure-on A)
+                (B′ : left-invertible-structure-on B)
+                (f′ : A′ →le B′)
+                where 
+
+    open left-invertible-structure-on_ A′ renaming (μ to μA; e to eA)
+    open left-invertible-structure-on_ B′ renaming (μ to μB; e to eB)
+    open _→le_ f′
+
+    {-
+      the underlying space of the kernel
+      (two equivalent types)
+    -}
+    K = ∑ (λ a → f(a) ≈ eB)
+    K′ = fiber-of f at eB
+
+    underlying-space-as-sum = K
+    underlying-space-as-fiber = K′
+
+    {-
+      multiplication in the kernel,
+      starting with the witness 'η', that the product
+      of elements of the kernel, is still an element of the kernel
+    η : ∀ {a a′ : A} (γ : f(a) ≈ eB) (γ′ : f(a′) ≈ eB)
+        → f(μA(a , a′)) ≈ eB
+    η {a} {a′} γ γ′ =   f(μA(a , a′))
+                      ≈⟨ homomorphism-square (a , a′) ⁻¹ ⟩
+                        μB (f(a) , f(a′))
+                      ≈⟨ {!!} ⟩
+                        μB (eB , f(a′))
+                      ≈⟨ {!!} ⟩
+                        μB (eB , eB)
+                      ≈⟨ {!!} ⟩
+                        eB
+                      ≈∎
+  
+    μ : K × K → K
+    μ ((a , γ) , (a′ , γ′)) = ((μA (a , a′)) , η γ γ′)
+    -}
 
   {-
     for all groups G and φ:D→G, we have a pullback square:

@@ -107,7 +107,7 @@ module FormalDiskBundle where
     let
       map-to = {!!}
     in over id-as-equivalence
-      we-have-a-morphism-of-fibers (λ x → {!!})
+      there-is-the-equivalence (λ x → {!!})
   -}
   {-
     T is fiberwise left adjoint to J:
