@@ -2,7 +2,7 @@
 
 module LeftInvertibleHspace where 
   open import Basics 
-  open import EqualityAndPaths
+  open import EqualityAndPaths renaming (_⁻¹ to _⁻¹•)
   open import Homotopies
   open import Language
   open import Equivalences
@@ -55,7 +55,7 @@ module LeftInvertibleHspace where
       (a : X) → (b : X) → (∑ (λ x → b ≈ μ (x , a))) is-contractible
     uniqueness-of-left-translations′ a b =
        types-equivalent-to-contractibles-are-contractible
-          (the-equivalence-of-sums-given-by (λ _ γ → γ ⁻¹)
+          (the-equivalence-of-sums-given-by (λ _ γ → γ ⁻¹•)
             being-fiberwise-an-equivalence-by (λ _ → inversion-is-an-equivalence.proof))
           (uniqueness-of-left-translations a b)
     
@@ -64,28 +64,28 @@ module LeftInvertibleHspace where
     left-translation-difference : X → X → X
     left-translation-difference a b = left-invert a b
 
-    infix 50 _‣_
-    _‣_ : X → X → X
-    a ‣ b = μ (a , b)
+    infix 50 _✧_
+    _✧_ : X → X → X
+    a ✧ b = μ (a , b)
 
-    _‣_⁻ : X → X → X
-    a ‣ b ⁻ = left-translation-difference b a
+    _✧_⁻¹ : X → X → X
+    a ✧ b ⁻¹ = left-translation-difference b a
 
     -- read as difference
     ∂ : X × X → X
-    ∂ (a , b) = b ‣ a ⁻
+    ∂ (a , b) = b ✧ a ⁻¹
 
     ∂-is-left-inverse-of-right-translation :
       ∀ (a : X)
-      → (λ (x : X) → x ‣ a ⁻) ∘ (λ x → x ‣ a) ⇒ id
+      → (λ (x : X) → x ✧ a ⁻¹) ∘ (λ x → x ✧ a) ⇒ id
     ∂-is-left-inverse-of-right-translation a = unit (left-invertible a)
 
     ∂-is-right-inverse-of-right-translation :
       ∀ (a : X)
-      →  (λ x → x ‣ a) ∘ (λ (x : X) → x ‣ a ⁻) ⇒ id
+      →  (λ x → x ✧ a) ∘ (λ (x : X) → x ✧ a ⁻¹) ⇒ id
     ∂-is-right-inverse-of-right-translation a =
-      left-inverses-are-also-right-inverses (λ x → x ‣ a)
-        (λ (x : X) → x ‣ a ⁻) _ (∂-is-left-inverse-of-right-translation a)
+      left-inverses-are-also-right-inverses (λ x → x ✧ a)
+        (λ (x : X) → x ✧ a ⁻¹) _ (∂-is-left-inverse-of-right-translation a)
         (counit (left-invertible a))
 
     -- the following stuff finds its non-obvious use in Im.agda
@@ -96,11 +96,11 @@ module LeftInvertibleHspace where
       has-left-inverse (∂ ,→ π₁)
         by (λ {(a , b) → (λ x → (x , b)) ⁎ ∂-is-left-inverse-of-right-translation b a})
       and-right-inverse (∂ ,→ π₁)
-        by (λ {(a , b) → (λ x → a , x) ⁎ ∂-is-right-inverse-of-right-translation a b ⁻¹})
+        by (λ {(a , b) → (λ x → a , x) ⁎ ∂-is-right-inverse-of-right-translation a b ⁻¹•})
 
     ∂-triangle :
       π₁ ⇒ ∂ ∘ (π₂ ,→ μ)
-    ∂-triangle (a , b) = ∂-is-left-inverse-of-right-translation b a ⁻¹
+    ∂-triangle (a , b) = ∂-is-left-inverse-of-right-translation b a ⁻¹•
     
     ∂-is-determined-by-a-triangle :
       ∀ (f : X × X → X)
@@ -113,24 +113,24 @@ module LeftInvertibleHspace where
 
     two-solutions-are-equal :
       ∀ {a b : X} (x y : X)
-      → (x ‣ a) ≈ b → (y ‣ a) ≈ b
+      → (x ✧ a) ≈ b → (y ✧ a) ≈ b
       → x ≈ y
     two-solutions-are-equal {a} {b} x y γ η =
       let
         c = contraction (uniqueness-of-left-translations a b)
-      in ∑π₁ ⁎ (c (x , γ) ⁻¹ • c (y , η))
+      in ∑π₁ ⁎ (c (x , γ) ⁻¹• • c (y , η))
 
     left-difference-is-a-solution :
       ∀ (a b : X)
-      → (b ‣ a ⁻) ‣ a ≈ b
-    left-difference-is-a-solution a b = left-inverses-are-also-right-inverses (λ x → x ‣ a)
+      → (b ✧ a ⁻¹) ✧ a ≈ b
+    left-difference-is-a-solution a b = left-inverses-are-also-right-inverses (λ x → x ✧ a)
                                           (left-inverse (left-invertible a))
                                           (right-inverse (left-invertible a)) (unit (left-invertible a))
                                           (counit (left-invertible a)) b
 
     left-difference-is-unique :
       ∀ (a b : X)
-      → (∑ λ (x : X) → (x ‣ a ⁻) ≈ b) is-contractible
+      → (∑ λ (x : X) → (x ✧ a ⁻¹) ≈ b) is-contractible
     left-difference-is-unique a b =  types-equivalent-to-contractibles-are-contractible
                                        (fiber-as-sum ⁻¹≃)
                                        (contractible-fibers-characterize-equivalences.to-fiber-condition
@@ -139,9 +139,9 @@ module LeftInvertibleHspace where
 
     left-difference-is-unique′ :
       ∀ (a b : X)
-      → (∑ λ (x : X) → b ≈ (x ‣ a ⁻)) is-contractible
+      → (∑ λ (x : X) → b ≈ (x ✧ a ⁻¹)) is-contractible
     left-difference-is-unique′ a b = types-equivalent-to-contractibles-are-contractible
-                                       (the-equivalence-of-sums-given-by (λ x γ → γ ⁻¹)
+                                       (the-equivalence-of-sums-given-by (λ x γ → γ ⁻¹•)
                                           being-fiberwise-an-equivalence-by (λ x → inversion-is-an-equivalence.proof))
                                        (left-difference-is-unique a b)
 
@@ -160,20 +160,20 @@ module LeftInvertibleHspace where
     right-compose-right-invertible :
       ∀ {x y z : BG}  
       → (γ : x ≈ y)
-      → (η : z ≈ y) → (right-compose-with γ) (right-compose-with (γ ⁻¹) η) ≈ η
+      → (η : z ≈ y) → (right-compose-with γ) (right-compose-with (γ ⁻¹•) η) ≈ η
     right-compose-right-invertible refl refl = refl
 
     right-compose-left-invertible :
       ∀ {x y z : BG}  
       → (γ : x ≈ y)
-      → (η : z ≈ x) → (right-compose-with (γ ⁻¹)) (right-compose-with γ η) ≈ η
+      → (η : z ≈ x) → (right-compose-with (γ ⁻¹•)) (right-compose-with γ η) ≈ η
     right-compose-left-invertible refl refl = refl
 
     right-composing-is-an-equivalence :
       ∀ (γ : Ω BG e) → (right-compose-with γ) is-an-equivalence
     right-composing-is-an-equivalence γ =
-      has-left-inverse right-compose-with (γ ⁻¹) by right-compose-left-invertible γ
-      and-right-inverse right-compose-with (γ ⁻¹) by (λ (η : Ω BG e) → right-compose-right-invertible γ η ⁻¹)
+      has-left-inverse right-compose-with (γ ⁻¹•) by right-compose-left-invertible γ
+      and-right-inverse right-compose-with (γ ⁻¹•) by (λ (η : Ω BG e) → right-compose-right-invertible γ η ⁻¹•)
 
 
     left-compose-with :
@@ -184,38 +184,59 @@ module LeftInvertibleHspace where
     left-compose-right-invertible :
       ∀ {x y z : BG}  
       → (γ : x ≈ y)
-      → (η : x ≈ z) → (left-compose-with γ) (left-compose-with (γ ⁻¹) η) ≈ η
+      → (η : x ≈ z) → (left-compose-with γ) (left-compose-with (γ ⁻¹•) η) ≈ η
     left-compose-right-invertible refl refl = refl
 
     left-compose-left-invertible :
       ∀ {x y z : BG}  
       → (γ : x ≈ y)
-      → (η : y ≈ z) → (left-compose-with (γ ⁻¹)) (left-compose-with γ η) ≈ η
+      → (η : y ≈ z) → (left-compose-with (γ ⁻¹•)) (left-compose-with γ η) ≈ η
     left-compose-left-invertible refl refl = refl
 
     left-composing-is-an-equivalence :
       ∀ (γ : Ω BG e) → (left-compose-with γ) is-an-equivalence
     left-composing-is-an-equivalence γ =
-      has-left-inverse left-compose-with (γ ⁻¹) by left-compose-left-invertible γ
-      and-right-inverse left-compose-with (γ ⁻¹) by (λ (η : Ω BG e) → left-compose-right-invertible γ η ⁻¹)
+      has-left-inverse left-compose-with (γ ⁻¹•) by left-compose-left-invertible γ
+      and-right-inverse left-compose-with (γ ⁻¹•) by (λ (η : Ω BG e) → left-compose-right-invertible γ η ⁻¹•)
 
 
-    as-non-associative-group : left-invertible-structure-on (Ω BG e)
-    as-non-associative-group = record { e = refl;
-                          μ = λ {(γ , η) → γ • η};
-                          left-neutral = refl-is-left-neutral;
-                          right-neutral = refl-is-right-neutral ⁻¹⇒;
-                          left-invertible = right-composing-is-an-equivalence} 
+    structure : left-invertible-structure-on (Ω BG e)
+    structure = record { e = refl;
+                         μ = λ {(γ , η) → γ • η};
+                         left-neutral = refl-is-left-neutral;
+                         right-neutral = refl-is-right-neutral ⁻¹⇒;
+                         left-invertible = right-composing-is-an-equivalence} 
 
 
   record _→le_ {A B : U₀} 
-                (structure-on-A : left-invertible-structure-on A)
-                (structure-on-B : left-invertible-structure-on B) : U₀
+                (A′ : left-invertible-structure-on A)
+                (B′ : left-invertible-structure-on B) : U₀
                 where
     field
       f : A → B
-      homomorphism-square : (operation-on structure-on-B) ∘ (f ×→ f) ⇒ f ∘ (operation-on structure-on-A)
+      homomorphism-square : (operation-on B′) ∘ (f ×→ f) ⇒ f ∘ (operation-on A′)
 
+
+
+    open left-invertible-structure-on_ A′ renaming (e to eA; left-neutral to ⋆-is-neutral; _✧_ to _⋆_)
+    open left-invertible-structure-on_ B′ renaming (e to eB;
+                                                    left-neutral to ✦-is-neutral;
+                                                    _✧_ to _✦_;
+                                                    two-solutions-are-equal to cancel-✦)
+    
+    unit-is-preserved : f(eA) ≈ eB
+    unit-is-preserved =
+      let
+        e✦fe≈fe✦fe : eB ✦ f(eA) ≈ f(eA) ✦ f(eA)
+        e✦fe≈fe✦fe = eB ✦ f(eA)
+                   ≈⟨ ✦-is-neutral (f(eA)) ⟩ 
+                    f(eA)
+                   ≈⟨ f ⁎ (⋆-is-neutral eA ⁻¹•) ⟩
+                    f(eA ⋆ eA)
+                   ≈⟨ homomorphism-square (eA , eA) ⁻¹• ⟩
+                    f(eA) ✦ f(eA)
+                   ≈∎
+      in cancel-✦ (f(eA)) eB refl e✦fe≈fe✦fe 
 
   {-
     the kernel of a morphism of left invertible H-spaces
@@ -227,8 +248,8 @@ module LeftInvertibleHspace where
                 (f′ : A′ →le B′)
                 where 
 
-    open left-invertible-structure-on_ A′ renaming (μ to μA; e to eA)
-    open left-invertible-structure-on_ B′ renaming (μ to μB; e to eB)
+    open left-invertible-structure-on_ A′ renaming (μ to μA; e to eA; _✧_ to _⋆_)
+    open left-invertible-structure-on_ B′ renaming (μ to μB; e to eB; left-neutral to μB-is-neutral; _✧_ to _✦_)
     open _→le_ f′
 
     {-
@@ -245,22 +266,30 @@ module LeftInvertibleHspace where
       multiplication in the kernel,
       starting with the witness 'η', that the product
       of elements of the kernel, is still an element of the kernel
+    -}
     η : ∀ {a a′ : A} (γ : f(a) ≈ eB) (γ′ : f(a′) ≈ eB)
-        → f(μA(a , a′)) ≈ eB
-    η {a} {a′} γ γ′ =   f(μA(a , a′))
-                      ≈⟨ homomorphism-square (a , a′) ⁻¹ ⟩
-                        μB (f(a) , f(a′))
-                      ≈⟨ {!!} ⟩
-                        μB (eB , f(a′))
-                      ≈⟨ {!!} ⟩
-                        μB (eB , eB)
-                      ≈⟨ {!!} ⟩
+        → f(a ⋆ a′) ≈ eB
+    η {a} {a′} γ γ′ =   f(a ⋆ a′)
+                      ≈⟨ homomorphism-square (a , a′) ⁻¹• ⟩
+                        f(a) ✦ f(a′)
+                      ≈⟨ (λ x → x ✦ f(a′)) ⁎ γ ⟩
+                        eB ✦ f(a′)
+                      ≈⟨ (λ x → eB ✦ x) ⁎ γ′ ⟩
+                        eB ✦ eB
+                      ≈⟨ μB-is-neutral eB ⟩
                         eB
                       ≈∎
   
     μ : K × K → K
-    μ ((a , γ) , (a′ , γ′)) = ((μA (a , a′)) , η γ γ′)
+    μ ((a , γ) , (a′ , γ′)) = (a ⋆ a′ , η γ γ′)
+
+    {-
+      next, we will define the neutral element and show its 
+      properties with respect to μ
     -}
+
+    e : K
+    e = (eA , unit-is-preserved)
 
   {-
     for all groups G and φ:D→G, we have a pullback square:
@@ -296,17 +325,17 @@ module LeftInvertibleHspace where
       ∑(d : D) ∑((g,h):G×G) φ(d)≈∂(g,h) ≃ ∑(d : D) ∑(g : G) ∑(h : G)  φ(d)≈∂(g,h) 
     -}
 
-    uncurry-G×G : (∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ h ‣ g ⁻) → ∑ (λ d → ∑ λ {(g , h) → φ(d) ≈ h ‣ g ⁻})
+    uncurry-G×G : (∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ h ✧ g ⁻¹) → ∑ (λ d → ∑ λ {(g , h) → φ(d) ≈ h ✧ g ⁻¹})
     uncurry-G×G (d , (g , (h , γ))) = (d , ((g , h) , γ))
  
     uncurrying-G×G-is-an-equivalence : uncurry-G×G is-an-equivalence
     uncurrying-G×G-is-an-equivalence =
       the-map-of-sums-given-by
         (λ d → iterated-sums-over-independent-bases.uncurry
-               G G (λ g h → φ(d) ≈ h ‣ g ⁻))
+               G G (λ g h → φ(d) ≈ h ✧ g ⁻¹))
        is-an-equivalence-since-it-is-fiberwise-an-equivalence-by
          (λ d → iterated-sums-over-independent-bases.uncurrying-is-an-equivalence
-               G G (λ g h → φ(d) ≈ h ‣ g ⁻))
+               G G (λ g h → φ(d) ≈ h ✧ g ⁻¹))
                
     square2 = substitute-equivalent-cone
                 ∑π₁ (λ {(d , (g , (h , γ))) → g , h})
@@ -330,8 +359,8 @@ module LeftInvertibleHspace where
 
 
     curry-D×G :
-        (∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ h ‣ (π₂ x) ⁻)
-      → ∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ h ‣ g ⁻
+        (∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ h ✧ (π₂ x) ⁻¹)
+      → ∑ λ d → ∑ λ g → ∑ λ h → φ(d) ≈ h ✧ g ⁻¹
     curry-D×G = iterated-sums-over-independent-bases.curry D G _
 
     square3 = substitute-equivalent-cone
@@ -343,21 +372,21 @@ module LeftInvertibleHspace where
 
     inner-sum-is-contractible :
       ∀ (x : D × G)
-      → (∑ λ h → φ(π₁ x) ≈ h ‣ (π₂ x) ⁻) is-contractible
+      → (∑ λ h → φ(π₁ x) ≈ h ✧ (π₂ x) ⁻¹) is-contractible
     inner-sum-is-contractible (d , g) = left-difference-is-unique′ g (φ d)
     
     equivalence-to-product :
         D × G
-      → ∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ h ‣ (π₂ x) ⁻
+      → ∑ λ (x : D × G) → ∑ λ h → φ(π₁ x) ≈ h ✧ (π₂ x) ⁻¹
     equivalence-to-product = sums-over-contractibles.section
                                    (∑ λ (d : D) → G) _ (λ {(d , g) → inner-sum-is-contractible (d , g)}) 
 
     square4 : pullback-square-with-right φ
                 bottom ∂
                 top π₁
-                left (λ {(d , g) → (g , (φ d) ‣ g)})
+                left (λ {(d , g) → (g , (φ d) ✧ g)})
     square4 = substitute-equivalent-cone
-                π₁ (λ {(d , g) → (g , (φ d) ‣ g)})
+                π₁ (λ {(d , g) → (g , (φ d) ✧ g)})
                 equivalence-to-product
                 (sums-over-contractibles.section-is-an-equivalence (D × G) _
                                         inner-sum-is-contractible)
