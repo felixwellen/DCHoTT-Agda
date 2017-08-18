@@ -1,0 +1,27 @@
+* abuse of notation
+** if an identifier would be used for multiple things in the usual way of writing down mathematics, append '\prime's to 'the other' versions
+   example:
+
+	\ZZ : U\_0                              % integers as 'set' or 'type'
+	\ZZ\prime : group-structure-on \ZZ      % integers as 'group'
+	\ZZ\prime\prime : ring-structure-on     % integers as 'ring'
+
+   use the same for natural-language-identifiers, if there is a choice of arguments
+   example:
+
+	TODO: example
+
+   exception:
+
+	see 'overloading'
+
+** overloading
+   if a type-construction extends to functions
+   append the type-constructor-symbol for functions '\to' to the type-constructor-symbol to be extended
+
+   example:
+
+	_\times_ : U \to U \to U
+	...
+	_\times\to_ : (A -> B) -> (C -> D) -> (A \times C -> B \times D)
+	...
