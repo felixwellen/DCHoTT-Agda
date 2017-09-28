@@ -16,7 +16,7 @@ module LeftInvertibleHspace where
 
   record left-invertible-structure-on_ (X : U₀) : U₀ where
     constructor
-      structure-given-by-e=_,μ=_,neutral-by_and_,left-invertible-by_and_
+      structure-given-by-e=_,μ=_,neutral-by_and_,left-invertible-by_
     field
       e : X
       μ : X × X → X
