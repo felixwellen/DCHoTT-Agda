@@ -264,6 +264,8 @@ module Im where
         is-an-equivalence,-since-the-first-one-is-by ℑf⁎′-is-an-equivalence
         and-the-second-by conjugation-with-naturality-path-is-an-equivalence
 
+
+
   module the-ℑ-preimages-of-equivalences-are-ℑ-connected -- not yet complete, not needed anyway
     {A B : U₀} (f : A → B) (ℑf-is-an-equivalence : (ℑ→ f) is-an-equivalence) where
 
@@ -398,6 +400,42 @@ module Im where
                       (Π ⁎ fun-ext (λ (a : A) → univalence (ℑ-unit-at (P a) is-an-equivalence-because (P-is-coreduced a)) ⁻¹))
                       coreducedness′
                       
+
+  {- experiment for lex modalities -}
+  module identity-types-of-sums
+    {A : U₀} (P : A → U₀) where
+
+    ι = ℑ-unit
+    
+    ℑ-transport′ : {a a′ : A}
+      → ℑ (a ≈ a′) → (ℑ (P a) →  ℑ (P a′))
+    ℑ-transport′ {a} {a′} =
+      ℑ-induction
+        (λ (γ : ℑ (a ≈ a′)) → Π-of-coreduced-types-is-coreduced.coreducedness
+          (λ _ → ℑ (P a′)) (λ _ → ℑ-is-coreduced _))
+        (λ (γ : a ≈ a′) → ℑ→ (transport P γ))
+
+    postulate
+      ℑ-is-lex : ∀ (a a′ : A) → ι a ≈ ι a′ → ℑ (a ≈ a′) 
+
+    ℑ-transport : {a a′ : A}
+      → (ι a ≈ ι a′) → (ℑ (P a) →  ℑ (P a′))
+    ℑ-transport = ℑ-transport′ ∘ (ℑ-is-lex _ _)
+
+{-
+    encode : {a a′ : A} {pₐ : P a} {pₐ′ : P a′} →
+      ι (a , pₐ) ≈ ι (a′ , pₐ′)
+     →
+      ∑ (λ (γ : ι a ≈ ι a′) → (ℑ-transport γ (ι pₐ) ≈ ι pₐ′)) 
+    encode γ = (∑π₁ ⁎ {!γ!} , {!!})
+
+    result : (x y : ∑ P) →
+      ι x ≈ ι y
+     ≃ 
+      ∑ (λ (γ : ι (∑π₁ x) ≈ ι (∑π₁ y)) → (ℑ-transport γ (ι (∑π₂ x)) ≈ ι (∑π₂ y))) 
+    result = {!!}
+-}
+
 
   -- from the book, thm 7.7.4
   ∑-of-coreduced-types-is-coreduced : 
