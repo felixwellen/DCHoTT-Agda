@@ -45,12 +45,6 @@ module FormalDiskBundle where
     → formal-disk-at x → X
   inclusion-of-formal-disk-at x (y , γ) = y
   
-  vector-fields-on_ :
-    ∀ (X : U₀)
-    → U₀
-  vector-fields-on X =
-    ∀ (x : X) → formal-disk-at x
-
   -- formal disk at a point as pullback
   --  
   -- D ---> ∗
