@@ -129,6 +129,7 @@ module FormalDiskBundle where
         and-right-inverse map-from by (λ _ → refl))
 
 {-
+  (what I was trying to do here cannot be true in the assumed generality)
   this is probably some work, 
   since in the end one has to show
   that the 2-cell of the constructed pullback
@@ -314,7 +315,7 @@ module FormalDiskBundle where
 
     trivialize : T∞V → V × De
     trivialize (v , dv) =
-      (v , (inverses-as-maps v) dv)    -- $≃ means applying an equivalence
+      (v , (inverses-as-maps v) dv)
 
     trivialize⁻¹ : V × De → T∞V
     trivialize⁻¹ (v , dv) =
