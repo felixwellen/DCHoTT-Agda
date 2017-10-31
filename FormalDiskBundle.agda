@@ -17,7 +17,8 @@ module FormalDiskBundle where
   open import DependentTypes
   open import Fiber
   open import Contractibility
-  
+  open import SymmetricSpace
+
   _is-infinitesimally-close-to_ :
     {X : U₀} → (x x′ : X) → U₀
   x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
@@ -275,33 +276,28 @@ module FormalDiskBundle where
 
     conclusion = transport-in-T∞
 
-
   {-
-    this is a new proof for the triviality of T∞ over left-invertible H-spaces
+    most general variant of the triviality theorem
   -}
-  module triviality-of-the-formel-disk-bundle-the-nice-way
-    {V : U₀} (structure-on-V : left-invertible-structure-on V) where
+  module triviality-of-the-formal-disk-bundle-over-symmetric-spaces
+    {V : U₀} (V′ : symmetry-on V) where
 
-    open left-invertible-structure-on_ structure-on-V
+    open symmetry-on_ V′
 
-    De : U₀
-    De = formal-disk-at e
-
-    equivalences : (x : V) → De ≃ formal-disk-at x
-    equivalences x =
-        paths-induce-equivalences-of-formal-disks.conclusion
-          (left-neutral x)
+    De = formal-disk-at a₀
+    
+    identifications-of-all-formal-disks : (v : V) → De ≃ formal-disk-at v 
+    identifications-of-all-formal-disks v =
+        paths-induce-equivalences-of-formal-disks.conclusion (is-translation-to v)
       ∘≃
-        equivalences-induce-equivalences-on-formal-disks.conclusion
-          (right-translation x) e
+        equivalences-induce-equivalences-on-formal-disks.conclusion (ψ v) a₀
 
     T∞V = ∑ (T∞-as-dependent-type V)
 
-    -- preparation...
     open import HalfAdjointEquivalences
 
     ha-equivalence-at : (v : V) → De ≃ha (formal-disk-at v)
-    ha-equivalence-at v = equivalence-to-half-adjoint-equivalence (equivalences v)
+    ha-equivalence-at v = equivalence-to-half-adjoint-equivalence (identifications-of-all-formal-disks v)
 
     equivalences-as-maps : (x : V) → De → formal-disk-at x
     equivalences-as-maps x =
@@ -340,6 +336,21 @@ module FormalDiskBundle where
 
     commutative-triangle : p-of-T∞ V ⇒ π₁ ∘ (underlying-map-of conclusion)
     commutative-triangle _ = refl
+
+  {-
+    specialize to left invertible H-spaces (legacy support...)
+  -}
+  module triviality-of-the-formel-disk-bundle-the-nice-way
+    {V : U₀} (structure-on-V : left-invertible-structure-on V) where
+
+    V′ = left-invertible-H-spaces-are-symmetric structure-on-V
+
+    conclusion = triviality-of-the-formal-disk-bundle-over-symmetric-spaces.conclusion V′
+
+    conclusion′ = triviality-of-the-formal-disk-bundle-over-symmetric-spaces.conclusion′ V′
+
+    commutative-triangle = triviality-of-the-formal-disk-bundle-over-symmetric-spaces.commutative-triangle V′
+
     
 
   module triviality-of-the-formel-disk-bundle-over-∞-groups
