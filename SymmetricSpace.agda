@@ -72,10 +72,12 @@ module SymmetricSpace where
   private
     {- shorthand for 'forgetful functor' -}
     ν = all-left-invertible-H-spaces-are-symmetric
-    
+
+{-
   morphisms-of-left-invertible-H-spaces-are-morphisms-of-symmetric-spaces :
     ∀ {X Y : U₀} {X′ : left-invertible-structure-on X} {Y′ : left-invertible-structure-on Y}
     → (X′ →le Y′) → (ν X′) →s (ν Y′)
   morphisms-of-left-invertible-H-spaces-are-morphisms-of-symmetric-spaces
     record { f = f ; homomorphism-square = homomorphism-square }
     = record { φ = f ; φ-respects-structure = λ x y → {!homomorphism-square (x , y)!} }
+-}

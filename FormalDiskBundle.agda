@@ -45,12 +45,6 @@ module FormalDiskBundle where
     → formal-disk-at x → X
   inclusion-of-formal-disk-at x (y , γ) = y
   
-  vector-fields-on_ :
-    ∀ (X : U₀)
-    → U₀
-  vector-fields-on X =
-    ∀ (x : X) → formal-disk-at x
-
   -- formal disk at a point as pullback
   --  
   -- D ---> ∗
@@ -190,7 +184,7 @@ module FormalDiskBundle where
     → (f : X → Y)
     → (x : X) → formal-disk-at x → formal-disk-at (f x)
   d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
-  
+
   T∞→ = induced-map-on-formal-disks
 
   formal-disk-bundle : (X : U₀) → U₀
