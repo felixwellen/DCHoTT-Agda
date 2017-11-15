@@ -7,12 +7,7 @@ module FormalDisk where
   open import Language
   open import Equivalences
   open import CommonEquivalences  
-  open import Pullback
-  open import PullbackSquare
   open import Im
-  open import InfinityGroups
-  open import MayerVietoris
-  open import EtaleMaps hiding (underlying-map-of)
   open import LeftInvertibleHspace
   open import DependentTypes
   open import Fiber
@@ -80,4 +75,32 @@ module FormalDisk where
     → (f : X → Y)
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
+
+
+  {-
+    Above, for a morphism f : A → B, we defined the induced
+    dependent morphism  d f : (a : A) → formal-disk-at a → formal-disk-at (f a)
+    if f is an equivalence, d f is an equivalence.
+  -}
+
+
+  module equivalences-induce-equivalences-on-formal-disks
+    {A B : U₀} (f≃ : A ≃ B) where
+
+    f = underlying-map-of f≃
+
+    ℑf⁎-is-an-equivalence : (x y : A) → (λ (γ : x is-close-to y) → ℑ⁎ f ⁎ γ) is-an-equivalence
+    ℑf⁎-is-an-equivalence =
+      equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
+    
+    df-is-an-equivalence : (a : A) → (d f a) is-an-equivalence
+    df-is-an-equivalence a =
+      fiber-equivalences-along-an-equivalence-on-the-base.induced-map-is-an-equivalence
+        (λ x → a is-close-to x) (λ y → f a is-close-to y) f≃
+        (λ x →
+           (λ (γ : a is-close-to x) → ℑ⁎ f ⁎ γ) is-an-equivalence-because
+           ℑf⁎-is-an-equivalence a x)
+           
+    conclusion : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
+    conclusion a = (d f a) is-an-equivalence-because (df-is-an-equivalence a)
 

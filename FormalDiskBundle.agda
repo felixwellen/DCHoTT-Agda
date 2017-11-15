@@ -195,34 +195,6 @@ module FormalDiskBundle where
           (pullback-square-from-equivalence-of-maps
             (∑π₁-from T∞-as-dependent-type X) (p-of-T∞ X) conclusion id-as-equivalence (λ _ → refl)) x)
 
-
-  {-
-    Above, for a morphism f : A → B, we defined the induced
-    dependent morphism  T∞ f : (a : A) → formal-disk-at a → formal-disk-at (f a)
-    if f is an equivalence, T∞ f is an equivalence.
-  -}
-
-
-  module equivalences-induce-equivalences-on-formal-disks
-    {A B : U₀} (f≃ : A ≃ B) where
-
-    f = underlying-map-of f≃
-
-    ℑf⁎-is-an-equivalence : (x y : A) → (λ (γ : x is-close-to y) → ℑ⁎ f ⁎ γ) is-an-equivalence
-    ℑf⁎-is-an-equivalence =
-      equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
-    
-    T∞f-is-an-equivalence : (a : A) → (T∞→ f a) is-an-equivalence
-    T∞f-is-an-equivalence a =
-      fiber-equivalences-along-an-equivalence-on-the-base.induced-map-is-an-equivalence
-        (λ x → a is-close-to x) (λ y → f a is-close-to y) f≃
-        (λ x →
-           (λ (γ : a is-close-to x) → ℑ⁎ f ⁎ γ) is-an-equivalence-because
-           ℑf⁎-is-an-equivalence a x)
-           
-    conclusion : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
-    conclusion a = (T∞→ f a) is-an-equivalence-because (T∞f-is-an-equivalence a)
-
   module paths-induce-equivalences-of-formal-disks
     {A : U₀} {x y : A} (γ : x ≈ y) where
 
@@ -231,6 +203,7 @@ module FormalDiskBundle where
     transport-in-T∞ = transport-as-equivalence (T∞-as-dependent-type A) γ
 
     conclusion = transport-in-T∞
+
 
   {-
     most general variant of the triviality theorem

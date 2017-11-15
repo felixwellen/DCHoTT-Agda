@@ -7,16 +7,8 @@ module LineGeometry where
   open import Language
   open import Equivalences
   open import CommonEquivalences  
-  open import Pullback
-  open import PullbackSquare
-  open import Im
-  open import InfinityGroups
-  open import MayerVietoris
   open import EtaleMaps hiding (underlying-map-of)
-  open import LeftInvertibleHspace
   open import DependentTypes
-  open import Fiber
-  open import Contractibility
   open import HomogeneousType
   open import FormalDisk
   open import FormalDiskBundle
@@ -43,4 +35,5 @@ module LineGeometry where
       → 𝒰
     jets-at x = 𝔻ₑ → 𝔻 _ x
 
+    
     
