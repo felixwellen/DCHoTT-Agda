@@ -7,11 +7,10 @@ module Homotopies where
 
 -- homotopy
 _∼_ : ∀ {i j} {A : U i} {B : U j} → (f g : A → B) → U (i ⊔ j)
-_∼_ {i} {j} {A} {B} f g = (a : A) → f a ≈ g a
+_∼_ {_} {_} {A} {_} f g = (a : A) → f a ≈ g a
 
 _⇒_ : ∀ {i j} {A : U i} {B : U j} → (f g : A → B) → U (i ⊔ j)
 f ⇒ g = f ∼ g
-
 
 refl⇒ : ∀ {i} {A B : U i} {f : A → B} → f ⇒ f
 refl⇒ a = refl 

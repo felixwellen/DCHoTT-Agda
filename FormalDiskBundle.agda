@@ -18,32 +18,7 @@ module FormalDiskBundle where
   open import Fiber
   open import Contractibility
   open import SymmetricSpace
-
-  _is-infinitesimally-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
-  x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
-
-  _is-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
-  _is-close-to_ = _is-infinitesimally-close-to_
-
-  mapping-with_preserves-infinitesimal-proximity :
-    ∀ {X Y : U₀} {x x′ : X}
-    → (f : X → Y)
-    → (x is-close-to x′) → (f x) is-close-to (f x′)
-  mapping-with f preserves-infinitesimal-proximity γ = ℑ⁎ f ⁎ γ  -- see 'Im.agda'
-  
-  -- T∞ as dependent type
-  formal-disk-at_ :
-    ∀ {X : U₀}
-    → (x : X) → U₀
-  formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
-
-  inclusion-of-formal-disk-at :
-    ∀ {X : U₀}
-    → (x : X)
-    → formal-disk-at x → X
-  inclusion-of-formal-disk-at x (y , γ) = y
+  open import FormalDisk
   
   -- formal disk at a point as pullback
   --  
@@ -171,18 +146,6 @@ module FormalDiskBundle where
          and-right-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ)})
            by (λ {(x , γ) → refl}))
 
-  induced-map-on-formal-disks :
-    ∀ {X Y : U₀}
-    → (f : X → Y)
-    → (x : X) → formal-disk-at x → formal-disk-at (f x)
-  induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
-    (f x′ , mapping-with f preserves-infinitesimal-proximity x′-is-close-to-x)
-
-  d :
-    ∀ {X Y : U₀}
-    → (f : X → Y)
-    → (x : X) → formal-disk-at x → formal-disk-at (f x)
-  d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
   
   T∞→ = induced-map-on-formal-disks
 

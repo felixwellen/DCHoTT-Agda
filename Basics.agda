@@ -21,8 +21,15 @@ open import Agda.Primitive using (Level; lzero; lsuc; _⊔_) public
 U : (i : Level) → Set (lsuc i)
 U i = Set i
 
+
 U₀ = U lzero
 U₁ = U (lsuc lzero)
+
+
+-- supposed to be standard names in the future:
+𝒰 = U₀
+𝒰₀ = U₀
+𝒰₁ = U₁
 
 domain : ∀ {A B : U₀} → (A → B) → U₀
 domain {A} {_} _ = A

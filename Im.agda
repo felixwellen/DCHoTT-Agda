@@ -427,7 +427,7 @@ module Im where
       ι (a , pₐ) ≈ ι (a′ , pₐ′)
      →
       ∑ (λ (γ : ι a ≈ ι a′) → (ℑ-transport γ (ι pₐ) ≈ ι pₐ′)) 
-    encode γ = (∑π₁ ⁎ {!γ!} , {!!})
+    encode γ = (naturality-of-ℑ-unit ∑π₁ _ ⁻¹ • (ℑ→ ∑π₁) ⁎ γ • naturality-of-ℑ-unit _ _  , {!!})
 
     result : (x y : ∑ P) →
       ι x ≈ ι y
