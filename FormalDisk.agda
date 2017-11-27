@@ -61,7 +61,7 @@ module FormalDisk where
 
 
   induced-map-on-formal-disks :
-    ∀ {X Y : U₀}
+    ∀ {X Y : 𝒰}
     → (f : X → Y)
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
@@ -71,7 +71,7 @@ module FormalDisk where
   -- the generalized differential of a function
 
   d :
-    ∀ {X Y : U₀}
+    ∀ {X Y : 𝒰}
     → (f : X → Y)
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)

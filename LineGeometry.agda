@@ -26,14 +26,19 @@ module LineGeometry where
     -- tangent vectors (or jets?) at a point are equivalence classes of curves through the point,
     -- where two curves are equivalent, if their derivatives agree.
     -- Since we are only interested in the derivate, we can also use maps
-    -- f : 𝔻ₑ → X with f(∗)=x₀
+    -- f : 𝔻ₑ → X with f(∗)=x
     -- since those maps always factor over 𝔻_f(∗), we look at the more convenient type
-    -- 𝔻ₑ → 𝔻ₓ₀
+    -- 𝔻ₑ → 𝔻ₓ
     
-    jets-at_ : 
-      ∀ {X : 𝒰} (x : X)
-      → 𝒰
-    jets-at x = 𝔻ₑ → 𝔻 _ x
+    Γ⟨T∞_⟩ : 
+      (X : 𝒰) → 𝒰
+    Γ⟨T∞ X ⟩ = (x : X) → 𝔻ₑ → 𝔻 _ x
+    
+    Γ⟨T∞∗_⟩  : 
+      (X : 𝒰) → 𝒰
+    Γ⟨T∞∗ X ⟩ = (x : X) → 𝔻 _ x → 𝔻ₑ
 
-    
-    
+
+    eval : ∀ {X : 𝒰}
+      → Γ⟨T∞∗ X ⟩ → Γ⟨T∞ X ⟩ → ((x : X) → 𝔻ₑ → 𝔻ₑ)
+    eval ω χ x = (ω x) ∘ (χ x)

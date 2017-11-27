@@ -17,7 +17,7 @@ module FormalDiskBundle where
   open import DependentTypes
   open import Fiber
   open import Contractibility
-  open import SymmetricSpace
+  open import HomogeneousType
   open import FormalDisk
   
   -- formal disk at a point as pullback
@@ -209,17 +209,17 @@ module FormalDiskBundle where
     most general variant of the triviality theorem
   -}
   module triviality-of-the-formal-disk-bundle-over-symmetric-spaces
-    {V : U₀} (V′ : symmetry-on V) where
+    {V : U₀} (V′ : homogeneous-structure-on V) where
 
-    open symmetry-on_ V′
+    open homogeneous-structure-on_ V′
 
-    De = formal-disk-at a₀
+    De = formal-disk-at e
     
     identifications-of-all-formal-disks : (v : V) → De ≃ formal-disk-at v 
     identifications-of-all-formal-disks v =
         paths-induce-equivalences-of-formal-disks.conclusion (is-translation-to v)
       ∘≃
-        equivalences-induce-equivalences-on-formal-disks.conclusion (ψ v) a₀
+        equivalences-induce-equivalences-on-formal-disks.conclusion (ψ v) e
 
     T∞V = ∑ (T∞-as-dependent-type V)
 
@@ -272,7 +272,7 @@ module FormalDiskBundle where
   module triviality-of-the-formel-disk-bundle-the-nice-way
     {V : U₀} (structure-on-V : left-invertible-structure-on V) where
 
-    V′ = left-invertible-H-spaces-are-symmetric structure-on-V
+    V′ = left-invertible-H-spaces-are-homogeneous structure-on-V
 
     conclusion = triviality-of-the-formal-disk-bundle-over-symmetric-spaces.conclusion V′
 
