@@ -29,6 +29,10 @@ module Im where
     → (A → ℑ A)
   ℑ-unit-at A = ℑ-unit {_} {A}
 
+  ι : ∀ {i} {A : U i}
+    → A → ℑ A
+  ι = ℑ-unit
+
   _is-coreduced : ∀ {i} → U i → U i
   A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
 
@@ -73,7 +77,7 @@ module Im where
     ∀ {A B : U₀}
     → (A → B)
     → (ℑ A → ℑ B)
-  apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit {_} {B} ∘ f)
+  apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit-at B ∘ f)
 
   apply-ℑ : ∀ {A B : U₀}
             → (A → B)
@@ -91,7 +95,7 @@ module Im where
   naturality-of-ℑ-unit : 
     ∀ {A B : U₀}
     → (f : A → B)
-    → (a : A) → (ℑ→ f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
+    → (a : A) → (ℑ→ f(ℑ-unit-at A a) ≈ ℑ-unit-at B (f a))
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
   ℑ⇒ : ∀ {A B : U₀} {f g : A → B}
@@ -207,10 +211,14 @@ module Im where
                                → A ≃ B → ℑ A ≃ ℑ B
   apply-ℑ-to-the-equivalence 
     (f is-an-equivalence-because proof-of-invertibility) =
-      ℑ→ f is-an-equivalence-because
+      (ℑ→ f) is-an-equivalence-because
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
-
+  -- shorthand
+  ℑ≃ : ∀ {A B : 𝒰} 
+    → A ≃ B → ℑ A ≃ ℑ B
+  ℑ≃ = apply-ℑ-to-the-equivalence
+  
   -- this is put to use later to conclude that equivalences can 'move' formal disks
   module equivalences-induce-equivalences-on-the-coreduced-identity-types {A B : U₀} (f≃ : A ≃ B) (x y : A) where
     f = underlying-map-of f≃
@@ -405,8 +413,6 @@ module Im where
   module identity-types-of-sums
     {A : U₀} (P : A → U₀) where
 
-    ι = ℑ-unit
-    
     ℑ-transport′ : {a a′ : A}
       → ℑ (a ≈ a′) → (ℑ (P a) →  ℑ (P a′))
     ℑ-transport′ {a} {a′} =
@@ -427,7 +433,7 @@ module Im where
       ι (a , pₐ) ≈ ι (a′ , pₐ′)
      →
       ∑ (λ (γ : ι a ≈ ι a′) → (ℑ-transport γ (ι pₐ) ≈ ι pₐ′)) 
-    encode γ = (∑π₁ ⁎ {!γ!} , {!!})
+    encode γ = (naturality-of-ℑ-unit ∑π₁ _ ⁻¹ • (ℑ→ ∑π₁) ⁎ γ • naturality-of-ℑ-unit _ _  , {!!})
 
     result : (x y : ∑ P) →
       ι x ≈ ι y
@@ -530,6 +536,52 @@ module Im where
     → (A ≃ B) → (B is-coreduced → A is-coreduced)
   to-show-that A is-coreduced,-it-suffices-to-show-that B is-coreduced-since-it-is-equivalent-by φ =
     transport _is-coreduced (univalence (φ ⁻¹≃))
+
+
+  homotopies-in-coreduced-types-are-coreduced :
+      ∀ {A B : U₀} {f g : ℑ A → ℑ B} → (f ⇒ g) is-coreduced
+  homotopies-in-coreduced-types-are-coreduced {A} {B} {_} {_} =
+      Π-of-coreduced-types-is-coreduced.coreducedness _
+        (λ (a : ℑ A) →
+          coreduced-types-have-coreduced-identity-types (ℑ B) (ℑ-is-coreduced _) _ _)
+
+  induce-homotopy-on-coreduced-types :
+      ∀ {A B : U₀} (f g : ℑ A → ℑ B)
+      → f ∘ ℑ-unit ⇒ g ∘ ℑ-unit
+      → f ⇒ g
+  induce-homotopy-on-coreduced-types f g H =
+      ℑ-induction (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _) H
+
+  coreduced-types-have-a-coreduced-equivalence-proposition :
+      ∀ {A B : U₀}
+      → (f : ℑ A → ℑ B) → (f is-an-equivalence) is-coreduced
+  coreduced-types-have-a-coreduced-equivalence-proposition {A} {B} f =
+       (to-show-that (f is-an-equivalence) is-coreduced,-it-suffices-to-show-that (∑ _)
+        is-coreduced-since-it-is-equivalent-by (equivalence-proposition-as-sum-type f))
+        (∑-of-coreduced-types-is-coreduced
+          ((ℑ B → ℑ A) × (ℑ B → ℑ A))
+          (∑-of-coreduced-types-is-coreduced _ (Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → ℑ _) (λ _ → ℑ-is-coreduced _)) _ 
+            (λ i → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ _ → ℑ-is-coreduced _)))
+          (λ {(g , h) → (g ∘ f ⇒ id) × (id ⇒ f ∘ h)})
+          (λ {(g , h) →  ∑-of-coreduced-types-is-coreduced
+                         (g ∘ f ⇒ id)
+                           homotopies-in-coreduced-types-are-coreduced
+                         (λ _ → id ⇒ f ∘ h)
+                           (λ _ → homotopies-in-coreduced-types-are-coreduced)}))
+
+  ℑ≃-is-coreduced : ∀ {A B : 𝒰}
+    → (ℑ A ≃ ℑ B) is-coreduced
+  ℑ≃-is-coreduced {A} {B} =
+    (to-show-that (ℑ A ≃ ℑ B) is-coreduced,-it-suffices-to-show-that
+        (∑ λ (f : ℑ A → ℑ B) → f is-an-equivalence)
+     is-coreduced-since-it-is-equivalent-by type-of-equivalences-as-sum-type)
+    (This-follows-from
+       (∑-of-coreduced-types-is-coreduced
+         (ℑ A → ℑ B)
+         (Π-of-coreduced-types-is-coreduced.coreducedness _ λ _ → ℑ-is-coreduced _)
+         _is-an-equivalence
+         (λ (f : ℑ A → ℑ B) → coreduced-types-have-a-coreduced-equivalence-proposition
+           f)))
 
 
   module ℑ-preserves-left-invertible-H-spaces
@@ -657,36 +709,6 @@ module Im where
 
     -}
 
-    homotopies-in-coreduced-types-are-coreduced :
-      ∀ {A B : U₀} {f g : ℑ A → ℑ B} → (f ⇒ g) is-coreduced
-    homotopies-in-coreduced-types-are-coreduced {A} {B} {_} {_} =
-      Π-of-coreduced-types-is-coreduced.coreducedness _
-        (λ (a : ℑ A) →
-          coreduced-types-have-coreduced-identity-types (ℑ B) (ℑ-is-coreduced _) _ _)
-
-    induce-homotopy-on-coreduced-types :
-      ∀ {A B : U₀} (f g : ℑ A → ℑ B)
-      → f ∘ ℑ-unit ⇒ g ∘ ℑ-unit
-      → f ⇒ g
-    induce-homotopy-on-coreduced-types f g H =
-      ℑ-induction (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _) H
-
-    coreduced-types-have-a-coreduced-equivalence-proposition :
-      ∀ {A B : U₀}
-      → (f : ℑ A → ℑ B) → (f is-an-equivalence) is-coreduced
-    coreduced-types-have-a-coreduced-equivalence-proposition {A} {B} f =
-       (to-show-that (f is-an-equivalence) is-coreduced,-it-suffices-to-show-that (∑ _)
-        is-coreduced-since-it-is-equivalent-by (equivalence-proposition-as-sum-type f))
-        (∑-of-coreduced-types-is-coreduced
-          ((ℑ B → ℑ A) × (ℑ B → ℑ A))
-          (∑-of-coreduced-types-is-coreduced _ (Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → ℑ _) (λ _ → ℑ-is-coreduced _)) _ 
-            (λ i → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ _ → ℑ-is-coreduced _)))
-          (λ {(g , h) → (g ∘ f ⇒ id) × (id ⇒ f ∘ h)})
-          (λ {(g , h) →  ∑-of-coreduced-types-is-coreduced
-                         (g ∘ f ⇒ id)
-                           homotopies-in-coreduced-types-are-coreduced
-                         (λ _ → id ⇒ f ∘ h)
-                           (λ _ → homotopies-in-coreduced-types-are-coreduced)}))
 
 
     ℑ-of-left-abstracted-μ′ :
@@ -899,3 +921,6 @@ module Im where
                   ≈⟨ ℑ∂′⇒ℑ∂ ((ℑ-unit ×→ ℑ-unit) x) ⟩
                    (ℑ∂ ∘ (ℑ-unit ×→ ℑ-unit)) x
                   ≈∎
+
+
+

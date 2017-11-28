@@ -17,33 +17,8 @@ module FormalDiskBundle where
   open import DependentTypes
   open import Fiber
   open import Contractibility
-  open import SymmetricSpace
-
-  _is-infinitesimally-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
-  x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
-
-  _is-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
-  _is-close-to_ = _is-infinitesimally-close-to_
-
-  mapping-with_preserves-infinitesimal-proximity :
-    ∀ {X Y : U₀} {x x′ : X}
-    → (f : X → Y)
-    → (x is-close-to x′) → (f x) is-close-to (f x′)
-  mapping-with f preserves-infinitesimal-proximity γ = ℑ⁎ f ⁎ γ  -- see 'Im.agda'
-  
-  -- T∞ as dependent type
-  formal-disk-at_ :
-    ∀ {X : U₀}
-    → (x : X) → U₀
-  formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
-
-  inclusion-of-formal-disk-at :
-    ∀ {X : U₀}
-    → (x : X)
-    → formal-disk-at x → X
-  inclusion-of-formal-disk-at x (y , γ) = y
+  open import HomogeneousType
+  open import FormalDisk
   
   -- formal disk at a point as pullback
   --  
@@ -172,19 +147,6 @@ module FormalDiskBundle where
          and-right-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ)})
            by (λ {(x , γ) → refl}))
 
-  induced-map-on-formal-disks :
-    ∀ {X Y : U₀}
-    → (f : X → Y)
-    → (x : X) → formal-disk-at x → formal-disk-at (f x)
-  induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
-    (f x′ , mapping-with f preserves-infinitesimal-proximity x′-is-close-to-x)
-
-  d :
-    ∀ {X Y : U₀}
-    → (f : X → Y)
-    → (x : X) → formal-disk-at x → formal-disk-at (f x)
-  d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
-
   T∞→ = induced-map-on-formal-disks
 
   formal-disk-bundle : (X : U₀) → U₀
@@ -233,34 +195,6 @@ module FormalDiskBundle where
           (pullback-square-from-equivalence-of-maps
             (∑π₁-from T∞-as-dependent-type X) (p-of-T∞ X) conclusion id-as-equivalence (λ _ → refl)) x)
 
-
-  {-
-    Above, for a morphism f : A → B, we defined the induced
-    dependent morphism  T∞ f : (a : A) → formal-disk-at a → formal-disk-at (f a)
-    if f is an equivalence, T∞ f is an equivalence.
-  -}
-
-
-  module equivalences-induce-equivalences-on-formal-disks
-    {A B : U₀} (f≃ : A ≃ B) where
-
-    f = underlying-map-of f≃
-
-    ℑf⁎-is-an-equivalence : (x y : A) → (λ (γ : x is-close-to y) → ℑ⁎ f ⁎ γ) is-an-equivalence
-    ℑf⁎-is-an-equivalence =
-      equivalences-induce-equivalences-on-the-coreduced-identity-types.ℑf⁎-is-an-equivalence f≃
-    
-    T∞f-is-an-equivalence : (a : A) → (T∞→ f a) is-an-equivalence
-    T∞f-is-an-equivalence a =
-      fiber-equivalences-along-an-equivalence-on-the-base.induced-map-is-an-equivalence
-        (λ x → a is-close-to x) (λ y → f a is-close-to y) f≃
-        (λ x →
-           (λ (γ : a is-close-to x) → ℑ⁎ f ⁎ γ) is-an-equivalence-because
-           ℑf⁎-is-an-equivalence a x)
-           
-    conclusion : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
-    conclusion a = (T∞→ f a) is-an-equivalence-because (T∞f-is-an-equivalence a)
-
   module paths-induce-equivalences-of-formal-disks
     {A : U₀} {x y : A} (γ : x ≈ y) where
 
@@ -270,21 +204,22 @@ module FormalDiskBundle where
 
     conclusion = transport-in-T∞
 
+
   {-
     most general variant of the triviality theorem
   -}
   module triviality-of-the-formal-disk-bundle-over-symmetric-spaces
-    {V : U₀} (V′ : symmetry-on V) where
+    {V : U₀} (V′ : homogeneous-structure-on V) where
 
-    open symmetry-on_ V′
+    open homogeneous-structure-on_ V′
 
-    De = formal-disk-at a₀
+    De = formal-disk-at e
     
     identifications-of-all-formal-disks : (v : V) → De ≃ formal-disk-at v 
     identifications-of-all-formal-disks v =
         paths-induce-equivalences-of-formal-disks.conclusion (is-translation-to v)
       ∘≃
-        equivalences-induce-equivalences-on-formal-disks.conclusion (ψ v) a₀
+        equivalences-induce-equivalences-on-formal-disks.conclusion (ψ v) e
 
     T∞V = ∑ (T∞-as-dependent-type V)
 
@@ -337,7 +272,7 @@ module FormalDiskBundle where
   module triviality-of-the-formel-disk-bundle-the-nice-way
     {V : U₀} (structure-on-V : left-invertible-structure-on V) where
 
-    V′ = left-invertible-H-spaces-are-symmetric structure-on-V
+    V′ = left-invertible-H-spaces-are-homogeneous structure-on-V
 
     conclusion = triviality-of-the-formal-disk-bundle-over-symmetric-spaces.conclusion V′
 

@@ -109,7 +109,17 @@ module Equivalences where
                                    has-left-inverse g by unit and-right-inverse h by counit})) by (λ a → refl)
                                  and-right-inverse ((λ {((g , h) , (unit , counit)) →
                                    has-left-inverse g by unit and-right-inverse h by counit})) by (λ a → refl))
-  
+
+
+  type-of-equivalences-as-sum-type : 
+    ∀ {A B : U₀}
+    → (A ≃ B) ≃ ∑ (λ (f : A → B) → f is-an-equivalence)
+  type-of-equivalences-as-sum-type =
+      (λ {(f is-an-equivalence-because proof) → (f , proof)})
+      is-an-equivalence-because
+        (has-left-inverse (λ {(_ , _) → _}) by (λ _ → refl)
+         and-right-inverse ((λ {(_ , _) → _})) by λ _ → refl)
+
   -- easy examples
   id-is-an-equivalence : ∀ {i} {A : U i} → id {i} {A} is-an-equivalence
   id-is-an-equivalence = has-left-inverse id by (λ x → refl) and-right-inverse id by (λ x → refl)

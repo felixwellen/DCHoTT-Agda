@@ -19,6 +19,7 @@ module Manifolds where
   open import OneImage
   open import FiberBundle
   open import LeftInvertibleHspace
+  open import FormalDisk
 
   pullback-square-of :
     ∀ {A B : U₀}
