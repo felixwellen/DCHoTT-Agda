@@ -583,6 +583,12 @@ module Im where
          (λ (f : ℑ A → ℑ B) → coreduced-types-have-a-coreduced-equivalence-proposition
            f)))
 
+  naturality-of-ℑ-unit≃ : 
+    ∀ {A B : U₀}
+    → (f : A ≃ B)
+    → (a : A) → (ℑ≃ f $≃ (ℑ-unit a) ≈ ℑ-unit (f $≃ a))
+  naturality-of-ℑ-unit≃ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (underlying-map-of f z)) 
+
 
   module ℑ-preserves-left-invertible-H-spaces
          (X : U₀)
