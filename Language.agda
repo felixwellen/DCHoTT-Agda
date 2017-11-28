@@ -22,6 +22,9 @@ module Language where
   the-map : ∀ {A B : U₀} → (A → B) → (A → B)
   the-map f = f
 
+  This-follows-from : ∀ {A : 𝒰} → A → A
+  This-follows-from = id
+  
   equal-by-definition : ∀ {A : U₀} {a : A} → a ≈ a
   equal-by-definition = refl
 

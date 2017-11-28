@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 
-open import Basics public
-open import EqualityAndPaths public
+open import Basics 
+open import EqualityAndPaths 
 
 module Homotopies where 
 

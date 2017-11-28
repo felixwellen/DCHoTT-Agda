@@ -18,7 +18,7 @@ module HomogeneousType where
     field
       e : A
       ψ : (x : A) → (A ≃ A)
-      is-translation-to : (x : A) → (ψ x) $≃ e ≈ x
+      is-translation-to : (x : A) → ((ψ x) $≃ e) ≈ x
 
 
   left-invertible-H-spaces-are-homogeneous :
@@ -32,4 +32,6 @@ module HomogeneousType where
         is-translation-to = left-neutral }
 
 
+  
+  
   
