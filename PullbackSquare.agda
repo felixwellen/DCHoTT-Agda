@@ -284,7 +284,7 @@ module PullbackSquare where
      | ⌟     |
      π₂      |
      ↓       ↓
-     B ────→ C
+     B ────→ 1
   -}
   product-square : 
     ∀ (A B : U₀)

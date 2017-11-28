@@ -18,8 +18,8 @@ module Manifolds where
   open import Language
   open import OneImage
   open import FiberBundle
-  open import LeftInvertibleHspace
   open import FormalDisk
+  open import HomogeneousType
 
   pullback-square-of :
     ∀ {A B : U₀}
@@ -34,13 +34,13 @@ module Manifolds where
 
   _is-a-manifold-with-cover_locally-like_by_ : 
     ∀ {W : U₀} {V : U₀} (M : U₀)
-    → (w : W ─ét→ M) → (structure-on-V : left-invertible-structure-on V) → (v : W ─ét→ V)
+    → (w : W ─ét→ M) → (structure-on-V : homogeneous-structure-on V) → (v : W ─ét→ V)
     → U₀
   M is-a-manifold-with-cover w locally-like structure-on-V by v =
     underlying-map-of w is-1-epi
 
   left-invertible-H-spaces-are-manifolds :
-    ∀ {V : U₀} (structure-on-V : left-invertible-structure-on V)
+    ∀ {V : U₀} (structure-on-V : homogeneous-structure-on V)
     → V is-a-manifold-with-cover id-as-étale-map locally-like structure-on-V by id-as-étale-map
   left-invertible-H-spaces-are-manifolds _ = equivalences-are-1-epi id-as-equivalence
   
@@ -144,71 +144,71 @@ module Manifolds where
 
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
-         {V : U₀} (W M : U₀) (w : W ─ét→ M) 
-         (structure-on-V : left-invertible-structure-on V) (v : W ─ét→ V)
+         {V : 𝒰} (U M : 𝒰) (w : U ─ét→ M) 
+         (structure-on-V : homogeneous-structure-on V) (v : U ─ét→ V)
          (M-is-a-manifold : M is-a-manifold-with-cover w
                             locally-like structure-on-V by v) where
 
-         open left-invertible-structure-on_ structure-on-V
-         De = D V e -- formal-disk-at e
+         open homogeneous-structure-on_ structure-on-V
+         𝔻ₑ = 𝔻 V e -- formal-disk-at e
 
          {-
 
-         T∞ W is a trivial bundle, which is witnessed by the square
+         T∞ U is a trivial bundle, which is witnessed by the square
          
-         T∞W ───→ De
+         T∞U ───→ 𝔻ₑ
           | ⌟     |
           |       |
           ↓       ↓
-          W ────→ 1
+          U ────→ 1
 
          constructed below
 
          -}
 
-         T∞W-is-trivial : 
-           pullback-square-with-right (λ (d : De) → ∗)
-             bottom (λ (x : W) → ∗)
+         T∞U-is-trivial : 
+           pullback-square-with-right (λ (d : 𝔻ₑ) → ∗)
+             bottom (λ (x : U) → ∗)
              top _
-             left (p-of-T∞ W)
-         T∞W-is-trivial =
+             left (p-of-T∞ U)
+         T∞U-is-trivial =
            pasting-of-pullback-squares 
              (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion v)  
-             (triviality-of-the-formel-disk-bundle-over-∞-groups.as-product-square
+             (triviality-of-the-formal-disk-bundle-over-homogeneous-types.as-product-square
                structure-on-V)
 
          {-
 
-            T∞W─id─→T∞W      
+            T∞U─id─→T∞U 
              | ⌟     |   
              p       p   and ? 
              |       |
              ↓       ↓
-             W ─id─→ W
+             U ─id─→ U
 
          -}
 
-         T∞W-is-equivalent-to-w*T∞M :
-           pullback-square-with-right (p-of-T∞ W)
+         T∞U-is-equivalent-to-w*T∞M :
+           pullback-square-with-right (p-of-T∞ U)
              bottom id
              top _
              left _
-         T∞W-is-equivalent-to-w*T∞M =
+         T∞U-is-equivalent-to-w*T∞M =
            (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion w)
            and (complete-to-pullback-square (p-of-T∞ M) (underlying-map-of w))
            pull-back-the-same-cospan-so-the-first-may-be-replaced-by-the-second-in-the-square
-           (pullback-square-from-identity-of-morphisms (p-of-T∞ W))
+           (pullback-square-from-identity-of-morphisms (p-of-T∞ U))
 
          w*T∞M-is-trivial :
-           pullback-square-with-right (λ (d : De) → ∗)
-             bottom (λ (x : W) → ∗)
+           pullback-square-with-right (λ (d : 𝔻ₑ) → ∗)
+             bottom (λ (x : U) → ∗)
              top _
              left ((underlying-map-of w) *→ (p-of-T∞ M))
          w*T∞M-is-trivial =
            substitute-homotopic-left-map
              (pasting-of-pullback-squares
-               T∞W-is-equivalent-to-w*T∞M
-               T∞W-is-trivial)
+               T∞U-is-equivalent-to-w*T∞M
+               T∞U-is-trivial)
              ((underlying-map-of w) *→ (p-of-T∞ M))
              (deduced-equivalence-factors-the-left-map
                 (complete-to-pullback-square (p-of-T∞ M) (underlying-map-of w))
@@ -217,31 +217,22 @@ module Manifolds where
                 ⁻¹⇒)
 
          
-         T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a De -fiber-bundle
+         T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a 𝔻ₑ -fiber-bundle
          T∞M-is-a-fiber-bundle =
            let
              v́-as-surjection = (underlying-map-of w) is-1-epi-by M-is-a-manifold
            in
-             on W the-pullback-along v́-as-surjection
+             on U the-pullback-along v́-as-surjection
              is-trivial-by top-map-of w*T∞M-is-trivial
              and w*T∞M-is-trivial
 
-         classifying-morphism′ : M → BAut De
-         classifying-morphism′ =
+         classifying-morphism : M → BAut 𝔻ₑ
+         classifying-morphism =
            all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M) T∞M-is-a-fiber-bundle
 
-         φ : BAut De → BAut (formal-disk-at e)
-         φ = underlying-map-of-the-equivalence
-               (equivalent-spaces-have-equivalent-BAut.equivalence
-                 (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e))
-
-         classifying-morphism : M → BAut (formal-disk-at e)
-         classifying-morphism =
-             φ
-           ∘ classifying-morphism′
 
          commutes-with-the-dependent-replacement-of-T∞′ :
-           (dependent-replacement (p-of-T∞ M)) ⇒ (ι-BAut De) ∘ classifying-morphism′ 
+           (dependent-replacement (p-of-T∞ M)) ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism 
          commutes-with-the-dependent-replacement-of-T∞′ x =
            all-fiber-bundle-are-associated.as-U₀-morphism (p-of-T∞ M)
              T∞M-is-a-fiber-bundle x
@@ -249,32 +240,25 @@ module Manifolds where
          -- the following makes a probably unnecessary use of univalence
          open import Univalence
          commutes-with-the-dependent-replacement-of-T∞ :
-           (λ (x : M) → formal-disk-at x) ⇒ (ι-BAut (formal-disk-at e)) ∘ classifying-morphism
+           (λ (x : M) → 𝔻 _ x) ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism
          commutes-with-the-dependent-replacement-of-T∞ x =
-             formal-disk-at x
+             𝔻 _ x
            ≈⟨ univalence
                 (pullback-definition-and-dependent-version-agree.on-fibers M x ⁻¹≃) ⟩
              (dependent-replacement (p-of-T∞ M)) x
-           ≈⟨ commutes-with-the-dependent-replacement-of-T∞′ x ⟩
-             ((ι-BAut De) ∘ classifying-morphism′) x
-           ≈⟨ equivalent-spaces-have-equivalent-BAut.homotopy
-                (pullback-and-sum-definition-of-formal-disks-are-equivalent.conclusion e)
-                (classifying-morphism′ x)
-             ⟩
-             (ι-BAut (formal-disk-at e) ∘ φ ∘ classifying-morphism′) x
-           ≈⟨ by-definition-of classifying-morphism ⟩
-             (ι-BAut (formal-disk-at e) ∘ classifying-morphism) x
+            ≈⟨ commutes-with-the-dependent-replacement-of-T∞′ x ⟩
+             ((ι-BAut 𝔻ₑ) ∘ classifying-morphism) x
            ≈∎
 
 
          -- conclude, that the formal disks are equivalent
          all-formal-disks-are-merely-equivalent :
            ∀ (x : M)
-           → ∥ De ≃ formal-disk-at x ∥
+           → ∥ 𝔻ₑ ≃ formal-disk-at x ∥
          all-formal-disks-are-merely-equivalent x =
            let
              ψ : fiber-of (p-of-T∞ M) at x ≃ formal-disk-at x 
              ψ = pullback-definition-and-dependent-version-agree.on-fibers M x
-           in ∥→ (λ (f : De ≃ (fiber-of p-of-T∞ M at x)) → ψ ∘≃ f) ∥→ 
+           in ∥→ (λ (f : 𝔻ₑ ≃ (fiber-of p-of-T∞ M at x)) → ψ ∘≃ f) ∥→ 
             (all-fiber-bundle-are-associated.all-fibers-are-merely-equivalent
               (p-of-T∞ M) T∞M-is-a-fiber-bundle x)
