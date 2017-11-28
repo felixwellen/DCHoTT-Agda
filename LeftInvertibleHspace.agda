@@ -291,6 +291,11 @@ module LeftInvertibleHspace where
     e : K
     e = (eA , unit-is-preserved)
 
+
+
+
+
+
   {-
     for all groups G and φ:D→G, we have a pullback square:
 
@@ -405,3 +410,8 @@ module LeftInvertibleHspace where
 
 
     result-as-square = square4
+
+
+
+
+ 
