@@ -29,6 +29,10 @@ module Im where
     → (A → ℑ A)
   ℑ-unit-at A = ℑ-unit {_} {A}
 
+  ι : ∀ {i} {A : U i}
+    → A → ℑ A
+  ι = ℑ-unit
+
   _is-coreduced : ∀ {i} → U i → U i
   A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
 
@@ -73,7 +77,7 @@ module Im where
     ∀ {A B : U₀}
     → (A → B)
     → (ℑ A → ℑ B)
-  apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit {_} {B} ∘ f)
+  apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit-at B ∘ f)
 
   apply-ℑ : ∀ {A B : U₀}
             → (A → B)
@@ -91,7 +95,7 @@ module Im where
   naturality-of-ℑ-unit : 
     ∀ {A B : U₀}
     → (f : A → B)
-    → (a : A) → (ℑ→ f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
+    → (a : A) → (ℑ→ f(ℑ-unit-at A a) ≈ ℑ-unit-at B (f a))
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
   ℑ⇒ : ∀ {A B : U₀} {f g : A → B}
@@ -210,7 +214,11 @@ module Im where
       ℑ→ f is-an-equivalence-because
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
-
+  -- shorthand
+  ℑ≃ : ∀ {A B : 𝒰} 
+    → A ≃ B → ℑ A ≃ ℑ B
+  ℑ≃ = apply-ℑ-to-the-equivalence
+  
   -- this is put to use later to conclude that equivalences can 'move' formal disks
   module equivalences-induce-equivalences-on-the-coreduced-identity-types {A B : U₀} (f≃ : A ≃ B) (x y : A) where
     f = underlying-map-of f≃
@@ -405,8 +413,6 @@ module Im where
   module identity-types-of-sums
     {A : U₀} (P : A → U₀) where
 
-    ι = ℑ-unit
-    
     ℑ-transport′ : {a a′ : A}
       → ℑ (a ≈ a′) → (ℑ (P a) →  ℑ (P a′))
     ℑ-transport′ {a} {a′} =
