@@ -67,9 +67,14 @@ module FormalDisk where
   induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
     (f x′ , mapping-with f preserves-infinitesimal-proximity x′-is-close-to-x)
 
-
+  -- first order terminology
+  push-forward : 
+    ∀ {X Y : 𝒰}
+    → (f : X → Y)
+    → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
+  push-forward = induced-map-on-formal-disks
+  
   -- the generalized differential of a function
-
   d :
     ∀ {X Y : 𝒰}
     → (f : X → Y)

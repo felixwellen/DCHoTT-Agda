@@ -56,6 +56,11 @@ data Bool : 𝒰 where
       → (a : A) → Π P → P a
 π-Π a = λ s → s a      
 
+_∘Π_ : ∀ {X : 𝒰} {A B C : X → 𝒰}
+  → Π (λ x → B x → C x) → Π (λ x → A x → B x) → Π (λ x → A x → C x)
+g ∘Π f = λ a z → g a (f a z)
+
+
 infix 20 _,_
 record ∑ {i j} {A : 𝒰- i} (P : A → 𝒰- j) : 𝒰- (i ⊔ j) where
   constructor _,_

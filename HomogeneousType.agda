@@ -35,3 +35,32 @@ module HomogeneousType where
   
   
   
+  record _─hom→_ {A B : U₀} (A′ : homogeneous-structure-on A) (B′ : homogeneous-structure-on B) : 𝒰 where
+    open homogeneous-structure-on_
+    field
+      φ : A → B
+      φ-respects-e : φ(e A′) ≈ e B′
+      φ-respects-translations : (x y : A) → ψ B′ (φ x) $≃ (φ y) ≈ φ (ψ A′ x $≃ y)
+                                        -- tanking translations commutes with φ
+
+  
+  module kernel {A B : 𝒰}
+    {A′ : homogeneous-structure-on A} {B′ : homogeneous-structure-on B}
+    (φ′ : A′ ─hom→ B′) where
+
+    open homogeneous-structure-on_
+    open _─hom→_ φ′
+
+    K′ : A → 𝒰
+    K′ a = φ a ≈ e B′
+
+    K : 𝒰
+    K = ∑ K′
+
+    e-K : K
+    e-K = (e A′ , φ-respects-e)
+
+{-    ψ-K′ : ∀ (x : A)
+      → (a : A) → K′ a → K′ (ψ A′ x $≃ a)
+    ψ-K′ x a γ = {!ψ B′ ⁎ γ!}
+-}

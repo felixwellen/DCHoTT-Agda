@@ -242,7 +242,7 @@ module LeftInvertibleHspace where
     the kernel of a morphism of left invertible H-spaces
     is again a left invertible H-space
   -}
-  module kernel {A B : U₀}
+  module kernel′ {A B : U₀}
                 (A′ : left-invertible-structure-on A)
                 (B′ : left-invertible-structure-on B)
                 (f′ : A′ →le B′)
