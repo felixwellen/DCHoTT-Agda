@@ -57,13 +57,15 @@ module LineGeometry where
       (X : 𝒰) → 𝒰
     1-forms-on X = (x : X) → 𝔻 _ x → 𝔻ₑ
 
+    Ω¹ = 1-forms-on
+
     d′ : ∀ {X : 𝒰}
       → (f : X → 𝔸)
-      → 1-forms-on X
+      → Ω¹ X
     d′ f x = τ (f x) ∘ d f x
 
     evaluate : ∀ {X : 𝒰}
-      → 1-forms-on X → vector-fields-on X 
+      → Ω¹ X → vector-fields-on X 
       → ((x : X) → 𝔻ₑ → 𝔻ₑ)
     evaluate ω χ x = (ω x) ∘ (χ x)
 
@@ -71,7 +73,7 @@ module LineGeometry where
     pullback-of-forms :
       ∀ {X Y : 𝒰}
       → (φ : X → Y)
-      → 1-forms-on Y → 1-forms-on X
+      → Ω¹ Y → Ω¹ X
     pullback-of-forms φ ω = λ x → ω (φ x) ∘ d φ x
 
     _⋆ = pullback-of-forms
