@@ -269,3 +269,8 @@ module EqualityAndPaths where
      f ⁎ η • refl
     ≈∎
 
+
+  J-right :
+    ∀ {A : 𝒰} {a : A} (C : (x : A) → a ≈ x → 𝒰)
+    → (r : C a refl) → ((y : A) (γ : a ≈ y) → C y γ)
+  J-right C r y refl = r 

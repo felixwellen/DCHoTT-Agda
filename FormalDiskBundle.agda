@@ -106,15 +106,15 @@ module FormalDiskBundle where
 
     D-pullback = D X x₀
     D-sum = formal-disk-at x₀
-
+{-
     conclusion : D-pullback ≃ D-sum
-    conclusion = (λ {(∗ and x are-in-the-same-fiber-by γ) → (x , γ)})
+    conclusion = (λ {(∗ and x are-in-the-same-fiber-by γ) → (x , γ ⁻¹)})
       is-an-equivalence-because
-        (has-left-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ)})
-           by (λ {(∗ and x are-in-the-same-fiber-by γ) → refl})
-         and-right-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ)})
+        (has-left-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ ⁻¹)})
+           by (λ {(∗ and x are-in-the-same-fiber-by γ) → ⁻¹-is-selfinverse γ ⁻¹})
+         and-right-inverse (λ {(x , γ) → (∗ and x are-in-the-same-fiber-by γ ⁻¹)})
            by (λ {(x , γ) → refl}))
-
+-}
   T∞→ = induced-map-on-formal-disks
 
   formal-disk-bundle : (X : U₀) → U₀

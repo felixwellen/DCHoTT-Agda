@@ -123,8 +123,7 @@ module Equivalences where
   -- easy examples
   id-is-an-equivalence : ∀ {i} {A : U i} → id {i} {A} is-an-equivalence
   id-is-an-equivalence = has-left-inverse id by (λ x → refl) and-right-inverse id by (λ x → refl)
-  
-  
+
   transport-invertibility : ∀ {i j} {A : U i} (P : A → U j) {x y : A} 
                               → (γ : x ≈ y) → (p : P y) → transport P γ ( transport P (γ ⁻¹) p) ≈ p
   transport-invertibility P refl p = refl
@@ -228,13 +227,13 @@ module Equivalences where
       left-and-right-inverse-are-homotopic f l r unit counit (f a)
   
   
-  -- commonly used examples:
   id-as-equivalence : ∀ {i} {A : U i} → A ≃ A
   id-as-equivalence = id is-an-equivalence-because id-is-an-equivalence
   
+  -- just language
+  equivalent-by-definition = id-as-equivalence
   
-  
-  -- towards univalence..
+
   U-transport : ∀ {i} {A B : U i} → A ≈ B → A ≃ B
   U-transport refl = id-as-equivalence
   
@@ -396,8 +395,8 @@ module Equivalences where
 
 
   -- reasoning
-  infix 15 _≃∎
-  infixr 10 _≃⟨_⟩_
+  infix 3 _≃∎
+  infixr 2 _≃⟨_⟩_
 
   _≃∎ : ∀ {i} (A : U i) 
       → A ≃ A

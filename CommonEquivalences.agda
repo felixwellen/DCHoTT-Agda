@@ -85,7 +85,31 @@ module CommonEquivalences where
                   go-back γ by left-inverse γ 
                 and-right-inverse
                   go-back γ by right-inverse γ
+
+
+      left-compose : ∀ {x : A} (γ : x ≈ a)
+                      → a ≈ a′ → x ≈ a′
+      left-compose refl η = η
   
+      go-back-left : ∀ {x : A} (γ : x ≈ a)
+                → x ≈ a′ → a ≈ a′
+      go-back-left refl η = η
+  
+      left-inverse-left : ∀ {x : A} (γ : x ≈ a) (η : a ≈ a′)
+                     → go-back-left γ (left-compose γ η) ≈ η
+      left-inverse-left refl η = refl
+  
+      right-inverse-left : ∀ {x : A} (γ : x ≈ a) (η : x ≈ a′)
+                     → η ≈ left-compose γ (go-back-left γ η)
+      right-inverse-left refl η = refl
+  
+      proof-left : ∀ {x : A} (γ : x ≈ a)
+              → left-compose γ is-an-equivalence
+      proof-left γ = has-left-inverse 
+                  go-back-left γ by left-inverse-left γ 
+                and-right-inverse
+                  go-back-left γ by right-inverse-left γ
+
   right-compose : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                   → a ≈ a′ → a ≈ a″ 
   right-compose {_} {a} {a′} {_} γ = proof-that-right-composition-is-an-equivalence.right-compose _ a a′ γ
@@ -94,6 +118,23 @@ module CommonEquivalences where
                                     → (right-compose {_} {a} {_} {_} γ) is-an-equivalence
   right-compose-is-an-equivalence γ = proof-that-right-composition-is-an-equivalence.proof _ _ _ γ
 
+  infix 30 _•r≃
+  _•r≃ : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
+                  → a ≈ a′ ≃ a ≈ a″ 
+  γ •r≃ = right-compose γ is-an-equivalence-because right-compose-is-an-equivalence γ
+
+  left-compose : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a) 
+                  → a ≈ a′ → x ≈ a′
+  left-compose γ = proof-that-right-composition-is-an-equivalence.left-compose _ _ _ γ
+  
+  left-compose-is-an-equivalence : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a) 
+                                    → (left-compose {_} {_} {_} {a′} γ) is-an-equivalence
+  left-compose-is-an-equivalence γ = proof-that-right-composition-is-an-equivalence.proof-left _ _ _ γ
+
+  infix 30 _•l≃
+  _•l≃ : ∀ {A : 𝒰} {x a a′ : A} (γ : x ≈ a) 
+                  → a ≈ a′ ≃ x ≈ a′
+  γ •l≃ = left-compose γ is-an-equivalence-because  left-compose-is-an-equivalence γ 
 
   module ∑-is-universal (A : U₀) (P : A → U₀) where
     map-to-cone : ∀ (Z : U₀) 
@@ -222,6 +263,14 @@ module CommonEquivalences where
       proof = has-left-inverse f⁻¹⁎ by left-invertible and-right-inverse f⁻¹⁎ by right-invertible
 
 
+  infix 50 _∗≃ 
+  _∗≃ : ∀ {A B : 𝒰} {x y : A}
+    → (f : A ≃ B) → (x ≈ y) ≃ (underlying-map-of f) x ≈ (underlying-map-of f) y
+  f ∗≃ =
+    proof-that-equivalences-induce-equivalences-on-path-spaces.f⁎ _ _ f
+    is-an-equivalence-because
+    proof-that-equivalences-induce-equivalences-on-path-spaces.proof _ _ f
+
 -- algebraic manipulations of equations are equivalences
   module concatenation-is-an-equivalence 
     {A : U₀} {a a′ : A} (η ζ : a ≈ a′) where
@@ -321,6 +370,7 @@ module CommonEquivalences where
     → concatenation-is-an-equivalence.concatenate-right η ζ γ is-an-equivalence
   concatenating-is-an-equivalence η ζ γ = concatenation-is-an-equivalence.proof-of-equivalence η ζ γ
 
+
   module substitution-as-equivalence
     {A : U₀} {a a′ : A} (η : a ≈ a′) where
 
@@ -333,6 +383,7 @@ module CommonEquivalences where
                      → γ ≈ γ′
                      → (γ • η ≈ ζ) ≃ (γ′ • η ≈ ζ)
     substitute-left ζ γ γ′ H = U-transport ((λ ξ → ξ • η ≈ ζ) ⁎ H)
+
 
 
   module inversion-is-an-equivalence

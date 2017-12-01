@@ -590,6 +590,13 @@ module Im where
   naturality-of-ℑ-unit≃ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (underlying-map-of f z)) 
 
 
+  ×-coreduced :
+    ∀ (A B : 𝒰)
+    → (ℑ A × ℑ B) is-coreduced
+  ×-coreduced A B = ∑-of-coreduced-types-is-coreduced 
+                  (ℑ A) (ℑ-is-coreduced A) (λ _ → ℑ B) (λ _ → ℑ-is-coreduced B)
+
+
   module ℑ-preserves-left-invertible-H-spaces
          (X : U₀)
          (left-invertible-structure-on-X : left-invertible-structure-on X)
@@ -599,8 +606,7 @@ module Im where
     ℑX = ℑ X
   
     ℑX×ℑX-coreduced : (ℑX × ℑX) is-coreduced
-    ℑX×ℑX-coreduced = ∑-of-coreduced-types-is-coreduced 
-                  (ℑ X) (ℑ-is-coreduced X) (λ _ → ℑ X) (λ _ → ℑ-is-coreduced X)
+    ℑX×ℑX-coreduced = ×-coreduced X X
 
     curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
     curry f = λ a → (λ b → f (a , b))
@@ -610,7 +616,6 @@ module Im where
 
     ℑX→ℑ-X×X-is-coreduced : (ℑ X → ℑ (X × X)) is-coreduced
     ℑX→ℑ-X×X-is-coreduced = Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → ℑ (X × X)) (λ _ → ℑ-is-coreduced _)
-
     ψ′ : X → (ℑX → ℑ(X × X))
     ψ′ x = ℑ-recursion (ℑ-is-coreduced (X × X)) (ψ x)
 

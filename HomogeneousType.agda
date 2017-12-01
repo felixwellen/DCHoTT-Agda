@@ -6,6 +6,7 @@ module HomogeneousType where
   open import Homotopies
   open import Language
   open import Equivalences
+  open import CommonEquivalences
   open import LeftInvertibleHspace
   
   {- 
@@ -42,7 +43,13 @@ module HomogeneousType where
       φ-respects-e : φ(e A′) ≈ e B′
       φ-respects-translations : (x y : A) → ψ B′ (φ x) $≃ (φ y) ≈ φ (ψ A′ x $≃ y)
                                         -- tanking translations commutes with φ
-
+      -- this notion of morphism is problematic, since
+      -- it turned out below in the kernel construction,
+      -- that the commuter should be refl on ψ (φ x) e ≈ φ (ψ x e)
+      -- but enforcing this would introduce another cell, which might
+      -- lead to other cells.
+      -- so I stopped here and tried to do what I want to know directly
+      -- for the one known example of a morphism, i.e. the unit ι of ℑ
   
   module kernel {A B : 𝒰}
     {A′ : homogeneous-structure-on A} {B′ : homogeneous-structure-on B}
@@ -59,31 +66,56 @@ module HomogeneousType where
 
     e-K : K
     e-K = (e A′ , φ-respects-e)
-{-
+
     ψ-K′ : ∀ (p : K)
-      → (a : A) → K′ a → K′ (ψ A′ (∑π₁ p) $≃ a)
-    ψ-K′ (x , γ) a ζ =
+      → (a : A) → K′ a ≃ K′ (ψ A′ (∑π₁ p) $≃ a)
+    ψ-K′ (x , γ) a =
       let
-        ψₓ : A ≃ A
-        ψₓ = ψ A′ x
-
-        y = φ(x)
-
-        ψ′y = ψ B′ y
-
-      {-
+        ψ-φ⟨x⟩ = ψ B′ (φ x)
+        ψ-φ⟨x⟩′ = underlying-map-of ψ-φ⟨x⟩
         
-        A ─φ→ B
-        |     |
-        ψₓ    ψ′y
-        ↓     ↓ 
-        A ─φ→ B
+      in  K′ a
+        ≃⟨ equivalent-by-definition ⟩
+          φ a  ≈  e B′
+        ≃⟨ ψ-φ⟨x⟩ ∗≃ ⟩ 
+          ψ-φ⟨x⟩′ (φ a)  ≈  ψ-φ⟨x⟩′ (e B′)
+        ≃⟨ is-translation-to B′ (φ x) •r≃ ⟩ 
+          ψ-φ⟨x⟩′ (φ a)  ≈  φ(x)
+        ≃⟨ γ •r≃ ⟩ 
+          ψ-φ⟨x⟩′ (φ a)  ≈  e B′
+        ≃⟨ (φ-respects-translations x a •l≃) ⁻¹≃ ⟩
+          φ (ψ A′ x $≃ a)  ≈  e B′
+        ≃⟨ equivalent-by-definition ⟩
+          K′ (ψ A′ x $≃ a)
+        ≃∎
 
-        Now:?
-        ψₓ = ψₑ because x = e
-      -}
-  
-        
-        
-      in {!ψ B′ ⁎ γ!}
+    import DependentTypes
+    open DependentTypes.fiber-equivalences-along-an-equivalence-on-the-base K′ K′
+
+    ψ-K : ∀ (p : K) → K ≃ K
+    ψ-K (x , γ) =
+      induced-map (ψ A′ x) (ψ-K′ (x , γ))
+      is-an-equivalence-because
+      induced-map-is-an-equivalence (ψ A′ x) (ψ-K′ (x , γ))
+
+{- discontinued - reasons are at the morphism definition
+    𝒯 :
+      ∀ (x : A)
+      → K′ (ψ A′ x $≃ e A′) ≃ K′ x
+    𝒯 x = transport-as-equivalence K′ (is-translation-to A′ x)
+    -- K′ e   ≃   φ e ≈ e B′  ≃   K′ x
+    the-ψ-K′-translate :
+      ∀ (p : K)
+      → (𝒯 (∑π₁ p) ∘≃ ψ-K′ p (e A′)) $≃ φ-respects-e  ≈  ∑π₂ p
+    the-ψ-K′-translate (x , γ) =
+       (𝒯 x ∘≃ ψ-K′ (x , γ) (e A′)) $≃ φ-respects-e
+      ≈⟨ {!!} ⟩
+       γ
+      ≈∎
+
+    homogeneous-structure : homogeneous-structure-on K
+    homogeneous-structure =
+      record { e = e-K ;
+               ψ = ψ-K ;
+               is-translation-to = {!!} } 
 -}

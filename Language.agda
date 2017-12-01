@@ -32,7 +32,7 @@ module Language where
     ∀ {i j} {A : U i} {Z : U j} {a : A}
     → Z → a ≈ a
   by-definition-of _ = refl
-  
+
   -- language constructs for readable manipulation of equations
   concatenate_on-the-right-to_ : ∀ {A : U₀} {a a′ a″ : A} {η ζ : a ≈ a′}
                                       → (γ : a′ ≈ a″)
