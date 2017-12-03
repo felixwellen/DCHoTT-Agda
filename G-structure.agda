@@ -13,7 +13,6 @@ module G-structure where
   open import OneImage
   open import EtaleMaps
   open import Manifolds
-  open import SymmetricSpace
   open import FormalDisk
   open import HomogeneousType
 
