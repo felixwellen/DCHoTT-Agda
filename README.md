@@ -1,15 +1,15 @@
 # DCHoTT-Agda
-Differential cohesion in Homotopy Type Theory by an axiomatized infinitesimal shape modality.
+Differential cohesion in Homotopy Type Theory by an axiomatized coreduction modality.
 The following is proved and could also be interpreted as theorems about general modalities:
 
 - The formal disk bundle over a group is trivial.
 - The formal disk bundle over a V-manifold is locally trivial. 
 - All F - fiber bundles are associated to an Aut(F) principal bundle.
 
-The only properties we need of a groups are existence of an operation V x V -> V,
-a neutral element for this operation without further compatibility requirements and invertibility of all right translations.
+In place of groups, a more general structure called homogeneous type is used in the code.
+[Here](https://ncatlab.org/schreiber/show/thesis+Wellen) is more information on this project.
 [Here](https://dl.dropboxusercontent.com/u/12630719/SchreiberDMV2015b.pdf) (theorem 3.6, 1) and some part of 2) is a short account of the question this code solves.
-The classical, category theoretic, version of the theory and together with a lot of opportunities to extend the formalized version is [here](https://arxiv.org/abs/1701.06238).
+The classical, category theoretic, version of the theory together with a lot of opportunities to extend the formalized version is [here](https://arxiv.org/abs/1701.06238).
 
 # State of the code
 Notation is not as consequent and compatible with the rest of the HoTT-World as it should be.
