@@ -94,41 +94,53 @@ module ImHomogeneousType where
 
     e-𝔻ₑ : 𝔻ₑ
     e-𝔻ₑ = ∗-𝔻
-{- switched direction of 'e is-infinitesimally-close-to a'
-    ψ-𝔻ₑ′ : ∀ (p : 𝔻ₑ)
-      → (a : A) → 𝔻ₑ′ a ≃ 𝔻ₑ′ (ψ (∑π₁ p) $≃ a)
+  
+    ψ-𝔻ₑ′ :
+         ∀ (d : 𝔻ₑ) (a : A)
+         → 𝔻ₑ′ a ≃ 𝔻ₑ′ (ψ′ (∑π₁ d) a)
+         
     ψ-𝔻ₑ′ (x , γ) a =
-      let
-        ψ-φ⟨x⟩ = ℑψ (ι x)
-        ψ-φ⟨x⟩′ = underlying-map-of ψ-φ⟨x⟩
-        
-      in  𝔻ₑ′ a
+         𝔻ₑ′ a
         ≃⟨ equivalent-by-definition ⟩
-          a  is-close-to e
+          e is-close-to a
         ≃⟨ equivalent-by-definition ⟩
-          (ι a)  ≈  (ι e)
+          (ι e)  ≈  (ι a)
         ≃⟨ ℑψ (ι x) ∗≃ ⟩ 
-          ℑψ′ (ι x) (ι a)  ≈  ℑψ′ (ι x) (ι e)
-        ≃⟨  ℑψ-is-a-family-of-translations (ι x) •r≃  ⟩ 
-          ℑψ′ (ι x) (ι a)  ≈  ι x
-        ≃⟨  γ ⁻¹• •r≃  ⟩ 
-          ℑψ′ (ι x) (ι a)  ≈  ι e
-        ≃⟨ (ι-commutator x a •l≃) ⁻¹≃ ⟩
-          ι (ψ x $≃ a)  ≈  ι e
+          ℑψ′ (ι x) (ι e)  ≈  ℑψ′ (ι x) (ι a) 
+        ≃⟨  ℑψ-is-a-family-of-translations (ι x) ⁻¹• •l≃  ⟩ 
+          ι x  ≈  ℑψ′ (ι x) (ι a) 
+        ≃⟨  γ •l≃  ⟩ 
+          ι e  ≈  ℑψ′ (ι x) (ι a)
+        ≃⟨ (ι-commutator x a •r≃) ⟩
+          ι e  ≈ ι (ψ′ x a) 
         ≃⟨ equivalent-by-definition ⟩
-          𝔻ₑ′ (ψ x $≃ a)
+          𝔻ₑ′ (ψ′ x a)
         ≃∎
 
     import DependentTypes
     open DependentTypes.fiber-equivalences-along-an-equivalence-on-the-base 𝔻ₑ′ 𝔻ₑ′
 
-    ψ-𝔻ₑ : ∀ (p : 𝔻ₑ) → 𝔻ₑ ≃ 𝔻ₑ
+    ψ-𝔻ₑ : ∀ (d : 𝔻ₑ) → 𝔻ₑ ≃ 𝔻ₑ
     ψ-𝔻ₑ (x , γ) =
-      {! induced-map (ψ x) (ψ-𝔻ₑ′ (x , γ)) !}
+      induced-map (ψ x) (ψ-𝔻ₑ′ (x , γ)) 
       is-an-equivalence-because
-      {! induced-map-is-an-equivalence (ψ x) (ψ-K′ (x , γ)) !}
+      induced-map-is-an-equivalence (ψ x) (ψ-𝔻ₑ′ (x , γ)) 
+
+    ψ-𝔻ₑ″ : ∀ (d : 𝔻ₑ) → 𝔻ₑ → 𝔻ₑ
+    ψ-𝔻ₑ″ d = underlying-map-of (ψ-𝔻ₑ d)
+{-
+    ψ-𝔻ₑ-translates :
+      ∀ (d : 𝔻ₑ)
+      →  (ψ-𝔻ₑ d) $≃ e-𝔻ₑ  ≈  d
+    ψ-𝔻ₑ-translates (x , γ) = {!!}
+
+    homogeneous-structure : homogeneous-structure-on 𝔻ₑ
+    homogeneous-structure =
+      record { e = e-𝔻ₑ ;
+               ψ = ψ-𝔻ₑ ;
+               is-translation-to = ψ-𝔻ₑ-translates } 
 -}
-{- discontinued - reasons are at the morphism definition
+{- 
     𝒯 :
       ∀ (x : A)
       → K′ (ψ A′ x $≃ e A′) ≃ K′ x
@@ -143,9 +155,4 @@ module ImHomogeneousType where
        γ
       ≈∎
 
-    homogeneous-structure : homogeneous-structure-on K
-    homogeneous-structure =
-      record { e = e-K ;
-               ψ = ψ-K ;
-               is-translation-to = {!!} } 
 -}
