@@ -42,25 +42,46 @@ module ImHomogeneousType where
       ∀ (x : A)
       → ℑψ (ι x) ≈ ℑ≃ (ψ x)
     compute-ℑψ = ℑ-compute-induction (λ _ → ℑ≃-is-coreduced) λ (x : A) → ℑ≃ (ψ x)
+
+    ℑψ-is-a-family-of-translations′ :
+      ∀ (x : A) →
+      _
+    ℑψ-is-a-family-of-translations′ x =
+        ℑψ (ι x) $≃ ιe
+      ≈⟨ (λ χ → χ $≃ ιe) ⁎ compute-ℑψ x ⟩
+        ℑ≃ (ψ x) $≃ ιe
+      ≈⟨ naturality-of-ℑ-unit≃ (ψ x) e ⟩
+        ι (ψ x $≃ e)
+      ≈⟨ ι ⁎ is-translation-to x ⟩
+        ι x
+      ≈∎
+
     
     ℑψ-is-a-family-of-translations :
       (x : ℑ A) → (ℑψ x $≃ ιe) ≈ x
     ℑψ-is-a-family-of-translations =
       ℑ-induction
         (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
-        λ a → ℑψ (ι a) $≃ ιe
-             ≈⟨ (λ χ → χ $≃ ιe) ⁎  ℑ-compute-induction (λ _ → ℑ≃-is-coreduced) (λ (x : A) → ℑ≃ (ψ x)) a ⟩
-              ℑ≃ (ψ a) $≃ ιe
-             ≈⟨ naturality-of-ℑ-unit≃ (ψ a) e ⟩
-              ι (ψ a $≃ e)
-             ≈⟨ ℑ-unit ⁎ is-translation-to a ⟩
-               ι a
-             ≈∎
-
+        ℑψ-is-a-family-of-translations′
+        
     structure : homogeneous-structure-on (ℑ A)
     structure = record { e = ιe ; ψ = ℑψ ; is-translation-to = ℑψ-is-a-family-of-translations }
 
-    
+
+    ℑ-compute-family-witness : 
+      ∀ (x : A) →
+      ℑψ-is-a-family-of-translations (ι x) 
+      ≈ (λ f → f $≃ (ιe)) ⁎ compute-ℑψ x • (naturality-of-ℑ-unit≃ (ψ x) e • ι ⁎ is-translation-to x)
+    ℑ-compute-family-witness x =
+       (ℑ-compute-induction
+          ((λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _))
+          ℑψ-is-a-family-of-translations′
+          x)
+       • (λ γ → ((λ f → f $≃ (ιe)) ⁎ compute-ℑψ x
+            • (naturality-of-ℑ-unit≃ (ψ x) e • γ)))
+           ⁎ refl-is-right-neutral (ι ⁎ is-translation-to x) ⁻¹•
+
+
     ψ′ : (x : A)
        → A → A
     ψ′ x = underlying-map-of (ψ x)
@@ -85,8 +106,13 @@ module ImHomogeneousType where
         ≈⟨ naturality-of-ℑ-unit (ψ′ x) y ⟩
          ι (ψ′ x y)
         ≈∎ 
-
-
+{-
+    compute-ι-commutator : 
+      ∀ (x : A)
+      →  ι-commutator x e • ι ⁎ is-translation-to x
+        ≈ ℑψ-is-a-family-of-translations (ι x)
+    compute-ι-commutator x = {!!}
+-}    
     𝔻ₑ′ : A → 𝒰
     𝔻ₑ′ a = e is-infinitesimally-close-to a
 
@@ -98,7 +124,6 @@ module ImHomogeneousType where
     ψ-𝔻ₑ′ :
          ∀ (d : 𝔻ₑ) (a : A)
          → 𝔻ₑ′ a ≃ 𝔻ₑ′ (ψ′ (∑π₁ d) a)
-         
     ψ-𝔻ₑ′ (x , γ) a =
          𝔻ₑ′ a
         ≃⟨ equivalent-by-definition ⟩
@@ -122,18 +147,28 @@ module ImHomogeneousType where
 
     ψ-𝔻ₑ : ∀ (d : 𝔻ₑ) → 𝔻ₑ ≃ 𝔻ₑ
     ψ-𝔻ₑ (x , γ) =
-      induced-map (ψ x) (ψ-𝔻ₑ′ (x , γ)) 
+      induced-map (ψ x) (ψ-𝔻ₑ′ (x , γ))
       is-an-equivalence-because
       induced-map-is-an-equivalence (ψ x) (ψ-𝔻ₑ′ (x , γ)) 
 
     ψ-𝔻ₑ″ : ∀ (d : 𝔻ₑ) → 𝔻ₑ → 𝔻ₑ
     ψ-𝔻ₑ″ d = underlying-map-of (ψ-𝔻ₑ d)
-{-
-    ψ-𝔻ₑ-translates :
-      ∀ (d : 𝔻ₑ)
-      →  (ψ-𝔻ₑ d) $≃ e-𝔻ₑ  ≈  d
-    ψ-𝔻ₑ-translates (x , γ) = {!!}
 
+    𝒯 : ∀ {y z : A} (γ : y ≈ z) → e is-close-to y → e is-close-to z
+    𝒯 = transport (λ (x : A) → e is-close-to x)
+{-
+    ψ-𝔻ₑ′-translates :
+      ∀ (x : A) (γ : e is-close-to x)
+      →  ψ-𝔻ₑ′ (x , γ) e $≃ refl  ≈  𝒯 (is-translation-to x ⁻¹•) γ
+    ψ-𝔻ₑ′-translates x γ =
+        ψ-𝔻ₑ′ (x , γ) e $≃ refl
+      ≈⟨ {!!} ⟩
+        {! id-as-equivalence ∘≃ (id-as-equivalence ∘≃)!}
+      ≈⟨ {!!} ⟩
+        𝒯 (is-translation-to x ⁻¹•) γ
+      ≈∎
+-}
+{-
     homogeneous-structure : homogeneous-structure-on 𝔻ₑ
     homogeneous-structure =
       record { e = e-𝔻ₑ ;
