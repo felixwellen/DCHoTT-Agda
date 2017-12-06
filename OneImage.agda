@@ -17,7 +17,7 @@ module OneImage where
     → (A → B) → U (i ⊔ j)
   _is-1-epi {_} {_} {A} {B} f = Π (λ (b : B) → ∥ fiber-of f at b ∥)
 
-  record _↠_ (A B : U₀) : U₁ where
+  record _↠_ (A B : U₀) : U₀ where
     constructor _is-1-epi-by_
     field
       morphism : A → B
