@@ -113,7 +113,11 @@ module CommonEquivalences where
   right-compose : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                   → a ≈ a′ → a ≈ a″ 
   right-compose {_} {a} {a′} {_} γ = proof-that-right-composition-is-an-equivalence.right-compose _ a a′ γ
-  
+
+  compute-right-compose : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
+                  → (η : a ≈ a′) → right-compose γ η ≈ η • γ
+  compute-right-compose refl refl = refl
+
   right-compose-is-an-equivalence : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                                     → (right-compose {_} {a} {_} {_} γ) is-an-equivalence
   right-compose-is-an-equivalence γ = proof-that-right-composition-is-an-equivalence.proof _ _ _ γ
@@ -126,6 +130,10 @@ module CommonEquivalences where
   left-compose : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a) 
                   → a ≈ a′ → x ≈ a′
   left-compose γ = proof-that-right-composition-is-an-equivalence.left-compose _ _ _ γ
+
+  compute-left-compose : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a)
+    → (η : a ≈ a′) → left-compose γ η ≈ γ • η
+  compute-left-compose refl η = refl
   
   left-compose-is-an-equivalence : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a) 
                                     → (left-compose {_} {_} {_} {a′} γ) is-an-equivalence
