@@ -76,19 +76,6 @@ module ImHomogeneousType where
          ι (ψ′ x y)
         ≈∎ 
 
-    ℑψ-is-a-family-of-translations′ :
-      ∀ (x : A) →
-      _
-    ℑψ-is-a-family-of-translations′ x =
-        ℑψ (ι x) $≃ ιe
-      ≈⟨ (λ χ → χ $≃ ιe) ⁎ compute-ℑψ x ⟩
-        ℑ≃ (ψ x) $≃ ιe
-      ≈⟨ naturality-of-ℑ-unit≃ (ψ x) e ⟩
-        ι (ψ x $≃ e)
-      ≈⟨ ι ⁎ is-translation-to x ⟩
-        ι x
-      ≈∎
-
     
     ℑψ-is-a-family-of-translations :
       (x : ℑ A) → (ℑψ x $≃ ιe) ≈ x
@@ -105,9 +92,6 @@ module ImHomogeneousType where
     𝔻ₑ′ a = e is-infinitesimally-close-to a
 
     𝔻ₑ = 𝔻 _ e
-
-    e-𝔻ₑ : 𝔻ₑ
-    e-𝔻ₑ = ∗-𝔻
 
 
     module compute-translation-on-𝔻ₑ (x : A) (γ : e is-close-to x) where
@@ -238,11 +222,9 @@ module ImHomogeneousType where
       ≈∎
 
 
-
-
     homogeneous-structure : homogeneous-structure-on 𝔻ₑ
     homogeneous-structure =
-      record { e = e-𝔻ₑ ;
+      record { e = ∗-𝔻 ;
                ψ = ψ-𝔻ₑ ;
                is-translation-to = ψ-𝔻ₑ-translates } 
 
