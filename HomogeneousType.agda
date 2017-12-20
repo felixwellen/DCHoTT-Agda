@@ -8,6 +8,7 @@ module HomogeneousType where
   open import Equivalences
   open import CommonEquivalences
   open import LeftInvertibleHspace
+  open import FunctionExtensionality
   
   {- 
     All points of a homogeneous space
@@ -33,8 +34,31 @@ module HomogeneousType where
         is-translation-to = left-neutral }
 
 
-  
-  
+
+  module structure-inherited-from-codomain {A B : 𝒰} (B' : homogeneous-structure-on B) where
+
+    open homogeneous-structure-on_ B'
+
+    ψ→ : (x : A → B) →
+      (A → B) ≃ (A → B)
+    ψ→ x = (λ f → λ a → ψ (x a) $≃ (f a))
+      is-an-equivalence-because
+        (has-left-inverse (λ f → λ a → ψ (x a) ⁻¹≃l  $≃ (f a))
+           by (λ f → fun-ext (λ a → unit-of-the-equivalence (ψ (x a)) (f a)))
+         and-right-inverse (λ f → λ a → ψ (x a) ⁻¹≃r  $≃ (f a))
+           by (λ f → fun-ext (λ a → counit-of-the-equivalence (ψ (x a)) (f a))))
+
+    e→ : A → B
+    e→ = λ _ → e
+
+    is-translation-to→ : (x : A → B) →
+      ψ→ x $≃ (e→) ≈ x
+    is-translation-to→ x = fun-ext (λ a → is-translation-to (x a))
+
+    structure : homogeneous-structure-on (A → B)
+    structure = record { e = e→ ; ψ = ψ→ ; is-translation-to = is-translation-to→ }
+
+    {- -}
   
   record _─hom→_ {A B : U₀} (A′ : homogeneous-structure-on A) (B′ : homogeneous-structure-on B) : 𝒰 where
     open homogeneous-structure-on_
