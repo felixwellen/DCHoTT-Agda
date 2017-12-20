@@ -306,6 +306,33 @@ module Equivalences where
                      and-right-inverse
                      the-equivalence by reverse-homotopy unit) 
 
+  infix 80 _⁻¹≃l
+  _⁻¹≃l : ∀ {i} {A B : U i} → A ≃ B → B ≃ A
+  (the-equivalence is-an-equivalence-because reason) ⁻¹≃l with reason
+  ... | (has-left-inverse
+          left-inverse by unit
+         and-right-inverse
+          right-inverse by counit) 
+      = left-inverse is-an-equivalence-because 
+                 (has-left-inverse
+                   the-equivalence by switch-inverses reason unit
+                     and-right-inverse
+                     the-equivalence by reverse-homotopy unit) 
+
+  infix 80 _⁻¹≃r
+  _⁻¹≃r : ∀ {i} {A B : U i} → A ≃ B → B ≃ A
+  (the-equivalence is-an-equivalence-because reason) ⁻¹≃r with reason
+  ... | (has-left-inverse
+          left-inverse by unit
+         and-right-inverse
+          right-inverse by counit) 
+      = right-inverse is-an-equivalence-because 
+                 (has-left-inverse
+                   the-equivalence by reverse-homotopy counit
+                     and-right-inverse
+                     the-equivalence by
+                       right-inverses-are-also-left-inverses
+                         the-equivalence left-inverse right-inverse unit counit) 
 
   the-inverse-of_which-is-an-equivalence-by_is-again-an-equivalence :
     ∀ {A B : U₀} (f : A → B)

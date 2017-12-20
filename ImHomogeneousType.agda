@@ -78,7 +78,6 @@ module ImHomogeneousType where
          ι (ψ′ x y)
         ≈∎ 
 
-
     ℑψ-is-a-family-of-translations :
       (x : ℑ A) → (ℑψ x $≃ ιe) ≈ x
     ℑψ-is-a-family-of-translations =
@@ -222,8 +221,6 @@ module ImHomogeneousType where
       ≈⟨ (λ ζ → (x , ζ)) ⁎ refl-is-right-neutral γ ⁻¹• ⟩ 
         (x , γ)
       ≈∎
-
-
 
 
     homogeneous-structure : homogeneous-structure-on 𝔻ₑ
