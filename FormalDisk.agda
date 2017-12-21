@@ -109,3 +109,89 @@ module FormalDisk where
     conclusion : (a : A) → formal-disk-at a ≃ formal-disk-at (f a)
     conclusion a = (d f a) is-an-equivalence-because (df-is-an-equivalence a)
 
+
+  {-
+    this is essentially the fact that
+    derivatives of functions into products
+    may be calculated componentwise
+  -}
+
+  module 𝔻-commutes-with-× {A B C : 𝒰} (f : A → B × C) where 
+    open ℑ-preserves-products B C
+
+    df : (x : A) → 𝔻 A x → 𝔻 (B × C) (f x)
+    df = d f
+
+    df₁ : (x : A) → 𝔻 A x → 𝔻 B (π₁ (f x))
+    df₁ = d (π₁ ∘ f)
+    
+    df₂ : (x : A) → 𝔻 A x → 𝔻 C (π₂ (f x))
+    df₂ = d (π₂ ∘ f)
+
+    split-𝔻× : (y : B × C)
+      → 𝔻 (B × C) y → 𝔻 B (π₁ y) × 𝔻 C (π₂ y)
+    split-𝔻× (b₀ , c₀) ((b , c) , γ) =
+      let
+        b₀-close-to-b : b₀ is-close-to b
+        b₀-close-to-b =
+               ι b₀ 
+              ≈⟨ φ⁻¹-commutes-with-π₁ (b₀ , c₀) ⁻¹ ⟩
+               π₁ (φ⁻¹ (ι (b₀ , c₀)))
+              ≈⟨ π₁ ⁎ φ⁻¹ ⁎ γ ⟩
+               π₁ (φ⁻¹ (ι (b , c)))
+              ≈⟨ φ⁻¹-commutes-with-π₁ (b , c)  ⟩
+               ι b
+              ≈∎
+
+        c₀-close-to-c : c₀ is-close-to c
+        c₀-close-to-c =
+               ι c₀ 
+              ≈⟨ φ⁻¹-commutes-with-π₂ (b₀ , c₀) ⁻¹ ⟩
+               π₂ (φ⁻¹ (ι (b₀ , c₀)))
+              ≈⟨ π₂ ⁎ φ⁻¹ ⁎ γ ⟩
+               π₂ (φ⁻¹ (ι (b , c)))
+              ≈⟨ φ⁻¹-commutes-with-π₂ (b , c)  ⟩
+               ι c
+              ≈∎
+      in 
+         ((b , b₀-close-to-b)
+        , (c , c₀-close-to-c))
+
+    join-𝔻× : (y : B × C)
+      → 𝔻 B (π₁ y) × 𝔻 C (π₂ y) → 𝔻 (B × C) y
+    join-𝔻× (b₀ , c₀) ((b , b₀∼b) , (c , c₀∼c)) =
+      ((b , c) , pair-construction b₀ c₀ ⁻¹ • φ ⁎ (b₀∼b ,≈ c₀∼c) • pair-construction b c)
+{-
+    result : ∀ (a : A)
+      → df a ⇒ join-𝔻× (f a) ∘ (df₁ a ,→ df₂ a)
+    result a (x , γ) =
+      let
+        b₀ = π₁ (f a)
+        c₀ = π₂ (f a)
+
+        z : 𝔻 B b₀ × 𝔻 C c₀
+        z = (df₁ a ,→ df₂ a) (x , γ)
+
+        {- 
+          same notation as in 'join-𝔻×', i.e.:
+
+           ((b , b₀∼b) , (c , c₀∼c)) = z 
+        -}
+        b = ∑π₁ (π₁ z)
+        c = ∑π₁ (π₂ z)
+        b₀∼b = ∑π₂ (π₁ z)
+        c₀∼c = ∑π₂ (π₂ z)
+        --
+        
+        -- ≈ pair-construction b₀ c₀ ⁻¹ • φ ⁎ (b₀∼b ,≈ c₀∼c) • pair-construction b c  
+        in {!!}
+
+    result′ : ∀ (a : A)
+      → (split-𝔻× (f a)) ∘ (df a) ⇒ (df₁ a ,→ df₂ a)
+    result′ a (x , γ) =
+      let
+        b = π₁ (f a)
+        c = π₂ (f a)
+      in ({!!}  ,≈ {!!})
+-}
+      

@@ -25,3 +25,6 @@
 	...
 	_\times\to_ : (A -> B) -> (C -> D) -> (A \times C -> B \times D)
 	...
+
+** indication of incompleteness
+   {- ... -} at the end of a module means that the result indicated in its descritption is not yet proven

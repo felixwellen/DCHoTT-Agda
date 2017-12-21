@@ -58,15 +58,15 @@ module HomogeneousType where
     structure : homogeneous-structure-on (A → B)
     structure = record { e = e→ ; ψ = ψ→ ; is-translation-to = is-translation-to→ }
 
-    {- -}
-  
+
   record _─hom→_ {A B : U₀} (A′ : homogeneous-structure-on A) (B′ : homogeneous-structure-on B) : 𝒰 where
     open homogeneous-structure-on_
     field
       φ : A → B
       φ-respects-e : φ(e A′) ≈ e B′
       φ-respects-translations : (x y : A) → ψ B′ (φ x) $≃ (φ y) ≈ φ (ψ A′ x $≃ y)
-                                        -- tanking translations commutes with φ
+      
+      -- taking translations commutes with φ
       -- this notion of morphism is problematic, since
       -- it turned out below in the kernel construction,
       -- that the commuter should be refl on ψ (φ x) e ≈ φ (ψ x e)
