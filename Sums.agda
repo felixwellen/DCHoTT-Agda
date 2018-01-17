@@ -99,4 +99,5 @@ module Sums where
     center = (a₀ , refl)
 
     contraction : (x : ∑ (λ (a : A) → a ≈ a₀)) → x ≈ center
-    contraction (.a₀ , refl) = refl
+    contraction (_ , refl) = refl
+

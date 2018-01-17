@@ -66,6 +66,23 @@ module FiberBundle where
           (^ covering * φ) is-a-product-with-projections
             projection-to-the-fiber and (^ covering *→ φ) 
 
+    fiber-at : B → 𝒰
+    fiber-at b = fiber-of φ at b
+
+    canonical-cover′ : B → 𝒰₁
+    canonical-cover′ b = ∑ λ (F′ : 𝒰) → ∥ fiber-at b ≃ F′ ∥
+
+    canonical-cover : ∑ canonical-cover′ → B
+    canonical-cover (F′ , _) = F′
+
+  {- dependent version -}
+
+  record _is-a_-fiber-bundle′ {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where
+    field
+      all-fibers-are-merely-equivalent : ∀ (b : B) → ∥ φ b ≃ F ∥
+
+  
+
   covering-as-map : 
     ∀ {E B F : U₀} {φ : E → B} (φ-as-bundle : φ is-a F -fiber-bundle)
     → _is-a_-fiber-bundle.V φ-as-bundle → B
@@ -234,4 +251,18 @@ module FiberBundle where
              --    fiber-of φ at b ≃ F′-in-BAut
              fiber≃F′ : fiber-of φ at b ≃ F′-in-BAut
              fiber≃F′ = (transport-as-equivalence (λ (A : U₀) → A)) (as-U₀-morphism b)
-           in ∥→ (λ f → fiber≃F′ ⁻¹≃ ∘≃ f) ∥→ ∣F′≃F∣ 
+           in ∥→ (λ f → fiber≃F′ ⁻¹≃ ∘≃ f) ∥→ ∣F′≃F∣
+
+
+
+  {-
+     the last statement in the module above is also sufficient:
+  -}
+
+  
+  maps-with-merely-equivalent-are-fiber-bundles : 
+    ∀ {B E F : 𝒰} (φ : E → B) 
+    → (∀ (b : B) → ∥ F ≃ fiber-of φ at b  ∥) 
+    → φ is-a F -fiber-bundle
+  maps-with-merely-equivalent-are-fiber-bundles φ all-fibers-are-equivalent =
+    on {!!} the-pullback-along {!!} is-trivial-by {!!} and {!!}

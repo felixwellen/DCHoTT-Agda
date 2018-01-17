@@ -18,6 +18,8 @@ module Flat where
   open import EqualityAndPaths
   open import Homotopies
   open import Equivalences
+  open import Contractibility
+  open import DependentTypes
 
   data ♭ {l :{♭} Level} (A :{♭} 𝒰- l) : 𝒰- l where
     con : (a :{♭} A) → ♭ A
@@ -103,3 +105,57 @@ module Flat where
         (λ {refl → con refl}) by (λ {(con refl)  → refl})
        and-right-inverse
         (λ {refl → con refl}) by (λ {refl → refl})) 
+
+  ♭-encode-decode-is-enough :
+    ∀ {A :{♭} 𝒰} (code : ♭ A → ♭ A → 𝒰)
+    → (encode : (x y : ♭ A) → x ≈ y → code x y)
+    → (decode : (x y : ♭ A) → code x y → x ≈ y)
+    → (retract : (x y : ♭ A) → (encode x y) ∘ (decode x y) ⇒ id)
+    → (x y : ♭ A) → (decode x y) is-an-equivalence
+  ♭-encode-decode-is-enough {A} code encode decode retract x y =
+    let
+      step1 : (z : ♭ A) → (∑ (λ w → code z w)) is-contractible
+      step1 z = retracts-of-contractibles-are-contractible
+        (λ {(w , c) → (w , decode z w c)})
+        (λ {(w , γ) → (w , encode z w γ)})
+        (λ {(w , c) → (inclusion-of-the-fiber-of _ over w) ⁎ retract z w c})
+        (J-in-terms-of-contractibility′ (♭ A) z)
+
+      step2 : (z : ♭ A) → (λ {(w , c) → (w , decode z w c)}) is-an-equivalence
+      step2 z = the-map (λ {(w , c) → (w , decode z w c)}) is-an-equivalence-since-it-is-homotopic-to
+        _ by
+             maps-into-a-contractible-type-are-homotopic
+               _ _ ((J-in-terms-of-contractibility′ (♭ A) z))
+          which-is-an-equivalence-by
+          (proof-of-equivalency (two-contractible-types-are-equivalent
+            (step1 z) (J-in-terms-of-contractibility′ (♭ A) z) ))
+
+
+    in equivalence-from-equivalence-on-sums.conclusion (decode x) (step2 x) y
+
+  ♭-commutes-with-identity-types :
+    ∀ {A :{♭} 𝒰}
+    → (x y :{♭} A)
+    → ♭ (x ≈ y) ≃ con x ≈ con y 
+  ♭-commutes-with-identity-types {A} x y =
+    let
+      -- from Mike's Real-Cohesion Article, section 6
+      code : ♭ A → ♭ A → 𝒰
+      code = λ {(con z) → λ {(con w) → ♭ (z ≈ w) }}
+
+      step1 : code (con x) (con y) ≃ ♭ (x ≈ y)
+      step1 = id-as-equivalence
+
+      encode : (u v : ♭ A) → u ≈ v → code u v
+      encode u v γ = transport (λ v′ → code u v′)  γ
+             ((λ (u : ♭ A) → let♭ x := u in♭ (con refl) in-family (λ u′ → code u′ u′)) u)
+
+      decode : (u v : ♭ A) → code u v → u ≈ v
+      decode = λ {(con x) (con y) (con refl) → refl }
+
+      step2 : code (con x) (con y) ≃ (con x) ≈ (con y)
+      step2 = (decode (con x) (con y))
+        is-an-equivalence-because
+        ♭-encode-decode-is-enough code encode decode (λ {(con x′) (con y′) (con refl) → refl}) (con x) (con y)
+    in
+      step2 ∘≃ step1

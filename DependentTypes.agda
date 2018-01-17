@@ -307,19 +307,6 @@ module DependentTypes where
       and-right-inverse inverse
         by (λ ψₛ → refl))
 
-{-
-  fibered-morphisms-are-slice-homs′ :
-    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
-    → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ) ≃ Π (λ (x : X) → fiber-of φₛ at x → fiber-of φₜ at x)
-  fibered-morphisms-are-slice-homs′ φₛ φₜ =
-    let
-      inverse : Π (λ (x : _) → fiber-of φₛ at x → fiber-of φₜ at x) → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ)
-      inverse = λ f → ((λ s → ι-fiber (f (φₛ s) (s is-in-the-fiber-by refl))) , (λ s → fibers-equalize φₜ (φₛ s) (f (φₛ s) (s is-in-the-fiber-by refl))))
-    in (λ {(ψ , H) → λ x → λ {(s is-in-the-fiber-by γ) → ψ s is-in-the-fiber-by (H s • γ)}})
-      is-an-equivalence-because
-        (has-left-inverse inverse by (λ {(ψ , H) → {!!}})
-         and-right-inverse inverse by {!!})
-  -}
   
   if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic :
     ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
@@ -529,3 +516,39 @@ module DependentTypes where
       in the-map induced-map is-an-equivalence-since-it-is-homotopic-to f′ ∘ φ by
          (λ _ → refl) which-is-an-equivalence-by proof-of-equivalency (f′≃ ∘≃ φ≃)
 
+  module equivalence-from-equivalence-on-sums
+    {A : 𝒰} {P Q : A → 𝒰} (f : (x : A) → P x → Q x)
+    (map-on-sum-is-equivalence : (λ {(x , p) → (x , (f x) p)}) is-an-equivalence) where
+
+    -- if the following ψ is an equivalence, then all fₓ are
+    ψ′ : ∑ P → ∑ Q
+    ψ′ (x , p) = (x , (f x) p)
+
+    ψ : ∑ P ≃ ∑ Q
+    ψ = ψ′ is-an-equivalence-because map-on-sum-is-equivalence
+
+    □₁ : pullback-square-with-right ∑π₁
+           bottom id
+           top ψ′
+           left ∑π₁
+    □₁ = pullback-square-from-equivalence-of-maps
+      ∑π₁ ∑π₁ ψ id-as-equivalence
+      (λ {(x , p) → refl}) 
+
+    open import Fiber
+
+    conclude-equivalence-of-fibers :
+      (x : A) → P x ≃ Q x
+    conclude-equivalence-of-fibers x =
+      fiber-of-a-∑ x
+        ∘≃ pullbacks-are-fiberwise-equivalences.equivalence-at_ □₁ x
+        ∘≃ fiber-of-a-∑ x ⁻¹≃
+
+    f′ :
+      (x : A) → P x → Q x
+    f′ x = underlying-map-of (conclude-equivalence-of-fibers x)
+
+    conclusion :
+      (x : A) → (f x) is-an-equivalence
+    conclusion x = the-map (f x) is-an-equivalence-since-it-is-homotopic-to (f′ x)
+      by (λ a → refl) which-is-an-equivalence-by (proof-of-equivalency (conclude-equivalence-of-fibers x))

@@ -68,39 +68,26 @@ module Contractibility where
            contraction a • η 
           ≈∎)
 
+  maps-into-a-contractible-type-are-homotopic :
+    ∀ {A B : 𝒰} (f g : A → B)
+    → B is-contractible → f ⇒ g
+  maps-into-a-contractible-type-are-homotopic f g (contracts-to center by contraction) x =
+    contraction (f x) ⁻¹ • contraction (g x)
 
+  retracts-of-contractibles-are-contractible :
+    ∀ {R A : 𝒰} (i : R → A) (r : A → R)
+    → r ∘ i ⇒ id
+    → A is-contractible → R is-contractible
+  retracts-of-contractibles-are-contractible i r H (contracts-to center by contraction) =
+    contracts-to r center by (λ x → r ⁎ contraction (i x) • H x)
+    
 
+  J-in-terms-of-contractibility :
+    ∀ (A : 𝒰) (x₀ : A)
+    → ∑ (λ (x : A) → x ≈ x₀) is-contractible
+  J-in-terms-of-contractibility A x₀ = contracts-to (x₀ , refl) by (λ {(_ , refl) → refl})
 
-
-{-
-  -- the following is a dead end
-  -- the aim was to prove '(A → A) ≃ A' implies 'A is contractible'
-  -- which is not true in general
-  -- (a counterexample may be found in effective topoi)
-  module cantor's-diagonal-argument {A : U₀} (φ : (A → A) ≃ A) where
-    -- below, if find-distinct is a function with
-    --  'find-distinct(a) ≠ a'
-    -- then
-    --  'cantor's-diagonal φ'
-    -- is a function not in the image of φ⁻¹
-    cantor's-diagonal :
-      ∀ (find-distinct : A → A)
-      → (A → A)
-    cantor's-diagonal find-distinct a =
-      find-distinct ((φ ⁻¹≃ $≃ a) a)
-  
-    -- we use this function constructivly to
-    -- show, given an equivalence φ, that
-    -- all functions f : A → A have a fixpoint
-    fixpoint :
-      (f : A → A) → A
-    fixpoint f = φ $≃ (cantor's-diagonal f)
---    _has-a-fixpoint :
---      ∀ (f : A → A) → (fixpoint f) ≈ f (fixpoint f)
---    f has-a-fixpoint = {!!}
-
-    a₀ = φ $≃ id
-    a₁ = φ $≃ (λ a → a₀)
-
--}
-
+  J-in-terms-of-contractibility′ :
+    ∀ (A : 𝒰) (x₀ : A)
+    → ∑ (λ (x : A) → x₀ ≈ x) is-contractible
+  J-in-terms-of-contractibility′ A x₀ = contracts-to (x₀ , refl) by (λ {(_ , refl) → refl})

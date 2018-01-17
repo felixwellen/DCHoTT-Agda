@@ -6,7 +6,8 @@ module EquivalenceCharacterization where
   open import Homotopies
   open import Equivalences
   open import Contractibility
-
+  open import PullbackSquare
+  
   module contractible-fibers-characterize-equivalences {A B : U₀} (f : A → B) where
     open import Fiber
     open _is-contractible
@@ -26,7 +27,6 @@ module EquivalenceCharacterization where
                        (center (proof-of-contractibility b))
                        ⁻¹)
 
-    open import PullbackSquare
 
     fiber-square : (b : B) → _
     fiber-square b = fiber-square-for f at b

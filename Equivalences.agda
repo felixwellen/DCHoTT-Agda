@@ -432,3 +432,5 @@ module Equivalences where
   _≃⟨_⟩_ : ∀ {i} (A : U i) {B C : U i}
          → A ≃ B → B ≃ C → A ≃ C
   A ≃⟨ reason ⟩ e′ = e′ ∘≃ reason  
+
+
