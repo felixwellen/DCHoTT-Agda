@@ -46,6 +46,14 @@ module PropositionalTruncation where
       → (A → B) → ∥ A ∥ → ∥ B ∥
     ∥→ f ∥→ = ∥-∥-recursion _ (∥-∥-is-truncation _) (λ a → ∣ (f a) ∣)
 
+    open import Equivalences
+    open import Univalence
+    
+    ∥≃_∥≃ :
+      ∀ {i} {A : U i} {B : U i}
+      → (A ≃ B) → ∥ A ∥ ≃ ∥ B ∥
+    ∥≃ f ∥≃ = U-transport (∥_∥ ⁎ (univalence f))
+    
     {-
     fill in the following, if needed
     postulate

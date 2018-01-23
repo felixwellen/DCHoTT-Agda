@@ -59,6 +59,8 @@ module Fiber where
                  (has-left-inverse (λ {(a , γ) → a is-in-the-fiber-by γ}) by (λ {(a is-in-the-fiber-by γ) → refl})
                   and-right-inverse (λ { (a , γ) → a is-in-the-fiber-by γ }) by (λ {(a , γ) → refl}))
 
+
+
   fiber-of-a-∑ :
     ∀ {i} {j} {A : U i} {P : A → U j}
     → (a : A) → fiber-of ∑π₁-from P at a ≃ P a
@@ -95,4 +97,9 @@ module Fiber where
               ((a′ , pₐ) is-in-the-fiber-by γ)
              ≈∎}) 
         and-right-inverse inverse by (λ _ → refl))
+
+  fiber-of-π₁-is-second-factor :
+    ∀ {A B : 𝒰}
+    → (x : A) → fiber-of π₁ {B = B} at x ≃ B
+  fiber-of-π₁-is-second-factor x = fiber-of-a-∑ x
 

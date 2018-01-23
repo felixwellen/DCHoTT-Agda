@@ -217,7 +217,7 @@ module Manifolds where
                 ⁻¹⇒)
 
          
-         T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a 𝔻ₑ -fiber-bundle
+         T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a′ 𝔻ₑ -fiber-bundle′
          T∞M-is-a-fiber-bundle =
            let
              v́-as-surjection = (underlying-map-of w) is-1-epi-by M-is-a-manifold

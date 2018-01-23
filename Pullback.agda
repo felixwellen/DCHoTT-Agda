@@ -175,7 +175,7 @@ module Pullback where
 
   induced-map-to-pullback : 
     ∀ {i} {Z A B C : U i} {f : A → C} {g : B → C}
-    → (z₁ : Z → A) → (z₂ : Z → B) → (γ : f ∘ z₁ ∼ g ∘ z₂)
+    → (z₁ : Z → A) → (z₂ : Z → B) → (γ : f ∘ z₁ ⇒ g ∘ z₂)
     → (Z → pullback f g)
   induced-map-to-pullback z₁ z₂ γ z =
     (z₁ z) and (z₂ z) are-in-the-same-fiber-by γ z 

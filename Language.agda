@@ -1,23 +1,10 @@
 {-# OPTIONS --without-K #-}
 
-{-
-Renaming candidates
-U => Type
-V => U
-G => V
-One => Point/∗
-above-is => symbole ( , ) oder so
-Equivalences als Half adjoint implementieren
-unit/counit richtig machen
-p-homotopy => the homotopy of the pullback of _ and _ (oder so)
-
--}
-
-
 module Language where 
   open import Basics
   open import EqualityAndPaths
 
+  
   -- language constructs indicating typing
   the-map : ∀ {A B : U₀} → (A → B) → (A → B)
   the-map f = f

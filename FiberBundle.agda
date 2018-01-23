@@ -8,15 +8,38 @@ module FiberBundle where
   open import Homotopies
   open import Equivalences
   open import Fiber
-  open import Im
-  open import FormalDiskBundle
-  open import EtaleMaps
   open import Language
   open import OneImage
   open import DependentTypes
   open import InfinityGroups
 
 
+  {- 
+    we start with the most natural definition
+    in a type theoretic setting 
+  
+    everything else in this file, 
+    is about linking this definition 
+    with definitions looking more like
+    what is common in pure mathematics
+    
+  -}
+
+  record _is-a_-fiber-bundle {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where
+    field
+      all-fibers-are-merely-equivalent : ∀ (b : B) → ∥ φ b ≃ F ∥
+
+    canonical-cover′ : B → 𝒰
+    canonical-cover′ b = φ b ≃ F
+
+    canonical-cover : ∑ canonical-cover′ → B
+    canonical-cover (F′ , _) = F′
+
+  record _is-a⁗_-fiber-bundle⁗ {E B : 𝒰} (p : E → B) (F : 𝒰) : 𝒰₁ where
+    field
+      χ : B → BAut F
+      classyfies : equivalence-of (λ b → fiber-of p at b) and (universal-family-over-BAut′ F) over χ
+      
   -- product property expressed by pullback square
   _is-a-product-with-projections_and_ :
     ∀ {A B : U₀} (Z : U₀) (z₁ : Z → A) (z₂ : Z → B)
@@ -45,7 +68,9 @@ module FiberBundle where
 
 
   {- 
-    a fiber bundle φ : E → B is required locally trivial, 
+    A more standard-mathematical way:
+
+    a fiber bundle φ : E → B is required to be locally trivial, 
     which might be witnessed by a pullback square like this:
 
     V×F ───→ E
@@ -56,7 +81,19 @@ module FiberBundle where
      
   -}
 
-  record _is-a_-fiber-bundle {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
+  record _is-a‴_-fiber-bundle‴ {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
+    field
+      V : U₀
+      v : V ↠ B
+      v′ : V × F → E
+      □ : pullback-square-with-right φ
+            bottom (underlying-map-of-the-1-epimorphism v)
+            top v′
+            left π₁
+
+  {- a variant -}
+
+  record _is-a′_-fiber-bundle′ {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
     constructor on_the-pullback-along_is-trivial-by_and_
     field
       V : U₀
@@ -66,31 +103,17 @@ module FiberBundle where
           (^ covering * φ) is-a-product-with-projections
             projection-to-the-fiber and (^ covering *→ φ) 
 
-    fiber-at : B → 𝒰
-    fiber-at b = fiber-of φ at b
-
-    canonical-cover′ : B → 𝒰₁
-    canonical-cover′ b = ∑ λ (F′ : 𝒰) → ∥ fiber-at b ≃ F′ ∥
-
-    canonical-cover : ∑ canonical-cover′ → B
-    canonical-cover (F′ , _) = F′
-
-  {- dependent version -}
-
-  record _is-a_-fiber-bundle′ {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where
-    field
-      all-fibers-are-merely-equivalent : ∀ (b : B) → ∥ φ b ≃ F ∥
 
   
 
   covering-as-map : 
-    ∀ {E B F : U₀} {φ : E → B} (φ-as-bundle : φ is-a F -fiber-bundle)
-    → _is-a_-fiber-bundle.V φ-as-bundle → B
-  covering-as-map φ-as-bundle = ^ (_is-a_-fiber-bundle.covering φ-as-bundle)
+    ∀ {E B F : U₀} {φ : E → B} (φ-as-bundle : φ is-a′ F -fiber-bundle′)
+    → _is-a′_-fiber-bundle′.V φ-as-bundle → B
+  covering-as-map φ-as-bundle = ^ (_is-a′_-fiber-bundle′.covering φ-as-bundle)
 
   -- project to the square drawn in the comment above
   covering-pullback-square :
-    ∀ {E B F : U₀} {φ : E → B} (φ-as-bundle : φ is-a F -fiber-bundle)
+    ∀ {E B F : U₀} {φ : E → B} (φ-as-bundle : φ is-a′ F -fiber-bundle′)
     → pullback-square-with-right φ
        bottom (covering-as-map φ-as-bundle)
        top _
@@ -99,8 +122,137 @@ module FiberBundle where
     complete-to-pullback-square φ (covering-as-map φ-as-bundle) 
 
 
-  module all-fiber-bundle-are-associated
-          {E B F : U₀} (φ : E → B) (φ-is-a-fiber-bundle : φ is-a F -fiber-bundle) where
+  {-
+    a dependent version of the above
+  -}
+
+  record _is-a″_-fiber-bundle″ {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where 
+    field
+      V : U₀
+      v : V ↠ B
+      pullback-trivializes : (x : V) → φ(v $↠ x) ≃ F
+
+
+  module logical-equivalences-between-the-four-definitions {B F : 𝒰} where
+  {-
+    def′-to-def‴ : ∀ {E : 𝒰} (p : E → B)
+      → p is-a′ F -fiber-bundle′
+      → p is-a‴ F -fiber-bundle‴
+    def′-to-def‴ p
+      (on V the-pullback-along v is-trivial-by projection-to-the-fiber and the-pullback-is-a-product) =
+      let
+        open pullbacks-are-fiberwise-equivalences
+          (covering-pullback-square (on V the-pullback-along v is-trivial-by projection-to-the-fiber and the-pullback-is-a-product))
+      in {!!}
+    -}
+
+    def‴-to-def″ : ∀ {E : 𝒰} (p : E → B)
+      → p is-a‴ F -fiber-bundle‴
+      → (λ b → fiber-of p at b) is-a″ F -fiber-bundle″
+    def‴-to-def″ p record { V = V ; v = v ; v′ = v′ ; □ = □ } =
+      let
+        open pullbacks-are-fiberwise-equivalences □
+      in record
+         {
+                V = V ;
+                v = v ;
+                pullback-trivializes = λ x → fiber-of-π₁-is-second-factor x ∘≃ (equivalence-at x) ⁻¹≃
+         }
+
+    def″-to-def‴ : ∀ (φ : B → 𝒰)
+      → φ is-a″ F -fiber-bundle″
+      → (∑π₁-from φ) is-a‴ F -fiber-bundle‴
+    def″-to-def‴ φ
+      record { V = V ; v = v ; pullback-trivializes = pullback-trivializes } =
+      let
+        as-fiberwise-morphism : morphism-of-dependent-types _ _ (λ _ → F) φ
+        as-fiberwise-morphism =
+          record
+          {
+            base-change = v ↠→  ;
+            morphism-of-fibers = λ x → (pullback-trivializes x ⁻¹≃) ≃→
+          }
+        open fiberwise-equivalences-are-pullbacks
+          as-fiberwise-morphism
+          (λ x → proof-of-equivalency (pullback-trivializes x ⁻¹≃))
+      in record { V = V ; v = v ; v′ = glued-morphism ; □ = fiberwise-equivalences-are-pullbacks }
+
+
+    def″-to-def :
+      ∀ (φ : B → 𝒰)
+      → φ is-a″ F -fiber-bundle″
+      → φ is-a F -fiber-bundle
+    def″-to-def φ
+      record { V = V ; v = v ; pullback-trivializes = pullback-trivializes } =
+      let
+        step1 : (x : B) → (y : fiber-of (v ↠→) at x) → φ x ≃ F
+        step1 x = λ {(y is-in-the-fiber-by γ) →
+                     pullback-trivializes y ∘≃ transport-as-equivalence φ γ ⁻¹≃}
+      in record
+        {
+          all-fibers-are-merely-equivalent =
+          λ x → ∥→ step1 x ∥→ ((proof-that v is-1-epi) x)
+        }
+
+
+    def-to-def″ :
+      ∀ (φ : B → 𝒰)
+      → φ is-a F -fiber-bundle
+      → φ is-a″ F -fiber-bundle″
+    def-to-def″ φ
+      φ-is-a-fiber-bundle =
+      let
+        open _is-a_-fiber-bundle φ-is-a-fiber-bundle
+      in record
+         {
+           V = _ ;
+           v = canonical-cover is-1-epi-by
+             (λ b →
+               ∥≃ fiber-of-a-∑ {P = canonical-cover′} b ∥≃ ⁻¹≃
+                 $≃ (all-fibers-are-merely-equivalent b) ) ;
+           pullback-trivializes = ∑π₂
+         }
+
+    open import Univalence
+    open import Sums
+
+    private
+      specialize-image-to-BAut : ∀ (φ : B → 𝒰)
+        → (x : B) → ∥ (φ x ≃ F) ∥ → the-1-image-of (λ ∗ → F) contains (φ x)
+      specialize-image-to-BAut φ x = ∥→ (λ e → (∗ , univalence (e ⁻¹≃))) ∥→
+      specialize-image-to-BAut′ : ∀ (φ : B → 𝒰)
+        → (x : B) → the-1-image-of (λ ∗ → F) contains (φ x) → ∥ (φ x ≃ F) ∥ 
+      specialize-image-to-BAut′ φ x = ∥→ (λ {(∗ , p) → U-transport p ⁻¹≃}) ∥→
+
+    def-to-def⁗ :
+      ∀ (φ : B → 𝒰)
+      → φ is-a F -fiber-bundle
+      → (∑π₁-from φ) is-a⁗ F -fiber-bundle⁗
+    def-to-def⁗ φ
+      record { all-fibers-are-merely-equivalent = all-fibers-are-merely-equivalent } =
+      record
+      {
+        χ = λ x → ((φ x) , specialize-image-to-BAut φ x (all-fibers-are-merely-equivalent x)) ;
+        classyfies = λ x → fiber-of-a-∑ x
+      }
+
+    def⁗-to-def :
+      ∀ {E : 𝒰} (p : E → B)
+      → p is-a⁗ F -fiber-bundle⁗
+      → (λ x → fiber-of p at x) is-a F -fiber-bundle
+    def⁗-to-def p
+      record { χ = χ ; classyfies = classyfies } =
+      record
+      {
+        all-fibers-are-merely-equivalent = λ b →
+        specialize-image-to-BAut′ (λ x → fiber-of p at x) b
+          (U-transport ((λ z → the-1-image-of _ contains z) ⁎ univalence (classyfies b) ) ⁻¹≃ $≃ (∑π₂ (χ b)))
+      }
+
+
+  -- obsolete proof, soon to be replaced
+  module all-fiber-bundle-are-associated 
+          {E B F : U₀} (φ : E → B) (φ-is-a-fiber-bundle : φ is-a′ F -fiber-bundle′) where
          
          {-
 
@@ -114,7 +266,7 @@ module FiberBundle where
          
          -}
 
-         open _is-a_-fiber-bundle φ-is-a-fiber-bundle
+         open _is-a′_-fiber-bundle′ φ-is-a-fiber-bundle
 
          v = covering-as-map φ-is-a-fiber-bundle
          v*φ = v *→ φ 
@@ -259,10 +411,11 @@ module FiberBundle where
      the last statement in the module above is also sufficient:
   -}
 
-  
+  {-
   maps-with-merely-equivalent-are-fiber-bundles : 
     ∀ {B E F : 𝒰} (φ : E → B) 
     → (∀ (b : B) → ∥ F ≃ fiber-of φ at b  ∥) 
-    → φ is-a F -fiber-bundle
+    → φ is-a′ F -fiber-bundle′
   maps-with-merely-equivalent-are-fiber-bundles φ all-fibers-are-equivalent =
     on {!!} the-pullback-along {!!} is-trivial-by {!!} and {!!}
+  -}

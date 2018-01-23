@@ -15,17 +15,20 @@ module DependentTypes where
 
   
   record morphism-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
-    constructor over_there-is-the-morphism_
     field 
       base-change : A′ → A
       morphism-of-fibers : (a′ : A′) → (E′(a′) → E(base-change a′))
 
   record equivalence-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
-    constructor over_there-is-the-equivalence_
     field 
       base-change : A′ ≃ A
       morphism-of-fibers : (a′ : A′) → (E′(a′) ≃ E(base-change $≃ a′))
 
+
+  equivalence-of_and_over_ : ∀ {i} {A′ : 𝒰} {A : 𝒰- i} (E′ : A′ → 𝒰) (E : A → 𝒰) (f : A′ → A) → 𝒰
+  equivalence-of E′ and E over f = (x : _) → E′(x) ≃ E(f x)
+  
+      
 
   _→χ_ :
     ∀ {A′ A : U₀}
@@ -43,22 +46,22 @@ module DependentTypes where
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (A′ → A)
-  base-change-of (over base-change there-is-the-morphism _) = 
-    base-change
+  base-change-of record {base-change = φ ; morphism-of-fibers = _} = 
+    φ
 
   _on-the-fiber-over_ :
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (a′ : A′)
     → (E′(a′) → E((base-change-of F) a′))
-  (over _ there-is-the-morphism f) on-the-fiber-over a′ = f a′
+  record {base-change = _ ; morphism-of-fibers = f} on-the-fiber-over a′ = f a′
 
   _is-an-equivalence-on-all-fibers : 
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → U₀
-  (over f there-is-the-morphism e) is-an-equivalence-on-all-fibers = 
-    ∀ (a′ : _) → e(a′) is-an-equivalence
+  record {base-change = φ ; morphism-of-fibers = f} is-an-equivalence-on-all-fibers = 
+    ∀ (a′ : _) → f(a′) is-an-equivalence
 
   dependent-type_as-map :
     ∀ {A : U₀} 
@@ -70,7 +73,7 @@ module DependentTypes where
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (∑ E′ → ∑ E)
-  the-map-on-total-spaces-induced-by (over φ there-is-the-morphism f) = 
+  the-map-on-total-spaces-induced-by record {base-change = φ ; morphism-of-fibers = f} = 
     λ {(a′ , e′) → ( φ(a′), (f a′)(e′) ) }
 
   dependent-replacement :
@@ -123,9 +126,6 @@ module DependentTypes where
     → (∑ P → U₀)
   pullback-of P along-dependent-tpye E (a , pₐ) = E a
 
-  -- ∑ formal-disk-at a = ∑ formal-disk-at (a , pₐ) = ∑ (ι(a′ , pₐ′) ≈ ι(a , pₐ))
-  -- pullback = fibration of products bzw. 
-  -- (type of pullbacks over base A) = (A -> type of products)
 
   module pullbacks-are-fiberwise-equivalences 
         {Z A B C : U₀}
@@ -193,6 +193,8 @@ module DependentTypes where
 
       g-on-∑ : ∑ E′ → ∑ E
       g-on-∑ (a′ , e′) = (f a′ , g a′ e′)
+
+      glued-morphism = g-on-∑
 
       p′ : ∑ E′ → A′
       p′ = ∑π₁
