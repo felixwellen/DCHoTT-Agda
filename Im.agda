@@ -36,12 +36,15 @@ module Im where
   _is-coreduced : ∀ {i} → U i → U i
   A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
 
+  ℑ𝒰 : 𝒰₁
+  ℑ𝒰 = ∑ λ (A : 𝒰) → A is-coreduced
+
   postulate
     -- ℑ is idempotent
     ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
 
     ℑ-induction :  
-      ∀ {A : U₀} {B : ℑ A → U₀}
+      ∀ {i} {A : 𝒰} {B : ℑ A → 𝒰- i}
       → (∀ (a : ℑ A) → B(a) is-coreduced)
       → ((a : A) → B(ℑ-unit a))
       → ((a : ℑ A) → B(a))
@@ -55,14 +58,19 @@ module Im where
       ∀ (B : U₀) → (B is-coreduced) → (b b′ : B) 
       → (b ≈ b′) is-coreduced
 
-  
+
+    {- this is a way to state left exactness of ℑ 
+       and for now, it is the only way we need left exactness -}
+
+    ℑ𝒰-is-coreduced : ℑ𝒰 is-coreduced
+
   -- End Axioms
 
 
   ℑ-recursion : 
-    ∀ {A B : U₀} 
+    ∀ {i} {A : U₀} {B : 𝒰- i} 
     → B is-coreduced 
-    → (A → B) 
+    → (f : A → B) 
     → (ℑ A → B)
   ℑ-recursion coreducedness f = ℑ-induction (λ a → coreducedness) (λ a → f a)
 
@@ -597,6 +605,102 @@ module Im where
                   (ℑ A) (ℑ-is-coreduced A) (λ _ → ℑ B) (λ _ → ℑ-is-coreduced B)
 
 
+  module ℑ-preserves-products (A B : 𝒰) where
+    curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
+    curry f = λ a → (λ b → f (a , b))
+    
+    uncurry : ∀ {A B C : U₀} → (A → (B → C)) → (A × B → C)
+    uncurry f (a , b) = f a b
+
+    ψ : A → (B → ℑ(A × B))
+    ψ = curry (ℑ-unit-at (A × B))
+    
+    ℑB→ℑ-A×B-is-coreduced : (ℑ B → ℑ (A × B)) is-coreduced
+    ℑB→ℑ-A×B-is-coreduced =
+      Π-of-coreduced-types-is-coreduced.coreducedness
+        (λ _ → ℑ (A × B)) (λ _ → ℑ-is-coreduced _)
+
+    ψ′ : A → (ℑ B → ℑ(A × B))
+    ψ′ x = ℑ-recursion (ℑ-is-coreduced (A × B)) (ψ x)
+
+    ψ′′ : ℑ A → (ℑ B → ℑ(A × B))
+    ψ′′ = ℑ-recursion
+           (ℑB→ℑ-A×B-is-coreduced)
+           ψ′
+
+    φ : ℑ A × ℑ B → ℑ(A × B)
+    φ = uncurry ψ′′
+
+    φ⁻¹ : ℑ(A × B) → ℑ A × ℑ B
+    φ⁻¹ = ℑ-recursion (×-coreduced _ _) (ι ×→ ι)
+    
+    pair-construction :
+      ∀ (x : A) (y : B)
+      → φ (ℑ-unit x , ℑ-unit y) ≈ ℑ-unit (x , y) 
+    pair-construction x y =
+       φ (ℑ-unit x , ℑ-unit y)
+      ≈⟨ (λ f → f (ℑ-unit y)) ⁎
+           ℑ-compute-recursion ℑB→ℑ-A×B-is-coreduced ψ′ x ⟩
+       ψ′ x (ℑ-unit y)
+      ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced (A × B)) (ψ x) y ⟩
+       ψ x y
+      ≈⟨ refl ⟩
+       ℑ-unit (x , y)
+      ≈∎
+  
+    φ⁻¹-commutes-with-π₁ :
+      ∀ (x : A × B)
+      → (π₁ (φ⁻¹ (ι x)) ≈ ι (π₁ x))
+    φ⁻¹-commutes-with-π₁ (a , b) =
+       π₁ ⁎ ℑ-compute-recursion (×-coreduced _ _) (ι ×→ ι) (a , b)
+
+    φ⁻¹-commutes-with-π₂ :
+      ∀ (x : A × B)
+      → (π₂ (φ⁻¹ (ι x)) ≈ ι (π₂ x))
+    φ⁻¹-commutes-with-π₂ (a , b) =
+      π₂ ⁎ ℑ-compute-recursion (×-coreduced _ _) (ι ×→ ι) (a , b)
+{-
+    ℑ×-induction : 
+        (P : (ℑ (A × B)) → 𝒰)
+      → ((x : ℑ (A × B)) → (P x) is-coreduced)        
+      → ((a : A) → (b : B) → P(φ (ι a , ι b)))
+      → (x : ℑ (A × B)) → P x
+    ℑ×-induction P P-is-coreduced pf = ℑ-induction P-is-coreduced
+      λ {(a , b) → transport P (pair-construction a b) (pf a b)}
+
+    ℑ×-induction-compute : 
+        (P : (ℑ (A × B)) → 𝒰)
+      → (P-is-coreduced : (x : ℑ (A × B)) → (P x) is-coreduced)        
+      → (pf : (a : A) → (b : B) → P(φ (ι a , ι b)))
+      → (a : A) (b : B) → ℑ×-induction P P-is-coreduced pf (φ (ι a , ι b)) ≈ pf a b
+    ℑ×-induction-compute P P-is-coreduced pf a b =
+      {!ℑ-compute-induction P-is-coreduced (λ {(a , b) → transport P (pair-construction a b) (pf a b)}) (a , b)!}
+
+    ℑ×-induction′ : 
+        (P : ℑ (A × B) → 𝒰)
+      → ((x : ℑ (A × B)) → (P x) is-coreduced)
+      → ((a : A) (b : B) → P(ι (a , b)))
+      → (x : ℑ (A × B)) → P x
+    ℑ×-induction′ P P-is-coreduced pf = ℑ-induction P-is-coreduced λ {(a , b) → pf a b}
+-}
+
+    {- ... -}
+
+  {- this should work essentially the same way as 
+     for ×, with the only difference, that coreducedness
+     of ℑ𝒰 and therefore left exactness is needed once in 
+     the beginning of the contruction -}
+  module ℑ-commutes-with-∑ {A : 𝒰} (P : A → 𝒰) where
+    ℑA = ℑ A
+
+    ℑP : ℑA → ℑ𝒰
+    ℑP = ℑ-recursion ℑ𝒰-is-coreduced λ (a : A) → (ℑ (P a) , ℑ-is-coreduced (P a))
+
+    {- -}
+
+
+  {- similar results for homogeneous spaces 
+     can now be found in ImHomogeneous.agda -}
   module ℑ-preserves-left-invertible-H-spaces
          (X : U₀)
          (left-invertible-structure-on-X : left-invertible-structure-on X)
@@ -608,28 +712,9 @@ module Im where
     ℑX×ℑX-coreduced : (ℑX × ℑX) is-coreduced
     ℑX×ℑX-coreduced = ×-coreduced X X
 
-    curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
-    curry f = λ a → (λ b → f (a , b))
-    
-    ψ : X → (X → ℑ(X × X))
-    ψ = curry (ℑ-unit-at (X × X))
-
-    ℑX→ℑ-X×X-is-coreduced : (ℑ X → ℑ (X × X)) is-coreduced
-    ℑX→ℑ-X×X-is-coreduced = Π-of-coreduced-types-is-coreduced.coreducedness (λ _ → ℑ (X × X)) (λ _ → ℑ-is-coreduced _)
-    ψ′ : X → (ℑX → ℑ(X × X))
-    ψ′ x = ℑ-recursion (ℑ-is-coreduced (X × X)) (ψ x)
-
-    ψ′′ : ℑX → (ℑX → ℑ(X × X))
-    ψ′′ = ℑ-recursion
-           (ℑX→ℑ-X×X-is-coreduced)
-           ψ′
-    
-    uncurry : ∀ {A B C : U₀} → (A → (B → C)) → (A × B → C)
-    uncurry f (a , b) = f a b
-
     φ : ℑX × ℑX → ℑ(X × X)
-    φ = uncurry ψ′′
-
+    φ = ℑ-preserves-products.φ X X
+    
     -- operations of the image structure
     ℑμ : ℑX × ℑX → ℑX
     ℑμ = ℑ→ μ ∘ φ 
@@ -661,17 +746,8 @@ module Im where
     ℑ-commutes-with-pair-construction :
       ∀ (x x′ : X)
       → φ (ℑ-unit x , ℑ-unit x′) ≈ ℑ-unit (x , x′) 
-    ℑ-commutes-with-pair-construction x x′ =
-       φ (ℑ-unit x , ℑ-unit x′)
-      ≈⟨ (λ f → f (ℑ-unit x′)) ⁎
-           ℑ-compute-recursion ℑX→ℑ-X×X-is-coreduced ψ′ x ⟩
-       ψ′ x (ℑ-unit x′)
-      ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced (X × X)) (ψ x) x′ ⟩
-       ψ x x′
-      ≈⟨ refl ⟩
-       ℑ-unit (x , x′)
-      ≈∎
-
+    ℑ-commutes-with-pair-construction = ℑ-preserves-products.pair-construction X X
+    
     ℑright-neutral′ : ∀ (x : X) → ℑμ (ℑ-unit x , ℑe) ≈ ℑ-unit x
     ℑright-neutral′ x =
                      ℑμ (ℑ-unit x , ℑe)

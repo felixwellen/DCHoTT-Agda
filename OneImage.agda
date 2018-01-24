@@ -1,7 +1,8 @@
 {-# OPTIONS --without-K #-}
 
 module OneImage where 
-  open import Basics 
+  open import Basics
+  open import Language
   open import EqualityAndPaths
   open import Homotopies
   open import Fiber
@@ -11,24 +12,36 @@ module OneImage where
   open import PropositionalTruncation
   open import Univalence
 
-  -- the following is called 'surjective' in the HoTT-Book
+  {-
+    the following is called 'surjective' in the HoTT-Book 
+    (at least if A and B are Sets)
+  -}
+  
   _is-1-epi : 
     ∀ {i} {j} {A : U i} {B : U j}
     → (A → B) → U (i ⊔ j)
-  _is-1-epi {_} {_} {A} {B} f = Π (λ (b : B) → ∥ fiber-of f at b ∥)
+  _is-1-epi {_} {_} {A} {B} f = (b : B) → ∥ fiber-of f at b ∥
 
-  record _↠_ (A B : U₀) : U₁ where
+  record _↠_ {i} {j} (A : U i) (B : U j) : U (i ⊔ j) where
     constructor _is-1-epi-by_
     field
       morphism : A → B
       proof-that-it-is-1-epi : morphism is-1-epi
 
   underlying-map-of-the-1-epimorphism : 
-    ∀ {A B : U₀}
+    ∀ {i} {j} {A : U i} {B : U j}
     → (f : A ↠ B) → (A → B)
   underlying-map-of-the-1-epimorphism
     (morphism is-1-epi-by proof-that-it-is-1-epi) = morphism
 
+  _$↠_ : ∀ {A B : 𝒰}
+    → (f : A ↠ B) → A → B
+  f $↠ a = (underlying-map-of-the-1-epimorphism f) a
+
+  _↠→ : ∀ {A B : 𝒰}
+    → (f : A ↠ B) → (A → B)
+  f ↠→ = λ a → f $↠ a
+  
   proof-that_is-1-epi :
     ∀ {A B : U₀}
     → (f : A ↠ B) → (underlying-map-of-the-1-epimorphism f) is-1-epi
@@ -142,14 +155,6 @@ module OneImage where
       
     in ι-fiber ⁎ fa≈ga
 
-{-
-  compatibility :
-    ∀ {A B : U₀} 
-    → (f : A → B)
-    → f is-1-mono → f is-1-mono′
-  compatibility f f-is-1-mono b (a is-in-the-fiber-by γ) (a′ is-in-the-fiber-by η) = {!f-is-1-mono a a′ (γ • η ⁻¹)!}
--}  
-
   
 
   a-1-monoism-factoring-over-the-point-is-trivial :
@@ -184,6 +189,7 @@ module OneImage where
          (m-is-1-mono : m is-1-mono) (e-is-1-epi : e is-1-epi)
          (H : m ∘ f ⇒ g ∘ e)
          where
+         
     {- idea: take a 'b : B' and map it to x in the 
              propositional truncation of the fiber 
              over b, given by the assumption that 
@@ -191,6 +197,7 @@ module OneImage where
              g(b), which is possible because m is 
              1-mono.
     -}
+    
     map-to-the-fiber : (b : B) → fiber-of e at b → fiber-of m at g(b)
     map-to-the-fiber b = λ {(a is-in-the-fiber-by γ) → f(a) is-in-the-fiber-by (H a • g ⁎ γ)}
     induced-map-on-the-truncated-fiber : (b : B) → ∥ fiber-of e at b ∥ → fiber-of m at g(b)
@@ -216,11 +223,3 @@ module OneImage where
     lower-triangle : m ∘ lift ⇒ g
     lower-triangle b = as-equality-in-the-codomain 
                        (induced-map-on-the-truncated-fiber b (e-is-1-epi b))
-
-{-
-    lifts-are-unique :
-      ∀ (lift′ : B → X)
-      → f ⇒ lift′ ∘ e → m ∘ lift′ ⇒ g
-      → lift′ ⇒ lift
-    lifts-are-unique lift′ H1 H2 b = {!!}
--}

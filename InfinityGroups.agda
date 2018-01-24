@@ -27,6 +27,14 @@ module InfinityGroups where
   ι-BAut-is-1-mono : ∀ {A : U₀} → (ι-BAut A) is-1-mono
   ι-BAut-is-1-mono {A} = ι-im₁-is-1-mono (λ ∗₃ → A)
 
+  universal-family-over-BAut′_ :
+    (F : 𝒰) → (BAut F → 𝒰)
+  (universal-family-over-BAut′ F) (F′ , p) = F′
+
+  universal-family-over-BAut_ :
+    (F : 𝒰) → 𝒰₁
+  universal-family-over-BAut F = ∑ (universal-family-over-BAut′ F)
+  
   -- the 'unit', i.e. 'refl {e-BAut A}' is the unit of 'Aut A'
   e-BAut : (A : U₀) → BAut A
   e-BAut A = (A , ∣ (∗ , refl) ∣ )

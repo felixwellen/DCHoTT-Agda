@@ -43,6 +43,10 @@ module Equivalences where
   underlying-map-of : ∀ {i} {A B : U i} 
                       → A ≃ B → (A → B)
   underlying-map-of f = _≃_.the-equivalence f
+
+  _≃→ : ∀ {i} {A B : U i} 
+        → A ≃ B → (A → B)
+  f ≃→ = underlying-map-of f
   
   left-inverse-of-the-equivalence : 
     ∀ {i} {A B : U i} 
@@ -432,3 +436,5 @@ module Equivalences where
   _≃⟨_⟩_ : ∀ {i} (A : U i) {B C : U i}
          → A ≃ B → B ≃ C → A ≃ C
   A ≃⟨ reason ⟩ e′ = e′ ∘≃ reason  
+
+

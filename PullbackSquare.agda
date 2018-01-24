@@ -31,7 +31,7 @@ module PullbackSquare where
     constructor the-square-commuting-by_and-inducing-an-equivalence-by_
     field
       γ : f ∘ z₁ ⇒ g ∘ z₂
-      proof : (induced-map-to-pullback {_} {_} {_} {_} {_} {f} {g}  z₁ z₂ γ) is-an-equivalence
+      proof : (induced-map-to-pullback {f = f} {g = g}  z₁ z₂ γ) is-an-equivalence
 
   record is-a-pullback-square {i} {Z A B C : U i} 
     (f : A → C)  (g : B → C) 

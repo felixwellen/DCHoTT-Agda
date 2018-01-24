@@ -154,6 +154,11 @@ module EqualityAndPaths where
                       → (γ : a ≈ a′) → (η : b ≈ b′)
                       → (a , b) ≈ (a′ , b′)
   ×-create-equality refl refl = refl
+
+  _,≈_ : ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+                      → (γ : a ≈ a′) → (η : b ≈ b′)
+                      → (a , b) ≈ (a′ , b′)
+  γ ,≈ η = ×-create-equality γ η
   
   ×-uniqueness-of-equality : 
     ∀ {A B : U₀} → {x y : A × B} → (γ : x ≈ y)

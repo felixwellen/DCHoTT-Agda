@@ -15,17 +15,20 @@ module DependentTypes where
 
   
   record morphism-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
-    constructor over_there-is-the-morphism_
     field 
       base-change : A′ → A
       morphism-of-fibers : (a′ : A′) → (E′(a′) → E(base-change a′))
 
   record equivalence-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
-    constructor over_there-is-the-equivalence_
     field 
       base-change : A′ ≃ A
       morphism-of-fibers : (a′ : A′) → (E′(a′) ≃ E(base-change $≃ a′))
 
+
+  equivalence-of_and_over_ : ∀ {i} {A′ : 𝒰} {A : 𝒰- i} (E′ : A′ → 𝒰) (E : A → 𝒰) (f : A′ → A) → 𝒰
+  equivalence-of E′ and E over f = (x : _) → E′(x) ≃ E(f x)
+  
+      
 
   _→χ_ :
     ∀ {A′ A : U₀}
@@ -43,22 +46,22 @@ module DependentTypes where
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (A′ → A)
-  base-change-of (over base-change there-is-the-morphism _) = 
-    base-change
+  base-change-of record {base-change = φ ; morphism-of-fibers = _} = 
+    φ
 
   _on-the-fiber-over_ :
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (a′ : A′)
     → (E′(a′) → E((base-change-of F) a′))
-  (over _ there-is-the-morphism f) on-the-fiber-over a′ = f a′
+  record {base-change = _ ; morphism-of-fibers = f} on-the-fiber-over a′ = f a′
 
   _is-an-equivalence-on-all-fibers : 
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → U₀
-  (over f there-is-the-morphism e) is-an-equivalence-on-all-fibers = 
-    ∀ (a′ : _) → e(a′) is-an-equivalence
+  record {base-change = φ ; morphism-of-fibers = f} is-an-equivalence-on-all-fibers = 
+    ∀ (a′ : _) → f(a′) is-an-equivalence
 
   dependent-type_as-map :
     ∀ {A : U₀} 
@@ -70,7 +73,7 @@ module DependentTypes where
     ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (∑ E′ → ∑ E)
-  the-map-on-total-spaces-induced-by (over φ there-is-the-morphism f) = 
+  the-map-on-total-spaces-induced-by record {base-change = φ ; morphism-of-fibers = f} = 
     λ {(a′ , e′) → ( φ(a′), (f a′)(e′) ) }
 
   dependent-replacement :
@@ -123,9 +126,6 @@ module DependentTypes where
     → (∑ P → U₀)
   pullback-of P along-dependent-tpye E (a , pₐ) = E a
 
-  -- ∑ formal-disk-at a = ∑ formal-disk-at (a , pₐ) = ∑ (ι(a′ , pₐ′) ≈ ι(a , pₐ))
-  -- pullback = fibration of products bzw. 
-  -- (type of pullbacks over base A) = (A -> type of products)
 
   module pullbacks-are-fiberwise-equivalences 
         {Z A B C : U₀}
@@ -193,6 +193,8 @@ module DependentTypes where
 
       g-on-∑ : ∑ E′ → ∑ E
       g-on-∑ (a′ , e′) = (f a′ , g a′ e′)
+
+      glued-morphism = g-on-∑
 
       p′ : ∑ E′ → A′
       p′ = ∑π₁
@@ -307,19 +309,6 @@ module DependentTypes where
       and-right-inverse inverse
         by (λ ψₛ → refl))
 
-{-
-  fibered-morphisms-are-slice-homs′ :
-    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
-    → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ) ≃ Π (λ (x : X) → fiber-of φₛ at x → fiber-of φₜ at x)
-  fibered-morphisms-are-slice-homs′ φₛ φₜ =
-    let
-      inverse : Π (λ (x : _) → fiber-of φₛ at x → fiber-of φₜ at x) → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ)
-      inverse = λ f → ((λ s → ι-fiber (f (φₛ s) (s is-in-the-fiber-by refl))) , (λ s → fibers-equalize φₜ (φₛ s) (f (φₛ s) (s is-in-the-fiber-by refl))))
-    in (λ {(ψ , H) → λ x → λ {(s is-in-the-fiber-by γ) → ψ s is-in-the-fiber-by (H s • γ)}})
-      is-an-equivalence-because
-        (has-left-inverse inverse by (λ {(ψ , H) → {!!}})
-         and-right-inverse inverse by {!!})
-  -}
   
   if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic :
     ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
@@ -529,3 +518,39 @@ module DependentTypes where
       in the-map induced-map is-an-equivalence-since-it-is-homotopic-to f′ ∘ φ by
          (λ _ → refl) which-is-an-equivalence-by proof-of-equivalency (f′≃ ∘≃ φ≃)
 
+  module equivalence-from-equivalence-on-sums
+    {A : 𝒰} {P Q : A → 𝒰} (f : (x : A) → P x → Q x)
+    (map-on-sum-is-equivalence : (λ {(x , p) → (x , (f x) p)}) is-an-equivalence) where
+
+    -- if the following ψ is an equivalence, then all fₓ are
+    ψ′ : ∑ P → ∑ Q
+    ψ′ (x , p) = (x , (f x) p)
+
+    ψ : ∑ P ≃ ∑ Q
+    ψ = ψ′ is-an-equivalence-because map-on-sum-is-equivalence
+
+    □₁ : pullback-square-with-right ∑π₁
+           bottom id
+           top ψ′
+           left ∑π₁
+    □₁ = pullback-square-from-equivalence-of-maps
+      ∑π₁ ∑π₁ ψ id-as-equivalence
+      (λ {(x , p) → refl}) 
+
+    open import Fiber
+
+    conclude-equivalence-of-fibers :
+      (x : A) → P x ≃ Q x
+    conclude-equivalence-of-fibers x =
+      fiber-of-a-∑ x
+        ∘≃ pullbacks-are-fiberwise-equivalences.equivalence-at_ □₁ x
+        ∘≃ fiber-of-a-∑ x ⁻¹≃
+
+    f′ :
+      (x : A) → P x → Q x
+    f′ x = underlying-map-of (conclude-equivalence-of-fibers x)
+
+    conclusion :
+      (x : A) → (f x) is-an-equivalence
+    conclusion x = the-map (f x) is-an-equivalence-since-it-is-homotopic-to (f′ x)
+      by (λ a → refl) which-is-an-equivalence-by (proof-of-equivalency (conclude-equivalence-of-fibers x))

@@ -17,7 +17,9 @@
 
   𝔻ₑ -→ A -→ ℑ A
 
-  The first morphism is a fiber inclusion and the second is 
+  The results in this module may be summarized as follows:
+  If A is homogeneous, so are 𝔻ₑ and ℑA.
+  The first morphism is a homotopy fiber and the second is 
   epi iff A is formally smooth. 
 
   The name of this module is a pathetic pun.
@@ -76,7 +78,6 @@ module ImHomogeneousType where
          ι (ψ′ x y)
         ≈∎ 
 
-    
     ℑψ-is-a-family-of-translations :
       (x : ℑ A) → (ℑψ x $≃ ιe) ≈ x
     ℑψ-is-a-family-of-translations =

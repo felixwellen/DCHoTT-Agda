@@ -99,4 +99,11 @@ module Sums where
     center = (a₀ , refl)
 
     contraction : (x : ∑ (λ (a : A) → a ≈ a₀)) → x ≈ center
-    contraction (.a₀ , refl) = refl
+    contraction (_ , refl) = refl
+
+
+  sum-over-1 :
+    ∀ {A : 𝒰} {F : 𝒰}
+    → ∑ (λ {∗ → F}) ≃ F
+  sum-over-1 = (λ {(∗ , x) → x}) is-an-equivalence-because
+    (has-left-inverse (λ x → ∗ , x) by (λ {(∗ , x) → refl}) and-right-inverse (λ x → ∗ , x) by (λ a → refl))
