@@ -58,7 +58,6 @@ module HomogeneousType where
     structure : homogeneous-structure-on (A → B)
     structure = record { e = e→ ; ψ = ψ→ ; is-translation-to = is-translation-to→ }
 
-    {- -}
   
   record _─hom→_ {A B : U₀} (A′ : homogeneous-structure-on A) (B′ : homogeneous-structure-on B) : 𝒰 where
     open homogeneous-structure-on_
