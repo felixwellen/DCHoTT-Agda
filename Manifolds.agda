@@ -98,7 +98,7 @@ module Manifolds where
          commutes-with-the-dependent-replacement-of-T∞′′ :
            (λ (x : M) → 𝔻 _ x) ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism
          commutes-with-the-dependent-replacement-of-T∞′′ x = refl
-
+{-
          {-
 
          T∞ U is a trivial bundle, which is witnessed by the square
@@ -172,10 +172,6 @@ module Manifolds where
              is-trivial-by top-map-of w*T∞M-is-trivial
              and w*T∞M-is-trivial
 
-         classifying-morphism′ : M → BAut 𝔻ₑ
-         classifying-morphism′ =
-           all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M) T∞M-is-a-fiber-bundle
-{-
          commutes-with-the-dependent-replacement-of-T∞′ :
            (dependent-replacement (p-of-T∞ M)) ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism 
          commutes-with-the-dependent-replacement-of-T∞′ x =
