@@ -189,6 +189,9 @@ module FormalDiskBundle where
       ∘≃
         equivalences-induce-equivalences-on-formal-disks.conclusion (ψ v) e
 
+    as-equivalence-of-dependent-types : equivalence-of (λ _ → 𝔻ₑ) and (λ v → 𝔻 V v) over id
+    as-equivalence-of-dependent-types x = identifications-of-all-formal-disks x
+    
     T∞V = ∑ (T∞-as-dependent-type V)
 
     open import HalfAdjointEquivalences

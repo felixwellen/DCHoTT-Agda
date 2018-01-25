@@ -52,7 +52,7 @@ module G-structure where
 
     {-
       Let BG be a delooping of a group G
-      together with an 'inclusion' Bι : BG → BAut(D)
+      together with an 'inclusion' Bι : BG → BAut(𝔻ₑ)
       into the Automorphisms of the formal disk 
       at the unit of V.
       A G-structure on a V-manifold M is given by a
@@ -63,7 +63,7 @@ module G-structure where
         φ   |
        /   Bφ
       /     ↓ 
-      M ─→ BAut(D)
+      M ─→ BAut(𝔻ₑ)
   
       We do not claim, that the type of those lifts
       is the correct moduli type of G-structures on M.
@@ -72,7 +72,6 @@ module G-structure where
     G-structures : U₁
     G-structures = ∑ (λ (φ : M → BG) → Bφ ∘ φ ⇒ χ)
     
-
   {-
       on a left invertible H-space V,
       there is always a 1-structure (for the trivial group 1)
@@ -93,43 +92,35 @@ module G-structure where
       id-as-étale-map id-as-étale-map
       V
       group-over-BAutD
-      (left-invertible-H-spaces-are-manifolds V)
+      (homogeneous-spaces-are-manifolds V)
 
     φ : (x : V′) → 𝔻ₑ ≃ 𝔻 _ x
     φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.identifications-of-all-formal-disks V
+    
+    φ-as-homotopy : (λ _ → 𝔻ₑ) ⇒ 𝔻 V′
+    φ-as-homotopy x = univalence (φ x)
+
 
     open groups-over-structure-group-of_ group-over-BAutD
 
     -- calculate the classifying morphism for V′
     -- i.e. give an explicit description
     χ-V′ : V′ → BAut 𝔻ₑ
-    χ-V′ x = ((formal-disk-at x) , ∣ (∗ , univalence (φ x)) ∣)
+    χ-V′ x = ((𝔻 V′ x) , ∣ (∗ , univalence (φ x)) ∣)
 
-    V-is-a-manifold = (left-invertible-H-spaces-are-manifolds V)
+
+    V-is-a-manifold : V′ is-a-manifold-with-cover id-as-étale-map locally-like V by id-as-étale-map
+    V-is-a-manifold = (homogeneous-spaces-are-manifolds V)
 
     χ′ = G-structures-on-V-manifolds.χ id-as-étale-map id-as-étale-map
               V group-over-BAutD
-              V-is-a-manifold
-    χ-V′⇒χ′ :
-      χ-V′ ⇒ χ′
-    χ-V′⇒χ′ = 1-monos-are-monos χ-V′ χ′ (ι-BAut 𝔻ₑ) (ι-im₁-is-1-mono (λ ∗₃ → 𝔻ₑ))
-      (λ (x : V′) →
-           the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.commutes-with-the-dependent-replacement-of-T∞
-           V′ V′ id-as-étale-map V id-as-étale-map V-is-a-manifold
-           x)
-
+              (homogeneous-spaces-are-manifolds V)
+              
     trivial-structure : G-structures-on-V
     trivial-structure =
-      ((λ x → Be) , (λ x →
-         Bφ(Be)
-        ≈⟨ path-between-units ⟩
-          e-BAut _
-        ≈⟨ 1-monos-are-monos (λ _ → e-BAut _) χ-V′ (ι-BAut 𝔻ₑ)
-             (ι-im₁-is-1-mono (λ ∗₃ → 𝔻ₑ)) (λ y → univalence (φ y)) x ⟩
-          χ-V′ x
-        ≈⟨ χ-V′⇒χ′ x ⟩
-          χ′ x
-        ≈∎))
+      ((λ _ → Be) ,
+        (λ (x : V′) → path-between-units • 1-monos-are-monos (λ (x : V′) → e-BAut 𝔻ₑ) χ′ (ι-BAut 𝔻ₑ)
+             (ι-im₁-is-1-mono (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x))
 
   {-
     We will now work towards the definition of 
@@ -147,6 +138,8 @@ module G-structure where
         ψ : V′ → BG
         ψ = (∑π₁ trivial-structure)
       in ψ ∘ ι-𝔻ₑ
+
+
 
     {-
       now, for a general V-manifold
@@ -167,7 +160,7 @@ module G-structure where
       
       all-𝔻s-are-merely-equivalent :
         ∀ (x : M)
-        → ∥  𝔻ₑ ≃ 𝔻-at x ∥
+        → ∥  𝔻-at x ≃ 𝔻ₑ ∥
       all-𝔻s-are-merely-equivalent x =
         the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent
           U M w V v M-is-a-V-manifold x 
@@ -205,7 +198,7 @@ module G-structure where
           -- classifying map of T∞V
           ξ = G-structures-on-V-manifolds.χ id-as-étale-map id-as-étale-map
               V group-over-BAutD
-              V-is-a-manifold
+              (homogeneous-spaces-are-manifolds V)
 
           -- the triangle type discussed above
           triangles-at : BAut 𝔻ₑ → 𝒰₁
@@ -222,7 +215,7 @@ module G-structure where
           𝔻-at_as-point-in-BAut-𝔻ₑ :
             ∀ (x : M) → BAut 𝔻ₑ
           𝔻-at_as-point-in-BAut-𝔻ₑ x =
-            (𝔻-at x , ∥→ (λ z → (∗ , univalence z)) ∥→  (all-𝔻s-are-merely-equivalent x))
+            (𝔻-at x , ∥→ (λ z → (∗ , univalence (z ⁻¹≃))) ∥→  (all-𝔻s-are-merely-equivalent x))
 
           triangle-from-the-G-structure-at :
             ∀ (x : M) → triangles-at (𝔻-at x as-point-in-BAut-𝔻ₑ)
@@ -233,3 +226,5 @@ module G-structure where
           → ∀ (γ : 𝔻-at x as-point-in-BAut-𝔻ₑ ≈ e-BAut 𝔻ₑ)
           → ∥ transport triangles-at γ (triangle-from-the-G-structure-at x)
               ≈ triangle-of-the-trivial-G-structure ∥ 
+
+

@@ -64,39 +64,25 @@ module EtaleMaps where
     → (A ─ét→ B) → (A → B)
   underlying-map-of (f , _) = f
 
+  _ét→ : 
+    ∀ {A B : U₀}
+    → (A ─ét→ B) → (A → B)
+  f ét→ = underlying-map-of f
+
+  _$ét_ :
+    ∀ {A B : U₀}
+    → (A ─ét→ B) → A → B
+  f $ét x = (f ét→) x
+  
   _is-étale = _is-an-étale-map
 
-  pullback-square-for-the-étale-map_ : 
+  pullback-square-of :
     ∀ {A B : U₀}
-    → (f : A ─ét→ B) 
-    → pullback-square-with-right (apply-ℑ-to-map (underlying-map-of f)) 
-        bottom ℑ-unit 
-        top ℑ-unit 
-        left (underlying-map-of f)
-  pullback-square-for-the-étale-map (f , (the-induced-map-is-an-equivalence-by proof)) = 
+    → (f́ : A ─ét→ B) 
+    → pullback-square-with-right (ℑ→ (underlying-map-of f́))
+        bottom ℑ-unit
+        top ℑ-unit
+        left (underlying-map-of f́)
+  pullback-square-of (f , (the-induced-map-is-an-equivalence-by pullback-property)) =
     the-square-commuting-by (naturality-of-ℑ-unit f)
-    and-inducing-an-equivalence-by proof
-
-
-  
-
-  -- composition of etale maps
-{-
-  the-composition-of-the-maps_and_being-étale-by_and_is-étale :
-    ∀ {A B C : U₀} 
-    → (g : B → C) → (f : A → B) → (g is-étale) → (f is-étale)
-    → (g ∘ f) is-étale
-  the-composition-of-the-maps g and f being-étale-by g-is-étale and f-is-étale is-étale =
-    the-induced-map-is-an-equivalence-by 
-      (the-induced-map-in pasted-squares-for-f-and-g is-an-equivalence)
-    where pasted-squares-for-f-and-g = {!substitute-homotopic-bottom-map (pasting-of-pullback-squares 
-      (rotate-cospan (pullback-square-for-the-étale-map (g , g-is-étale))) 
-      (rotate-cospan (pullback-square-for-the-étale-map (f , f-is-étale)))) (ℑ→ (g ∘ f)) ?!}
-
-
-  infixr 70 _∘ét_
-  _∘ét_ : ∀ {A B C : U₀} 
-    → (B ─ét→ C) → (A ─ét→ B) → (A ─ét→ C)
-  g ∘ét f = {!!}
-  
--}
+      and-inducing-an-equivalence-by pullback-property

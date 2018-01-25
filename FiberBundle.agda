@@ -133,18 +133,8 @@ module FiberBundle where
       pullback-trivializes : (x : V) → φ(v $↠ x) ≃ F
 
 
-  module logical-equivalences-between-the-four-definitions {B F : 𝒰} where
-  {-
-    def′-to-def‴ : ∀ {E : 𝒰} (p : E → B)
-      → p is-a′ F -fiber-bundle′
-      → p is-a‴ F -fiber-bundle‴
-    def′-to-def‴ p
-      (on V the-pullback-along v is-trivial-by projection-to-the-fiber and the-pullback-is-a-product) =
-      let
-        open pullbacks-are-fiberwise-equivalences
-          (covering-pullback-square (on V the-pullback-along v is-trivial-by projection-to-the-fiber and the-pullback-is-a-product))
-      in {!!}
-    -}
+  module logical-equivalences-between-the-four-definitions-of-fiber-bundles
+    {B F : 𝒰} where
 
     def‴-to-def″ : ∀ {E : 𝒰} (p : E → B)
       → p is-a‴ F -fiber-bundle‴
