@@ -25,7 +25,6 @@ module G-structure where
   
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
-    constructor group-given-by-delooping_with-unit_and-morphism_with-unit-identification_
     field
       BG : 𝒰₀
       Be : BG
@@ -34,21 +33,20 @@ module G-structure where
 
 
   module G-structures-on-V-manifolds
-    {V′ M U : 𝒰₀} (w : U ─ét→ M) (v : U ─ét→ V′)
+    {V′ : 𝒰₀} -- (w : U ─ét→ M) (v : U ─ét→ V′)
     (V : homogeneous-structure-on V′)
     (reduction : groups-over-structure-group-of V)
-    (M-is-a-manifold : M is-a-manifold-with-cover w
-                      locally-like V by v) where
+    (M′ : V -manifold) where
     
 
     open homogeneous-structure-on_ V
     open groups-over-structure-group-of_ reduction
+    open _-manifold M′
 
-    De = formal-disk-at e
+    𝔻ₑ = formal-disk-at e
 
-    χ : M → BAut De
-    χ = the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism
-        U M w V v M-is-a-manifold
+    χ : M → BAut 𝔻ₑ
+    χ = the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism V M′
 
     {-
       Let BG be a delooping of a group G
@@ -89,10 +87,9 @@ module G-structure where
     G-structures-on-V : 𝒰₁
     G-structures-on-V =
       G-structures-on-V-manifolds.G-structures
-      id-as-étale-map id-as-étale-map
       V
       group-over-BAutD
-      (homogeneous-spaces-are-manifolds V)
+      (homogeneous-space-as-manifold V)
 
     φ : (x : V′) → 𝔻ₑ ≃ 𝔻 _ x
     φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.identifications-of-all-formal-disks V
@@ -103,18 +100,10 @@ module G-structure where
 
     open groups-over-structure-group-of_ group-over-BAutD
 
-    -- calculate the classifying morphism for V′
-    -- i.e. give an explicit description
-    χ-V′ : V′ → BAut 𝔻ₑ
-    χ-V′ x = ((𝔻 V′ x) , ∣ (∗ , univalence (φ x)) ∣)
 
-
-    V-is-a-manifold : V′ is-a-manifold-with-cover id-as-étale-map locally-like V by id-as-étale-map
-    V-is-a-manifold = (homogeneous-spaces-are-manifolds V)
-
-    χ′ = G-structures-on-V-manifolds.χ id-as-étale-map id-as-étale-map
+    χ′ = G-structures-on-V-manifolds.χ 
               V group-over-BAutD
-              (homogeneous-spaces-are-manifolds V)
+              (homogeneous-space-as-manifold V)
               
     trivial-structure : G-structures-on-V
     trivial-structure =
@@ -145,29 +134,27 @@ module G-structure where
       now, for a general V-manifold
     -}
     module general-manifolds
-      {M U : 𝒰₀} (w : U ─ét→ M) (v : U ─ét→ V′)
-      (M-is-a-V-manifold : M is-a-manifold-with-cover w
-                      locally-like V by v)
+      (M′ : V -manifold)
                  where
+
+      open _-manifold M′
 
       ∗𝔻 : (x₀ : M) → formal-disk-at x₀
       ∗𝔻 x₀ = (x₀ , refl) 
 
       χ-M : M → BAut 𝔻ₑ
       χ-M =
-        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism
-          U M w V v M-is-a-V-manifold
+        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism V M′
       
       all-𝔻s-are-merely-equivalent :
         ∀ (x : M)
         → ∥  𝔻-at x ≃ 𝔻ₑ ∥
       all-𝔻s-are-merely-equivalent x =
-        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent
-          U M w V v M-is-a-V-manifold x 
+        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent V M′ x 
       
       G-structures-on-M =
         G-structures-on-V-manifolds.G-structures
-        w v V group-over-BAutD M-is-a-V-manifold
+         V group-over-BAutD M′
 
       _is-torsion-free :
         G-structures-on-M → U₁
@@ -196,9 +183,9 @@ module G-structure where
         -}
         let
           -- classifying map of T∞V
-          ξ = G-structures-on-V-manifolds.χ id-as-étale-map id-as-étale-map
+          ξ = G-structures-on-V-manifolds.χ 
               V group-over-BAutD
-              (homogeneous-spaces-are-manifolds V)
+              (homogeneous-space-as-manifold V)
 
           -- the triangle type discussed above
           triangles-at : BAut 𝔻ₑ → 𝒰₁
