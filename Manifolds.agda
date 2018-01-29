@@ -20,6 +20,7 @@ module Manifolds where
   open import FiberBundle
   open import FormalDisk
   open import HomogeneousType
+  open import ImHomogeneousType
   open import PropertiesOfEtaleMaps
 
 
@@ -45,7 +46,6 @@ module Manifolds where
         w-covers = λ b → ∣ b is-in-the-fiber-by refl ∣ ;
         v = id-as-étale-map
       }
-  
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
          {V′ : 𝒰} -- (w : U ─ét→ M) (v : U ─ét→ V) (M-is-a-manifold : M is-a-manifold-with-cover w locally-like structure-on-V by v) 
@@ -110,3 +110,6 @@ module Manifolds where
          commutes-with-the-dependent-replacement-of-T∞′′ :
            (λ (x : M) → 𝔻 _ x) ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism
          commutes-with-the-dependent-replacement-of-T∞′′ x = refl
+
+
+  
