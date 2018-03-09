@@ -94,6 +94,15 @@ module Flat where
     → (♭→ g) ∘ (♭→ f) ⇒ ♭→ (g ∘ f)
   ♭→-commutes-with-∘ f g (con a) = refl
 
+
+  ♭-identity-induction :
+    ∀ {A :{♭} 𝒰}
+    → (C :{♭} (x y :{♭} A) (p :{♭} x ≈ y) → 𝒰)
+    → (d :{♭} (x :{♭} A) → C x x refl)
+    → (x y :{♭} A) → (p :{♭} x ≈ y) → C x y p
+  ♭-identity-induction C d x .x refl = d x
+
+
   ♭-preserves-identity-types :
     ∀ {A :{♭} 𝒰}
     → (x y :{♭} A)
