@@ -14,6 +14,42 @@ module PropertiesOfEtaleMaps where
   open import FormalDisk
   open import FormalDiskBundle
 
+  module lifting-formal-disks
+    {A  : 𝒰} (f : A → 𝒰) (f-is-coreduced : (x : A) → (f x) is-coreduced) (a : A)
+    where
+
+    𝔻ₐ = 𝔻 A a   -- just for the comment below
+
+    {-
+
+      The formal disk 𝔻ₐ is analogous to the universal covering
+      in that the following lift φ exists for any f as above:
+
+
+        𝔻ₐ --φ--→ ∑ f
+         \       /
+        ι \     / π₁
+           ↘   ↙ 
+             A
+
+      We will proceed with a more dependently typed point of view
+
+    -}
+
+    𝔻ₐ′ : A → 𝒰
+    𝔻ₐ′ x = a is-close-to x
+
+    𝔻ₐ′-is-coreduced : (x : A) → (𝔻ₐ′ x) is-coreduced
+    𝔻ₐ′-is-coreduced x = coreduced-types-have-coreduced-identity-types (ℑ A) (ℑ-is-coreduced _) _ _
+
+    {-
+    lift : (f₀ : f a)
+      → (x : A) (d : a is-close-to x)
+      → f x
+    lift f₀ x d = {!(λ (u : ℑ A) (v : ℑ A) (γ : u ≈ v) → transport (ι-ℑ𝒰 ∘ (ℑ-recursion ℑ𝒰-is-coreduced (λ (x : A) → (f x , f-is-coreduced x)))) γ) (ι a) (ι x) d  !}
+    -}
+    {- ... -}
+
   module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
 
     f = underlying-map-of f́
@@ -117,25 +153,3 @@ module PropertiesOfEtaleMaps where
         step1 = pullback-definition-and-dependent-version-agree.on-fibers A
         step2 = pullback-definition-and-dependent-version-agree.on-fibers B
       in (step2 (f x)) ∘≃ (equivalence-at x) ∘≃ (step1 x ⁻¹≃)
-
-
-  -- composition of etale maps
-{-
-  the-composition-of-the-maps_and_being-étale-by_and_is-étale :
-    ∀ {A B C : U₀} 
-    → (g : B → C) → (f : A → B) → (g is-étale) → (f is-étale)
-    → (g ∘ f) is-étale
-  the-composition-of-the-maps g and f being-étale-by g-is-étale and f-is-étale is-étale =
-    the-induced-map-is-an-equivalence-by 
-      (the-induced-map-in pasted-squares-for-f-and-g is-an-equivalence)
-    where pasted-squares-for-f-and-g = {!substitute-homotopic-bottom-map (pasting-of-pullback-squares 
-      (rotate-cospan (pullback-square-for-the-étale-map (g , g-is-étale))) 
-      (rotate-cospan (pullback-square-for-the-étale-map (f , f-is-étale)))) (ℑ→ (g ∘ f)) ?!}
-
-
-  infixr 70 _∘ét_
-  _∘ét_ : ∀ {A B C : U₀} 
-    → (B ─ét→ C) → (A ─ét→ B) → (A ─ét→ C)
-  g ∘ét f = {!!}
-  
--}

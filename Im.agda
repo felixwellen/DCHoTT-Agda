@@ -38,6 +38,9 @@ module Im where
   ℑ𝒰 : 𝒰₁
   ℑ𝒰 = ∑ λ (A : 𝒰) → A is-coreduced
 
+  ι-ℑ𝒰 : ℑ𝒰 → 𝒰
+  ι-ℑ𝒰 (A , _) = A
+
   postulate
     -- ℑ is idempotent
     ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
