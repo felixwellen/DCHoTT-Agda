@@ -215,7 +215,6 @@ module Manifolds where
                 (formal-disk-bundles-are-preserved-by-étale-base-change.conclusion
                  w)
                 ⁻¹⇒)
-
          
          T∞M-is-a-fiber-bundle : (p-of-T∞ M) is-a′ 𝔻ₑ -fiber-bundle′
          T∞M-is-a-fiber-bundle =
@@ -228,7 +227,8 @@ module Manifolds where
 
          classifying-morphism : M → BAut 𝔻ₑ
          classifying-morphism =
-           all-fiber-bundle-are-associated.classifying-morphism (p-of-T∞ M) T∞M-is-a-fiber-bundle
+           all-fiber-bundle-are-associated.classifying-morphism
+             (p-of-T∞ M) T∞M-is-a-fiber-bundle
 
 
          commutes-with-the-dependent-replacement-of-T∞′ :
