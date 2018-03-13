@@ -7,7 +7,6 @@ module HomogeneousType where
   open import Language
   open import Equivalences
   open import CommonEquivalences
-  open import LeftInvertibleHspace
   open import FunctionExtensionality
   
   {- 
@@ -23,15 +22,6 @@ module HomogeneousType where
       is-translation-to : (x : A) → ((ψ x) $≃ e) ≈ x
 
 
-  left-invertible-H-spaces-are-homogeneous :
-    ∀ {A : U₀}
-    → left-invertible-structure-on A → homogeneous-structure-on A
-  left-invertible-H-spaces-are-homogeneous
-    (structure-given-by-e= e ,μ= μ ,neutral-by left-neutral and right-neutral ,left-invertible-by left-invertible)
-    = record {
-        e = e ;
-        ψ = λ x → (λ z → μ (z , x)) is-an-equivalence-because left-invertible x ;
-        is-translation-to = left-neutral }
 
 
 

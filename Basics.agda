@@ -134,6 +134,9 @@ data Zero : 𝒰 where
 data One : 𝒰 where 
   ∗ : One
 
+
+Point = One
+
 id : ∀ {i} {A : 𝒰- i} → A → A
 id a = a
 

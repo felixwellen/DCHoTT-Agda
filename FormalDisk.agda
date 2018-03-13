@@ -8,7 +8,6 @@ module FormalDisk where
   open import Equivalences
   open import CommonEquivalences  
   open import Im
-  open import LeftInvertibleHspace
   open import DependentTypes
   open import Fiber
   open import Contractibility
@@ -161,37 +160,3 @@ module FormalDisk where
       → 𝔻 B (π₁ y) × 𝔻 C (π₂ y) → 𝔻 (B × C) y
     join-𝔻× (b₀ , c₀) ((b , b₀∼b) , (c , c₀∼c)) =
       ((b , c) , pair-construction b₀ c₀ ⁻¹ • φ ⁎ (b₀∼b ,≈ c₀∼c) • pair-construction b c)
-{-
-    result : ∀ (a : A)
-      → df a ⇒ join-𝔻× (f a) ∘ (df₁ a ,→ df₂ a)
-    result a (x , γ) =
-      let
-        b₀ = π₁ (f a)
-        c₀ = π₂ (f a)
-
-        z : 𝔻 B b₀ × 𝔻 C c₀
-        z = (df₁ a ,→ df₂ a) (x , γ)
-
-        {- 
-          same notation as in 'join-𝔻×', i.e.:
-
-           ((b , b₀∼b) , (c , c₀∼c)) = z 
-        -}
-        b = ∑π₁ (π₁ z)
-        c = ∑π₁ (π₂ z)
-        b₀∼b = ∑π₂ (π₁ z)
-        c₀∼c = ∑π₂ (π₂ z)
-        --
-        
-        -- ≈ pair-construction b₀ c₀ ⁻¹ • φ ⁎ (b₀∼b ,≈ c₀∼c) • pair-construction b c  
-        in {!!}
-
-    result′ : ∀ (a : A)
-      → (split-𝔻× (f a)) ∘ (df a) ⇒ (df₁ a ,→ df₂ a)
-    result′ a (x , γ) =
-      let
-        b = π₁ (f a)
-        c = π₂ (f a)
-      in ({!!}  ,≈ {!!})
--}
-      

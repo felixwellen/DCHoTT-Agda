@@ -26,5 +26,11 @@
 	_\times\to_ : (A -> B) -> (C -> D) -> (A \times C -> B \times D)
 	...
 
-** indication of incompleteness
+* naming things
+  a function should describe its result as a unique entity.
+  Example: we have a function which creates a foo from two arguments
+  bad: make-foo _ _
+  good: the-foo-of_and_; foo-of _ _
+  
+* indication of incompleteness
    {- ... -} at the end of a module means that the result indicated in its descritption is not yet proven
