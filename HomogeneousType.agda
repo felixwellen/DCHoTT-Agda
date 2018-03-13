@@ -22,9 +22,18 @@ module HomogeneousType where
       is-translation-to : (x : A) → ((ψ x) $≃ e) ≈ x
 
 
-
-
-
+  _×ₕ_ :
+    ∀ {A′ B′ : 𝒰₀}
+    → homogeneous-structure-on A′ → homogeneous-structure-on B′
+    → homogeneous-structure-on (A′ × B′)
+  record { e = eA ; ψ = ψA ; is-translation-to = tA } ×ₕ record { e = eB ; ψ = ψB ; is-translation-to = tB }
+    = record
+      {
+        e = (eA , eB) ;
+        ψ = λ {(a , b) → ψA a ×≃ ψB b } ;
+        is-translation-to = λ {(x , y) → tA x ×≈ tB y}
+      }  
+  
   module structure-inherited-from-codomain {A B : 𝒰} (B' : homogeneous-structure-on B) where
 
     open homogeneous-structure-on_ B'

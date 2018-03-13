@@ -437,4 +437,15 @@ module Equivalences where
          → A ≃ B → B ≃ C → A ≃ C
   A ≃⟨ reason ⟩ e′ = e′ ∘≃ reason  
 
+  _×≃p_ : {A B A′ B′ : 𝒰₀} {f : A → B} {g : A′ → B′}
+    → f is-an-equivalence → g is-an-equivalence
+    → (f ×→ g) is-an-equivalence
+  (has-left-inverse fl by pfl and-right-inverse fr by pfr) ×≃p (has-left-inverse gl by pgl and-right-inverse gr by pgr)
+    = has-left-inverse fl ×→ gl by (λ {(_ , _) → (pfl _) ×≈ (pgl _)})
+      and-right-inverse fr ×→ gr by (λ {(_ , _) → (pfr _) ×≈ (pgr _)})
 
+  _×≃_ : {A B A′ B′ : 𝒰₀}
+    → A ≃ B → A′ ≃ B′
+    → A × A′ ≃ B × B′
+  (f is-an-equivalence-because pf) ×≃ (g is-an-equivalence-because pg)
+    = (f ×→ g) is-an-equivalence-because (pf ×≃p pg)
