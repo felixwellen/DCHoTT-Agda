@@ -79,13 +79,21 @@ module Equivalences where
   proof-of-equivalency (_ is-an-equivalence-because proof-of-equivalency) = 
     proof-of-equivalency
   
-  inverse-of_given-by_ :
+  left-inverse-of_given-by_ :
     ∀ {A B : U₀}
     → (f : A → B) → f is-an-equivalence
     → (B → A)
-  inverse-of f given-by 
+  left-inverse-of f given-by 
     (has-left-inverse left-inverse by _ and-right-inverse _ by _) = 
     left-inverse
+
+  unit-of_given-by_ :
+    ∀ {A B : U₀}
+    → (f : A → B) → (_ : f is-an-equivalence)
+    → (_ ⇒ id)
+  unit-of f given-by 
+    (has-left-inverse _ by unit and-right-inverse _ by _) = 
+     unit
 
   right-inverse-of_given-by_ :
     ∀ {A B : U₀}
@@ -217,7 +225,7 @@ module Equivalences where
   the-inverse-is-a-right-inverse-of_by_ :
     ∀ {A B : U₀} (f : A → B)
     → (proof : f is-an-equivalence)
-    → id ⇒ f ∘ (inverse-of f given-by proof)
+    → id ⇒ f ∘ (left-inverse-of f given-by proof)
   the-inverse-is-a-right-inverse-of_by_ f
     (has-left-inverse l by unit and-right-inverse r by counit) =
       left-inverses-are-also-right-inverses f l r unit counit ⁻¹⇒

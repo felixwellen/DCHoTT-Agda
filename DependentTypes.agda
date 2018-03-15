@@ -183,7 +183,7 @@ module DependentTypes where
       g : (a′ : A′) → (E′ a′ → E _)
       g a′ = F on-the-fiber-over a′
       g⁻¹ : (a′ : A′) → (E _ → E′ a′)
-      g⁻¹ a′ = inverse-of (g a′) given-by (F-is-an-equivalence-on-fibers a′)
+      g⁻¹ a′ = left-inverse-of (g a′) given-by (F-is-an-equivalence-on-fibers a′)
 
       left-invertible-at : (a′ : A′) → g⁻¹ a′ ∘ g a′ ⇒ id
       left-invertible-at a′ = unit (F-is-an-equivalence-on-fibers a′)
