@@ -24,7 +24,7 @@ module Manifolds where
   open import PropertiesOfEtaleMaps
 
 
-  record _-manifold {V′ : 𝒰} (V : homogeneous-structure-on V′) : 𝒰₁ where
+  record _-manifold {V′ : 𝒰₀} (V : homogeneous-structure-on V′) : 𝒰₁ where
     field
       M : 𝒰
       W : 𝒰
@@ -126,12 +126,39 @@ module Manifolds where
          where
 
          open homogeneous-structure-on_ V
-         𝔻ₑ = 𝔻 V′ e                      
+         𝔻ₑ′ = 𝔻 V′ e
+         𝔻ₑ : homogeneous-structure-on 𝔻ₑ′
+         𝔻ₑ = ℑ-homogene-sequence.homogeneous-structure V
          open _-manifold M′
 
          T∞M : 𝒰₀
-         T∞M = T∞ M
+         T∞M = ∑ (𝔻 M)
 
-         T∞M-is-a-manifold : (𝔻ₑ × V′) -manifold
-         T∞M-is-a-manifold = ?
+       {-
+
+         T∞M-is-a-manifold : (V ×ₕ 𝔻ₑ) -manifold
+         T∞M-is-a-manifold =
+           let
+             φ : ∑ (𝔻 V′) → V′ × 𝔻ₑ′
+             φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.trivialize V
+
+             dv : (x : W) → 𝔻 M (w $ét x) → 𝔻 V′ (v $ét x)
+             dv x = d (underlying-map-of v) x ∘ d⁻¹ w x
+           in record
+           {
+             M = T∞M ;
+             W = ∑ (λ (x : W) → 𝔻 M (w $ét x)) ;
+             w = ((λ {(x , (y , d)) → ((w $ét x) , (y , d))})
+                 is-étale-because {!!}) ;
+             w-covers = λ {(x , (y , d))
+               → ∥→
+                   (λ {(x′ is-in-the-fiber-by γ)
+                    → ((x′ , transport (𝔻 M) (γ ⁻¹) (y , d))
+                      is-in-the-fiber-by (equality-action-on-∑ _ _ (γ ⁻¹) (y , d) ⁻¹))})
+                 ∥→
+                 (w-covers x)} ;
+             v = (λ {(x , d) → φ ((v $ét x) , dv x d)})
+                 is-étale-because {!!}
+           }
+           -}
          {- ... -}

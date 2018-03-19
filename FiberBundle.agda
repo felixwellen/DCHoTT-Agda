@@ -25,17 +25,17 @@ module FiberBundle where
     
   -}
 
-  record _is-a_-fiber-bundle {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where
+  record _is-a_-fiber-bundle {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where
     field
       all-fibers-are-merely-equivalent : ∀ (b : B) → ∥ φ b ≃ F ∥
 
-    canonical-cover′ : B → 𝒰
+    canonical-cover′ : B → 𝒰₀
     canonical-cover′ b = φ b ≃ F
 
     canonical-cover : ∑ canonical-cover′ → B
     canonical-cover (F′ , _) = F′
 
-  record _is-a′_-fiber-bundle′ {E B : 𝒰} (p : E → B) (F : 𝒰) : 𝒰₁ where
+  record _is-a′_-fiber-bundle′ {E B : 𝒰₀} (p : E → B) (F : 𝒰₀) : 𝒰₁ where
     field
       χ : B → BAut F
       classyfies : equivalence-of (λ b → fiber-of p at b) and (universal-family-over-BAut′ F) over χ
@@ -81,7 +81,7 @@ module FiberBundle where
      
   -}
 
-  record _is-a‴_-fiber-bundle‴ {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
+  record _is-a‴_-fiber-bundle‴ {E B : 𝒰₀} (φ : E → B) (F : 𝒰₀) : 𝒰₁ where
     field
       V : U₀
       v : V ↠ B
@@ -96,7 +96,7 @@ module FiberBundle where
     a dependent version of the above
   -}
 
-  record _is-a″_-fiber-bundle″ {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where 
+  record _is-a″_-fiber-bundle″ {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where 
     field
       V : U₀
       v : V ↠ B
@@ -104,9 +104,9 @@ module FiberBundle where
 
 
   module logical-equivalences-between-the-four-definitions-of-fiber-bundles
-    {B F : 𝒰} where
+    {B F : 𝒰₀} where
 
-    def‴-to-def″ : ∀ {E : 𝒰} (p : E → B)
+    def‴-to-def″ : ∀ {E : 𝒰₀} (p : E → B)
       → p is-a‴ F -fiber-bundle‴
       → (λ b → fiber-of p at b) is-a″ F -fiber-bundle″
     def‴-to-def″ p record { V = V ; v = v ; v′ = v′ ; □ = □ } =
@@ -119,7 +119,7 @@ module FiberBundle where
                 pullback-trivializes = λ x → fiber-of-π₁-is-second-factor x ∘≃ (equivalence-at x) ⁻¹≃
          }
 
-    def″-to-def‴ : ∀ (φ : B → 𝒰)
+    def″-to-def‴ : ∀ (φ : B → 𝒰₀)
       → φ is-a″ F -fiber-bundle″
       → (∑π₁-from φ) is-a‴ F -fiber-bundle‴
     def″-to-def‴ φ
@@ -139,7 +139,7 @@ module FiberBundle where
 
 
     def″-to-def :
-      ∀ (φ : B → 𝒰)
+      ∀ (φ : B → 𝒰₀)
       → φ is-a″ F -fiber-bundle″
       → φ is-a F -fiber-bundle
     def″-to-def φ
@@ -156,7 +156,7 @@ module FiberBundle where
 
 
     def-to-def″ :
-      ∀ (φ : B → 𝒰)
+      ∀ (φ : B → 𝒰₀)
       → φ is-a F -fiber-bundle
       → φ is-a″ F -fiber-bundle″
     def-to-def″ φ
@@ -178,15 +178,15 @@ module FiberBundle where
     open import Sums
 
     private
-      specialize-image-to-BAut : ∀ (φ : B → 𝒰)
+      specialize-image-to-BAut : ∀ (φ : B → 𝒰₀)
         → (x : B) → ∥ (φ x ≃ F) ∥ → the-1-image-of (λ ∗ → F) contains (φ x)
       specialize-image-to-BAut φ x = ∥→ (λ e → (∗ , univalence (e ⁻¹≃))) ∥→
-      specialize-image-to-BAut′ : ∀ (φ : B → 𝒰)
+      specialize-image-to-BAut′ : ∀ (φ : B → 𝒰₀)
         → (x : B) → the-1-image-of (λ ∗ → F) contains (φ x) → ∥ (φ x ≃ F) ∥ 
       specialize-image-to-BAut′ φ x = ∥→ (λ {(∗ , p) → U-transport p ⁻¹≃}) ∥→
 
     def-to-def′ :
-      ∀ (φ : B → 𝒰)
+      ∀ (φ : B → 𝒰₀)
       → φ is-a F -fiber-bundle
       → (∑π₁-from φ) is-a′ F -fiber-bundle′
     def-to-def′ φ
@@ -199,7 +199,7 @@ module FiberBundle where
 
 
     def′-to-def :
-      ∀ {E : 𝒰} (p : E → B)
+      ∀ {E : 𝒰₀} (p : E → B)
       → p is-a′ F -fiber-bundle′
       → (λ x → fiber-of p at x) is-a F -fiber-bundle
     def′-to-def p
