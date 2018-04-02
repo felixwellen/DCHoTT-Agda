@@ -10,7 +10,7 @@ module EqualityAndPaths where
     refl : a ≈ a
   
   
-  One-contraction : (x : One) → x ≈ ∗
+  One-contraction : (x : 𝟙) → x ≈ ∗
   One-contraction ∗ = refl
   
   transport : ∀ {i j} {A : U i}  {x y : A} → (P : A → U j) → (γ : x ≈ y) → (P x → P y)
@@ -73,7 +73,10 @@ module EqualityAndPaths where
   infixr 70 _⁎_  -- \asterisk
   _⁎_ : ∀ {i j} {A : U i} {B : U j} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
   _⁎_ {_} {_} {_} {_} {x} {.x} f  refl = refl {a = f(x)} 
-  
+
+  ap : ∀ {i j} {A : U i} {B : U j} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
+  ap f γ = f ⁎ γ
+
   apply-preserves-refl : {A B : U₀} {x : A} (f : A → B) → f ⁎ refl {a = x} ≈ refl {a = f(x)}
   apply-preserves-refl f = refl
   
@@ -276,6 +279,6 @@ module EqualityAndPaths where
 
 
   J-right :
-    ∀ {A : 𝒰} {a : A} (C : (x : A) → a ≈ x → 𝒰)
+    ∀ {A : 𝒰₀} {a : A} (C : (x : A) → a ≈ x → 𝒰₀)
     → (r : C a refl) → ((y : A) (γ : a ≈ y) → C y γ)
   J-right C r y refl = r 

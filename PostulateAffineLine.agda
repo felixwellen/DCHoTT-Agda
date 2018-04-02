@@ -21,9 +21,6 @@ module PostulateAffineLine where
     this auxilliary definition may find a better home some day...
   -}
 
-  const : {X Y : 𝒰₀} → Y → (X → Y)
-  const y₀ = λ _ → y₀
-
   postulate
     𝔸 : 𝒰
     𝔸′ : homogeneous-structure-on 𝔸

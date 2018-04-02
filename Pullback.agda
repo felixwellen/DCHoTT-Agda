@@ -11,9 +11,9 @@ module Pullback where
   open import FunctionExtensionality
   open import Language
 
-  representability : ∀ (A : U₀) → (One → A) ≃ A
+  representability : ∀ (A : U₀) → (𝟙 → A) ≃ A
   representability A = ((λ t → t ∗) is-an-equivalence-because
-                   let to-constant-map : A → (One → A)
+                   let to-constant-map : A → (𝟙 → A)
                        to-constant-map a = λ x → a
                    in (has-left-inverse to-constant-map by (λ φ → fun-ext (λ { ∗ → refl }))
                        and-right-inverse to-constant-map by (λ (a : A) → refl)))
@@ -215,10 +215,10 @@ module Pullback where
     π-B : A × B → B
     π-B = π₂
 
-    A-to-One : A → One
+    A-to-One : A → 𝟙
     A-to-One a = ∗
 
-    B-to-One : B → One
+    B-to-One : B → 𝟙
     B-to-One b = ∗
 
     induced-map : A × B → pullback A-to-One B-to-One
@@ -235,7 +235,7 @@ module Pullback where
               -- n.t.s.: all γ are equal to refl_∗
               (a and b are-in-the-same-fiber-by γ)
              ≈⟨ (λ η → a and b are-in-the-same-fiber-by η) ⁎
-                  all-contractible-types-are-sets One One-is-contractible ∗ ∗ γ refl ⟩
+                  all-contractible-types-are-sets 𝟙 𝟙-is-contractible ∗ ∗ γ refl ⟩
               (a and b are-in-the-same-fiber-by refl)
              ≈∎})
 

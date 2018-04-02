@@ -14,119 +14,120 @@ module Shape where
   open import Equivalences
   open import FunctionExtensionality
   open import Flat renaming (_is-discrete to _is-crisply-discrete)
-
-  const : {X Y : 𝒰₀} → Y → (X → Y)
-  const y₀ = λ _ → y₀
+  open import PostulateAffineLine
+  open import DiscreteTypes
   
   {- 
 
     assume that the discreteness given by 
     ♭ can be dectected by all maps from 𝔸 
     into some space being constant (chapter 8, [1])
+
+    I added a user translation to my agda-input settings 
+    for the shape symbol 'ʃ'. It is not '\int', but the 
+    'esh' symbol (the IPA sign for 'sh').
   -}
 
-  postulate
-    𝔸 : 𝒰
-    𝔸-nullfies-discrete-types :
-      ∀ (A :{♭} 𝒰₀)
-      → A is-crisply-discrete ≃ const {𝔸} {A} is-an-equivalence
-
-  _is-discrete : ∀ (A : 𝒰₀) → 𝒰₀
-  A is-discrete = const {𝔸} {A} is-an-equivalence
 
   private
-    data #∫ (A : 𝒰₀) : 𝒰₀ where
-      #σ : A → #∫ A
-      #κ  : (𝔸 → #∫ A) → #∫ A
-      #κ′ : (𝔸 → #∫ A) → #∫ A
+    data #ʃ (A : 𝒰₀) : 𝒰₀ where
+      #σ : A → #ʃ A
+      #κ  : (𝔸 → #ʃ A) → #ʃ A
+      #κ′ : (𝔸 → #ʃ A) → #ʃ A
       
-  ∫ : (A : 𝒰₀) → 𝒰₀
-  ∫ A = #∫ A
+  ʃ : (A : 𝒰₀) → 𝒰₀
+  ʃ A = #ʃ A
   
   module _ {A : 𝒰₀} where
-    σ : A → ∫ A
+    σ : A → ʃ A
     σ A = #σ A
   
-    κ : (𝔸 → ∫ A) → ∫ A
+    κ : (𝔸 → ʃ A) → ʃ A
     κ = #κ
   
-    κ′ : (𝔸 → ∫ A) → ∫ A
+    κ′ : (𝔸 → ʃ A) → ʃ A
     κ′ = #κ′
     
     postulate
-      p1 : (γ : 𝔸 → ∫ A) → ((x : 𝔸) → γ x ≈ κ γ)
-      p2 : (x : ∫ A) → x ≈ κ′ (const x)
+      p1 : (γ : 𝔸 → ʃ A) → ((x : 𝔸) → γ x ≈ κ γ)
+      p2 : (x : ʃ A) → x ≈ κ′ (const x)
 
 
     module _ (B : 𝒰₀) where
-      ∫-as-HIT-recursion :
+      ʃ-as-HIT-recursion :
         (A → B) 
         → (κB : (𝔸 → B) → B)
         → (κ′B : (𝔸 → B) → B)
         → ((γ : 𝔸 → B) → ((x : 𝔸) → γ x ≈ κB γ))
         → ((x : B) → x ≈ κ′B (const x))
-        → (∫ A → B)
-      ∫-as-HIT-recursion σB _  _   _  _  (#σ a)  = σB a
-      ∫-as-HIT-recursion σB κB κ′B p1 p2 (#κ γ)  = κB (λ (x : 𝔸) → ∫-as-HIT-recursion σB κB κ′B p1 p2 (γ x))
-      ∫-as-HIT-recursion σB κB κ′B p1 p2 (#κ′ γ) = κ′B ((λ (x : 𝔸) → ∫-as-HIT-recursion σB κB κ′B p1 p2 (γ x)))
+        → (ʃ A → B)
+      ʃ-as-HIT-recursion σB _  _   _  _  (#σ a)  = σB a
+      ʃ-as-HIT-recursion σB κB κ′B p1 p2 (#κ γ)  = κB (λ (x : 𝔸) → ʃ-as-HIT-recursion σB κB κ′B p1 p2 (γ x))
+      ʃ-as-HIT-recursion σB κB κ′B p1 p2 (#κ′ γ) = κ′B ((λ (x : 𝔸) → ʃ-as-HIT-recursion σB κB κ′B p1 p2 (γ x)))
       postulate
-        uniqueness-of-∫-recursion-1 :
+        uniqueness-of-ʃ-recursion-1 :
            (σB : A → B) 
           → (κB : (𝔸 → B) → B)
           → (κ′B : (𝔸 → B) → B)
           → (p1B : (γ : 𝔸 → B) → ((x : 𝔸) → γ x ≈ κB γ))
           → (p2B : (x : B) → x ≈ κ′B (const x))
-          → (γ : 𝔸 → ∫ A) → (x : 𝔸)
-          → (∫-as-HIT-recursion σB κB κ′B p1B p2B) ⁎ (p1 γ x) ≈ p1B ((∫-as-HIT-recursion σB κB κ′B p1B p2B) ∘ γ) x
+          → (γ : 𝔸 → ʃ A) → (x : 𝔸)
+          → (ʃ-as-HIT-recursion σB κB κ′B p1B p2B) ⁎ (p1 γ x) ≈ p1B ((ʃ-as-HIT-recursion σB κB κ′B p1B p2B) ∘ γ) x
             
-    module _ (P : ∫ A → 𝒰₀) where
-      ∫-as-HIT-induction :
+    module _ (P : ʃ A → 𝒰₀) where
+      ʃ-as-HIT-induction :
         ((x : A) → (P (σ x)))
-        → (κP : (γ : 𝔸 → ∫ A) → (p : (x : 𝔸) → P (γ x)) → P (κ γ))
-        → ((γ : 𝔸 → ∫ A) → (x : 𝔸) → (p : (x : 𝔸) → P (γ x)) → transport P (p1 γ x) (p x) ≈ κP γ p)
-        → (κ′P : (γ : 𝔸 → ∫ A) → (p′ : (x : 𝔸) → P (γ x)) → P (κ′ γ))   
-        → ((x : ∫ A) → (pₓ : P x) → transport P (p2 x) pₓ ≈ κ′P (const x) (const pₓ))
-        → ((x : ∫ A) → P x)
-      ∫-as-HIT-induction pσ _   _   _    _   (#σ x) = pσ x
-      ∫-as-HIT-induction pσ pκP pp1 pκ′P pp2 (#κ γ) = pκP γ (λ (x : 𝔸) → ∫-as-HIT-induction pσ pκP pp1 pκ′P pp2 (γ x))
-      ∫-as-HIT-induction pσ pκP pp1 pκ′P pp2 (#κ′ γ) = pκ′P γ (λ (x : 𝔸) → ∫-as-HIT-induction pσ pκP pp1 pκ′P pp2 (γ x))
+        → (κP : (γ : 𝔸 → ʃ A) → (p : (x : 𝔸) → P (γ x)) → P (κ γ))
+        → ((γ : 𝔸 → ʃ A) → (x : 𝔸) → (p : (x : 𝔸) → P (γ x)) → transport P (p1 γ x) (p x) ≈ κP γ p)
+        → (κ′P : (γ : 𝔸 → ʃ A) → (p′ : (x : 𝔸) → P (γ x)) → P (κ′ γ))   
+        → ((x : ʃ A) → (pₓ : P x) → transport P (p2 x) pₓ ≈ κ′P (const x) (const pₓ))
+        → ((x : ʃ A) → P x)
+      ʃ-as-HIT-induction pσ _   _   _    _   (#σ x) = pσ x
+      ʃ-as-HIT-induction pσ pκP pp1 pκ′P pp2 (#κ γ) = pκP γ (λ (x : 𝔸) → ʃ-as-HIT-induction pσ pκP pp1 pκ′P pp2 (γ x))
+      ʃ-as-HIT-induction pσ pκP pp1 pκ′P pp2 (#κ′ γ) = pκ′P γ (λ (x : 𝔸) → ʃ-as-HIT-induction pσ pκP pp1 pκ′P pp2 (γ x))
 
        
   {- 
-    Now, it is about showing the properties of ∫,
+    Now, it is about showing the properties of ʃ,
     we are really interested in:
     It is a modality reflecting into the discrete types.
   -}
   
-  ∫-_is-discrete : (A : 𝒰₀) → (∫ A) is-discrete
-  ∫- A is-discrete =
-    has-left-inverse κ′ by (λ (x : ∫ A) → p2 x ⁻¹)
-    and-right-inverse κ by (λ (γ : 𝔸 → ∫ A) → fun-ext (p1 γ))
+  ʃ-_is-discrete : (A : 𝒰₀) → (ʃ A) is-discrete
+  ʃ- A is-discrete =
+    has-left-inverse κ′ by (λ (x : ʃ A) → p2 x ⁻¹)
+    and-right-inverse κ by (λ (γ : 𝔸 → ʃ A) → fun-ext (p1 γ))
 
-  {- 
-      describe κ 
-  -}
-
-  paths-are-constant-in-∫- : 
-    ∀ (A : 𝒰₀) (γ : 𝔸 → ∫ A)
-    → γ ⇒ const (κ γ)
-  paths-are-constant-in-∫- _ γ = p1 γ
 
   module _ {A : 𝒰₀} where
     {-
        induction for the shape modality
     -}
-{-    
-    ∫-induction :
-      ∀ (P : ∫ A → 𝒰₀)
-      → ((x : ∫ A) → (P x) is-discrete)
+
+    ʃ-induction :
+      ∀ (P : ʃ A → 𝒰₀)
+      → ((x : ʃ A) → (P x) is-discrete)
       → ((x : A) → P(σ x))
-      → ((x : ∫ A) → P x)
-    ∫-induction P P-is-discrete base-case x =
-      ∫-as-HIT-induction
+      → ((x : ʃ A) → P x)
+    ʃ-induction P P-is-discrete base-case =
+      ʃ-as-HIT-induction
         P
         base-case
-        (λ γ p → {!!}) {!!} {!!} {!!} {!!}
--}  
+        (λ γ pκ → transport P (p1 γ origin-of-𝔸) (pκ origin-of-𝔸))
+        (λ γ x₁ p →
+          conclude-equality-of-values-from-discreteness
+            (P-is-discrete (κ γ)) _  x₁ origin-of-𝔸)
+        (λ γ pκ′ → transport P
+                             ( γ origin-of-𝔸
+                              ≈⟨ p1 γ origin-of-𝔸 ⟩
+                               κ γ
+                              ≈⟨ p2 (κ γ) ⟩
+                               κ′ (const (κ γ))
+                              ≈⟨ (κ′ ⁎ (fun-ext (p1 γ))) ⁻¹ ⟩ 
+                               κ′ γ
+                              ≈∎)
+                             (pκ′ origin-of-𝔸))
+        (λ x pₓ →  {!!}) 
+
   
 

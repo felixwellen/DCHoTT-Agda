@@ -14,6 +14,7 @@ module DiscreteTypes where
   open import EqualityAndPaths
   open import Homotopies
   open import Equivalences
+  open import CommonEquivalences
   open import HalfAdjointEquivalences
   open import FunctionExtensionality
   open import Flat renaming (_is-discrete to _is-crisply-discrete)
@@ -23,6 +24,10 @@ module DiscreteTypes where
   _is-discrete : ∀ (A : 𝒰₀) → 𝒰₀
   A is-discrete = const {𝔸} {A} is-an-equivalence
 
+  const-as-equivalence :
+    ∀ {A : 𝒰₀} → A is-discrete → A ≃ (𝔸 → A)
+  const-as-equivalence A-is-discrete = const is-an-equivalence-because A-is-discrete
+  
   conclude-equality-of-values-from-discreteness :
     ∀ {A : 𝒰₀}
     → A is-discrete
@@ -62,12 +67,27 @@ module DiscreteTypes where
             (λ s → fun-ext (λ a → left-invertible-at a (s a)))
             (λ s′ → fun-ext (λ a → right-invertible-at a (s′ a)))
 
-      φ⁻¹∘ψ : Π♭′ P → (𝔸 → Π♭′ P) 
-      φ⁻¹∘ψ s = (φ ⁻¹≃) $≃ (ψ $≃ha) s  
+      φ⁻¹∘ψ : Π♭′ P ≃ (𝔸 → Π♭′ P) 
+      φ⁻¹∘ψ = (φ ⁻¹≃) ∘≃ half-adjoint-equivalences-to-equivalences ψ
       
-    in the-map const is-an-equivalence-since-it-is-homotopic-to
-      φ⁻¹∘ψ by (λ s → refl) which-is-an-equivalence-by
-        (proof-of-equivalency ((φ ⁻¹≃) ∘≃ half-adjoint-equivalences-to-equivalences ψ))
+    in the-map const is-an-equivalence-since-it-is-homotopic-to-the-equivalence
+      φ⁻¹∘ψ by (λ s → refl) 
 
   Π♭ : ∀ {A : 𝒰₀} → (P : A → 𝒰♭) → 𝒰♭
   Π♭ P = (Π♭′ P) , (Π-preserves-discreteness P)
+  
+  ≈-preserves-discreteness :
+    ∀ {A : 𝒰₀} {a a′ : A}
+    → A is-discrete → (a ≈ a′) is-discrete
+  ≈-preserves-discreteness {A} {a} {a′} A-is-discrete =
+    let
+      ψ : (a ≈ a′) ≃ (𝔸 → (a ≈ a′))
+      ψ = (a ≈ a′)
+         ≃⟨ (const-as-equivalence A-is-discrete) ∗≃ ⟩ 
+          (const a ≈ const a′)
+         ≃⟨ {!!} ⟩
+          (𝔸 → (a ≈ a′))
+         ≃∎
+    in the-map const is-an-equivalence-since-it-is-homotopic-to-the-equivalence
+     ψ by (λ x → {!!}) 
+

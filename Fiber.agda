@@ -43,7 +43,7 @@ module Fiber where
     → (η : a ≈ a′) → (a is-in-the-fiber-by γ) ≈ (a′ is-in-the-fiber-by (f ⁎ η ⁻¹ • γ))
   equality-action-on-the-fiber-of_at_acting-on-the-point-witnessed-by_ f b γ refl = refl
   
-  _as-map-from-One : ∀ {A : U₀} → A → (One → A)
+  _as-map-from-One : ∀ {A : U₀} → A → (𝟙 → A)
   a as-map-from-One = λ x → a 
   
   induced-map-to-the-fiber : 
@@ -99,7 +99,7 @@ module Fiber where
         and-right-inverse inverse by (λ _ → refl))
 
   fiber-of-π₁-is-second-factor :
-    ∀ {A B : 𝒰}
+    ∀ {A B : 𝒰₀}
     → (x : A) → fiber-of π₁ {B = B} at x ≃ B
   fiber-of-π₁-is-second-factor x = fiber-of-a-∑ x
 

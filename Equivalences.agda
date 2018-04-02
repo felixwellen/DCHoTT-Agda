@@ -7,8 +7,6 @@ module Equivalences where
   open import Language 
   open import Homotopies
   
-  
-  
   _left-inverse-of_ : ∀ {i j} {A : U i} {B : U j} → (f : A → B) → (g : B → A) → U j
   f left-inverse-of g =  (f ∘ g) ∼ id
   
@@ -32,15 +30,30 @@ module Equivalences where
     field 
       the-equivalence : A → B
       proof-of-invertibility : the-equivalence is-an-equivalence
-  
 
+  has-inverse_by_and_ :
+    ∀ {i j} {A : 𝒰 i} {B : 𝒰 j}
+    → {f : A → B} → (f⁻¹ : B → A)
+    → f⁻¹ ∘ f ⇒ id → f ∘ f⁻¹ ⇒ id
+    → f is-an-equivalence
+  has-inverse f⁻¹ by f⁻¹∘f⇒id and f∘f⁻¹⇒id = has-left-inverse f⁻¹ by f⁻¹∘f⇒id and-right-inverse f⁻¹ by (λ a → f∘f⁻¹⇒id a ⁻¹)
+
+  _is-an-equivalence-because_is-an-inverse-by_and_ :
+    ∀ {i j} {A : 𝒰 i} {B : 𝒰 j}
+    → (f : A → B) → (f⁻¹ : B → A)
+    → f⁻¹ ∘ f ⇒ id → f ∘ f⁻¹ ⇒ id
+    → (A ≃ B)
+  f is-an-equivalence-because f⁻¹ is-an-inverse-by f⁻¹∘f⇒id and f∘f⁻¹⇒id =
+    f is-an-equivalence-because
+      (has-left-inverse f⁻¹ by f⁻¹∘f⇒id and-right-inverse f⁻¹ by (λ a → f∘f⁻¹⇒id a ⁻¹))
+  
   --inclusion
   map-as-equivalence : ∀ {A B : U₀} → (e : A → B) → e is-an-equivalence → A ≃ B
   map-as-equivalence e proof-of-equivalency = e is-an-equivalence-because proof-of-equivalency
   
   -- projections
   
-  underlying-map-of : ∀ {i} {A B : U i} 
+  underlying-map-of : ∀ {i j} {A : 𝒰 i} {B : 𝒰 j}
                       → A ≃ B → (A → B)
   underlying-map-of f = _≃_.the-equivalence f
 
@@ -73,7 +86,7 @@ module Equivalences where
     (_ is-an-equivalence-because (has-left-inverse _ by _ and-right-inverse _ by counit)) = counit
   
   proof-of-equivalency :
-    ∀ {A B : U₀} 
+    ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} 
     → (f : A ≃ B) 
     → (underlying-map-of f) is-an-equivalence
   proof-of-equivalency (_ is-an-equivalence-because proof-of-equivalency) = 
@@ -154,7 +167,7 @@ module Equivalences where
   transport-as-equivalence P γ = transport P γ is-an-equivalence-because
                                    transport-is-an-equivalence P γ
   
-  
+
   equivalences-are-preserved-by-homotopy : 
     ∀ {A B : U₀} (f g : A → B)
     → f is-an-equivalence → f ∼ g
@@ -171,6 +184,13 @@ module Equivalences where
   the-map f is-an-equivalence-since-it-is-homotopic-to g by H which-is-an-equivalence-by g-is-an-equivalence =
     equivalences-are-preserved-by-homotopy g f g-is-an-equivalence (H ⁻¹∼)
   
+  the-map_is-an-equivalence-since-it-is-homotopic-to-the-equivalence_by_ :
+    ∀ {A B : U₀} (f : A → B)
+    → (g : A ≃ B)
+    → f ∼ (underlying-map-of g) 
+    → f is-an-equivalence
+  the-map f is-an-equivalence-since-it-is-homotopic-to-the-equivalence g by H =
+    equivalences-are-preserved-by-homotopy (underlying-map-of g) f (proof-of-equivalency g) (H ⁻¹∼)
   
   
   -- technical things for equivalences
@@ -251,21 +271,21 @@ module Equivalences where
   
   -- composition of equivalences 
   infixr 70 _∘≃_
-  _∘≃_ : ∀ {i} {A B C : U i} (g : B ≃ C) (f : A ≃ B) → A ≃ C
-  _∘≃_ {i} {A} {B} {C} (g is-an-equivalence-because (
+  _∘≃_ : ∀ {i j k} {A : 𝒰 i} {B : 𝒰 j} {C : 𝒰 k} (g : B ≃ C) (f : A ≃ B) → A ≃ C
+  _∘≃_ {i} {j} {k} {A} {B} {C} (g is-an-equivalence-because (
                           has-left-inverse 
                             left-inverse-of-g by unit-for-g 
                           and-right-inverse 
                             right-inverse-of-g by counit-for-g))
    (f is-an-equivalence-because (has-left-inverse left-inverse-of-f by unit-for-f and-right-inverse right-inverse-of-f by counit-for-f)) = g ∘ f is-an-equivalence-because 
-     (has-left-inverse left-inverse-of-f ∘ left-inverse-of-g by (_right-whisker_ {i} {A} {B} {A} {left-inverse-of-g ∘ (g ∘ f)} {f} 
-                        (_left-whisker_ {i} {_} {_} {A} {B} {B} {left-inverse-of-g ∘ g} {id} 
+     (has-left-inverse left-inverse-of-f ∘ left-inverse-of-g by (_right-whisker_ {i} {j} {i} {A} {B} {A} {left-inverse-of-g ∘ (g ∘ f)} {f} 
+                        (_left-whisker_ {i} {j} {j} {A} {B} {B} {left-inverse-of-g ∘ g} {id} 
                                     f  
                                     unit-for-g)  
                         left-inverse-of-f) •∼ 
                       unit-for-f and-right-inverse right-inverse-of-f ∘ right-inverse-of-g by
-                        (counit-for-g •∼ (_right-whisker_ {i} {C} {B} {C} {right-inverse-of-g} {f ∘ (right-inverse-of-f ∘ right-inverse-of-g)} 
-                          (_left-whisker_ {i} {_} {_} {C} {B} {B} {id} {f ∘ right-inverse-of-f} 
+                        (counit-for-g •∼ (_right-whisker_ {k} {j} {k} {C} {B} {C} {right-inverse-of-g} {f ∘ (right-inverse-of-f ∘ right-inverse-of-g)} 
+                          (_left-whisker_ {k} {j} {j} {C} {B} {B} {id} {f ∘ right-inverse-of-f} 
                           right-inverse-of-g 
                         counit-for-f))
                      g) )
@@ -290,7 +310,7 @@ module Equivalences where
   
   -- application for equivalences
   infixl 60 _$≃_
-  _$≃_ : ∀ {i} {A B : U i} → (f : A ≃ B) → A → B
+  _$≃_ : ∀ {i} {j} {A : U i} {B : 𝒰 j} → (f : A ≃ B) → A → B
   (f is-an-equivalence-because _) $≃ a = f a
   
   compute-$≃-on-transports : 
@@ -300,13 +320,13 @@ module Equivalences where
   compute-$≃-on-transports refl refl = refl
 
   -- inversion of equivalences
-  switch-inverses : ∀ {i} {A B : U i} {f : A → B} {g : B → A}
-                → f is-an-equivalence → g ∘ f ∼ id → f ∘ g ∼ id --  g∼gfh ○ gfh∼h -> g∼h -> fg∼fh ○ fh∼1
-  switch-inverses {_} {_} {_} {f} {g} (has-left-inverse k by H-kf-1 and-right-inverse h by H-fh-1) H-gf-1
+  switch-inverses : ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} {f : A → B} {g : B → A}
+                → f is-an-equivalence → g ∘ f ⇒ id → f ∘ g ⇒ id --  g∼gfh ○ gfh∼h -> g∼h -> fg∼fh ○ fh∼1
+  switch-inverses {_} {_} {_} {_} {f} {g} (has-left-inverse k by H-kf-1 and-right-inverse h by H-fh-1) H-gf-1
                            = (((H-fh-1 right-whisker g) •∼ (h left-whisker H-gf-1)) right-whisker f) •∼ (H-fh-1 ⁻¹∼)
   
   infix 80 _⁻¹≃
-  _⁻¹≃ : ∀ {i} {A B : U i} → A ≃ B → B ≃ A
+  _⁻¹≃ : ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} → A ≃ B → B ≃ A
   (the-equivalence is-an-equivalence-because reason) ⁻¹≃ with reason
   ... | (has-left-inverse
           left-inverse by unit
@@ -446,3 +466,11 @@ module Equivalences where
   A ≃⟨ reason ⟩ e′ = e′ ∘≃ reason  
 
 
+  equivalences-are-injective :
+    ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} {f : A → B} {x y : A}
+    → f is-an-equivalence
+    → (γ : f x ≈ f y)
+    → x ≈ y
+  equivalences-are-injective
+    (has-left-inverse l by unit and-right-inverse _ by _) γ =
+      (unit _) ⁻¹ • l ⁎ γ • (unit _)
