@@ -10,7 +10,7 @@ module G-structure where
   open import FiberBundle
   open import InfinityGroups
   open import PropositionalTruncation
-  open import OneImage
+  open import Image
   open import EtaleMaps
   open import Manifolds
   open import FormalDisk
@@ -75,7 +75,7 @@ module G-structure where
       there is always a 1-structure (for the trivial group 1)
   -}
   module trivial-structure-on-left-homogeneous-types
-    {V′ : 𝒰}
+    {V′ : 𝒰₀}
     (V : homogeneous-structure-on V′) 
     (group-over-BAutD : groups-over-structure-group-of V)
     where
@@ -108,8 +108,8 @@ module G-structure where
     trivial-structure : G-structures-on-V
     trivial-structure =
       ((λ _ → Be) ,
-        (λ (x : V′) → path-between-units • 1-monos-are-monos (λ (x : V′) → e-BAut 𝔻ₑ) χ′ (ι-BAut 𝔻ₑ)
-             (ι-im₁-is-1-mono (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x))
+        (λ (x : V′) → path-between-units • injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ) χ′ (ι-BAut 𝔻ₑ)
+             (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x))
 
   {-
     We will now work towards the definition of 
@@ -158,7 +158,7 @@ module G-structure where
 
       _is-torsion-free :
         G-structures-on-M → U₁
-      (lift , homotopy) is-torsion-free =
+      (lift-of-g , homotopy) is-torsion-free =
         {- 
           to decide if a G-structure is torsion free,
           we have to compare it locally to the trivial G-structure.
@@ -207,7 +207,7 @@ module G-structure where
           triangle-from-the-G-structure-at :
             ∀ (x : M) → triangles-at (𝔻-at x as-point-in-BAut-𝔻ₑ)
           triangle-from-the-G-structure-at x =
-            (lift ∘ ι-𝔻 x , (χ-M ∘ ι-𝔻 x , (pre-whisker (ι-𝔻 x) to homotopy)))
+            (lift-of-g ∘ ι-𝔻 x , (χ-M ∘ ι-𝔻 x , (pre-whisker (ι-𝔻 x) to homotopy)))
 
         in  ∀ (x : M)
           → ∀ (γ : 𝔻-at x as-point-in-BAut-𝔻ₑ ≈ e-BAut 𝔻ₑ)

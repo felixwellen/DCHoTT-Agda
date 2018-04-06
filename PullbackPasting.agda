@@ -20,10 +20,10 @@ module PullbackPasting where
   --   v    v g  v
   --   D -> B -> C
 
-  module proof-of-pullback-lemma (A B C D : U₀)(f : A → C)(g : B → C)(h : D → B) where
+  module proof-of-pullback-lemma (A B C D : 𝒰₀)(f : A → C)(g : B → C)(h : D → B) where
     -- prove the iterated cone type is equivalent to the cone type of the outer pullback
       open pullback-uniqueness using (cone-to-map)
-      inner-cone-to-outer-cone : ∀ {Z : U₀} 
+      inner-cone-to-outer-cone : ∀ {Z : 𝒰₀} 
         → cone Z (p₂-of-pullback f g) h → cone Z f (g ∘ h)
         -- Z ─z₁→ P₁ ─p₁→ A
         -- |      |
@@ -33,7 +33,7 @@ module PullbackPasting where
       inner-cone-to-outer-cone (z₁ and z₂ commute-by γ) = 
                               p₁ ∘ z₁ and z₂ commute-by (λ z → p-homotopy (z₁ z) • g ⁎ γ z)
 
-      outer-cone-to-inner-cone : ∀ (Z : U₀)
+      outer-cone-to-inner-cone : ∀ (Z : 𝒰₀)
         → cone Z f (g ∘ h) → cone {pullback f g} {_} {_}  Z p₂ h
         -- Z ─────z₁────→ A
         -- |              |
@@ -52,7 +52,7 @@ module PullbackPasting where
       -- z₂ ⇙γ  p₂      f
       -- ↓      ↓       ↓
       -- D ─h─→ B ──g─→ C
-      module rectify (Z : U₀)(z₁ : Z → pullback f g)(z₂ : Z → D)(γ : p₂ ∘ z₁ ∼ h ∘ z₂) where
+      module rectify (Z : 𝒰₀)(z₁ : Z → pullback f g)(z₂ : Z → D)(γ : p₂ ∘ z₁ ∼ h ∘ z₂) where
          -- given a cone, construct a map Z → P₁ homotopic to z₁ such that
          -- the new cone commutes strictly
 
@@ -150,7 +150,7 @@ module PullbackPasting where
                                 -- z₂     p₂      f    ⇙γ
                                 -- ↓      ↓       ↓
                                 -- D ─h─→ B ──g─→ C
-      module factor (Z : U₀) (z₁ : Z → A) (z₂ : Z → D) (γ : f ∘ z₁ ∼ (g ∘ h) ∘ z₂) where
+      module factor (Z : 𝒰₀) (z₁ : Z → A) (z₂ : Z → D) (γ : f ∘ z₁ ∼ (g ∘ h) ∘ z₂) where
              induced-map : Z → pullback f g
              induced-map = cone-to-map {_} {_} {_} {f} {g} {_} (z₁ and (h ∘ z₂) commute-by γ)
              ψ = induced-map
@@ -164,11 +164,11 @@ module PullbackPasting where
                                   refl-doesnt-matter z = refl-is-right-neutral (γ z)
                               in (λ η → z₁ and z₂ commute-by η) ⁎ fun-ext refl-doesnt-matter
              
-      invers-left : ∀ (Z : U₀) (c : cone {pullback f g} {_} {_}  Z p₂ h)
+      invers-left : ∀ (Z : 𝒰₀) (c : cone {pullback f g} {_} {_}  Z p₂ h)
                 → outer-cone-to-inner-cone Z (inner-cone-to-outer-cone c) ≈ c
       invers-left Z (z₁ and z₂ commute-by γ) = rectify.equality-of-the-cones Z z₁ z₂ γ
 
-      invers-right : ∀ (Z : U₀) (c : cone Z f (g ∘ h))
+      invers-right : ∀ (Z : 𝒰₀) (c : cone Z f (g ∘ h))
                 → c ≈ inner-cone-to-outer-cone (outer-cone-to-inner-cone Z c)
       invers-right Z (z₁ and z₂ commute-by γ) = factor.recompose-cone Z z₁ z₂ γ
 
@@ -180,7 +180,7 @@ module PullbackPasting where
                                   -- D ─h─→ B ──g─→ C
 
       proof-of-equivalence : 
-        ∀ {Z : U₀} → inner-cone-to-outer-cone {Z} is-an-equivalence
+        ∀ {Z : 𝒰₀} → inner-cone-to-outer-cone {Z} is-an-equivalence
       proof-of-equivalence {Z} =
         has-left-inverse
           (outer-cone-to-inner-cone Z) by (invers-left Z)
@@ -188,25 +188,25 @@ module PullbackPasting where
           (outer-cone-to-inner-cone Z) by (invers-right Z)
                             
       pasting-lemma-on-cone-spaces : 
-        ∀ {Z : U₀} → cone Z (p₂-of-pullback f g) h ≃ cone Z f (g ∘ h) 
+        ∀ {Z : 𝒰₀} → cone Z (p₂-of-pullback f g) h ≃ cone Z f (g ∘ h) 
       pasting-lemma-on-cone-spaces = 
         inner-cone-to-outer-cone is-an-equivalence-because proof-of-equivalence
 
       extend-inner-cone :
-        ∀ {Z Z′ : U₀} (φ : Z′ → Z)
+        ∀ {Z Z′ : 𝒰₀} (φ : Z′ → Z)
         → cone {pullback f g} {_} {_} Z p₂ h → cone {pullback f g} {_} {_} Z′ p₂ h
       extend-inner-cone φ (z₁ and z₂ commute-by γ) = 
         z₁ ∘ φ and z₂ ∘ φ commute-by (λ z → γ (φ z))
 
       extend-outer-cone :
-        ∀ {Z Z′ : U₀} (φ : Z′ → Z)
+        ∀ {Z Z′ : 𝒰₀} (φ : Z′ → Z)
         → cone Z f (g ∘ h) → cone Z′ f (g ∘ h)
       extend-outer-cone φ (z₁ and z₂ commute-by γ) = 
         z₁ ∘ φ and z₂ ∘ φ commute-by (λ z → γ (φ z))
 
       -- naturality is a part of the result
       naturality-of-inner-cone-to-outer-cone :
-        ∀ {Z Z′ : U₀} (φ : Z → Z′)
+        ∀ {Z Z′ : 𝒰₀} (φ : Z → Z′)
         → inner-cone-to-outer-cone ∘ extend-inner-cone φ ∼ extend-outer-cone φ ∘ inner-cone-to-outer-cone
       naturality-of-inner-cone-to-outer-cone φ (z₁ and z₂ commute-by γ) = refl
 
@@ -215,18 +215,18 @@ module PullbackPasting where
       -- (Z → PB f g∘h) ≃ (cone Z f g∘h) ≃ (cone Z p₂ h) ≃ (Z → PB p₂ h)
 
       pasting-lemma-on-mapping-spaces : 
-        ∀ {Z : U₀}
+        ∀ {Z : 𝒰₀}
         → (Z → pullback (p₂-of-pullback f g) h) ≃ (Z → pullback f (g ∘ h))
       pasting-lemma-on-mapping-spaces = 
         (pullback-is-universal  ∘≃ pasting-lemma-on-cone-spaces) ∘≃ pullback-is-universal ⁻¹≃
 
       inner-map-to-outer-map :  
-        ∀ {Z : U₀}
+        ∀ {Z : 𝒰₀}
         → (Z → pullback (p₂-of-pullback f g) h) → (Z → pullback f (g ∘ h))
       inner-map-to-outer-map = underlying-map-of pasting-lemma-on-mapping-spaces
 
       naturality-on-mapping-spaces : 
-        ∀ {Z Z′ : U₀} (φ : Z → Z′)
+        ∀ {Z Z′ : 𝒰₀} (φ : Z → Z′)
         → inner-map-to-outer-map ∘ (λ ξ → ξ ∘ φ) ∼ (λ ξ → ξ ∘ φ) ∘ inner-map-to-outer-map
       naturality-on-mapping-spaces φ ξ = refl
       
@@ -254,7 +254,7 @@ module PullbackPasting where
                                   -- |      p₂      f    ⇙γ
                                   -- v      ↓       ↓
                                   -- D ─h─→ B ──g─→ C
-      module factor-induced-maps (Z : U₀) (z₁ : Z → pullback f g) (z₂ : Z → D) (γ : p₂ ∘ z₁ ∼ h ∘ z₂) where
+      module factor-induced-maps (Z : 𝒰₀) (z₁ : Z → pullback f g) (z₂ : Z → D) (γ : p₂ ∘ z₁ ∼ h ∘ z₂) where
         induced-map : Z → pullback (p₂-of-pullback f g) h
         induced-map = induced-map-to-pullback z₁ z₂ γ
       
@@ -272,7 +272,7 @@ module PullbackPasting where
         induced-maps-factor′ z = e⁻¹∘e∼1 (induced-map z) ⁻¹ • e⁻¹ ⁎ induced-maps-factor z
 
 
-  pasting-lemma : ∀ {A B C D : U₀} (f : A → C) (g : B → C) (h : D → B)
+  pasting-lemma : ∀ {A B C D : 𝒰₀} (f : A → C) (g : B → C) (h : D → B)
                   → pullback (p₂-of-pullback f g) h ≃ pullback f (g ∘ h)
   pasting-lemma f g h = proof-of-pullback-lemma.pasting-lemma _ _ _ _ f g h
 

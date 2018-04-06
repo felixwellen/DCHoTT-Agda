@@ -27,14 +27,14 @@ f ⇒Π g = (x : _) → f(x) ≈ g(x)
 --  fγ          gγ
 --  ||          ||
 -- f(a′) ∼Ha′∼ g(a)
-naturality-of-homotopies : ∀ {A B : U₀} {a a′ : A} (f g : A → B)
+naturality-of-homotopies : ∀ {A B : 𝒰₀} {a a′ : A} (f g : A → B)
                            → (H : f ∼ g) → (γ : a ≈ a′)
                            → H a • g ⁎ γ ≈ f ⁎ γ • H a′
 naturality-of-homotopies f g H refl =
                              refl-is-right-neutral (H _) ⁻¹ • refl-is-left-neutral (H _)
 
 conjugate-with-homotopy : 
-  ∀ {A B : U₀} {a a′ : A}
+  ∀ {A B : 𝒰₀} {a a′ : A}
   → (f g : A → B) → (H : f ∼ g) → (γ : a ≈ a′)
   → f ⁎ γ ≈ H a • g ⁎ γ • H a′ ⁻¹ 
 conjugate-with-homotopy f g H refl =
@@ -43,13 +43,13 @@ conjugate-with-homotopy f g H refl =
            
 
 
-compose-homotopies : ∀ {A B : U₀} {f g h : A → B}
+compose-homotopies : ∀ {A B : 𝒰₀} {f g h : A → B}
                      → (H : f ⇒ g) (K : g ⇒ h)
                      → f ⇒ h
 compose-homotopies H K = λ a → H a • K a
 
 
-naturality-for-units : ∀ {A B : U₀} (f : A → B) (g : B → A)
+naturality-for-units : ∀ {A B : 𝒰₀} (f : A → B) (g : B → A)
                        → (unit :  g ∘ f ∼ id) 
                        → (a : A) → (g ∘ f) ⁎ unit a ≈ unit (g (f a)) 
 naturality-for-units f g unit a = (refl-is-right-neutral (unit (g (f a))) •
@@ -133,11 +133,11 @@ equality-to-homotopy : ∀ {i} {A B : U i} {f g : A → B}
                          → f ≈ g → (a : A) → f a ≈ g a
 equality-to-homotopy refl a = refl
   
-equality-to-homotopy′ : ∀ {A B : U₀} {f g : A → B}
+equality-to-homotopy′ : ∀ {A B : 𝒰₀} {f g : A → B}
                         → f ≈ g → (a : A) → f a ≈ g a
 equality-to-homotopy′ γ a = (λ f → f a) ⁎ γ
   
-those-are-equal : ∀ {A B : U₀} {f g : A → B}
+those-are-equal : ∀ {A B : 𝒰₀} {f g : A → B}
                     → (γ : f ≈ g) → (a : A)
                     → equality-to-homotopy γ a ≈ equality-to-homotopy′ γ a
 those-are-equal refl a = refl                  

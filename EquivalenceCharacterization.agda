@@ -8,7 +8,7 @@ module EquivalenceCharacterization where
   open import Contractibility
   open import PullbackSquare
   
-  module contractible-fibers-characterize-equivalences {A B : U₀} (f : A → B) where
+  module contractible-fibers-characterize-equivalences {A B : 𝒰₀} (f : A → B) where
     open import Fiber
     open _is-contractible
     
@@ -34,10 +34,10 @@ module EquivalenceCharacterization where
     square-with-equivalences :
       ∀ (a : A) (b : B) (γ : b ≈ f a)
       → f is-an-equivalence
-      → pullback-square-with-right (λ (_ : One) → b)
+      → pullback-square-with-right (λ (_ : 𝟙) → b)
           bottom f
           top id
-          left (λ (_ : One) → a)
+          left (λ (_ : 𝟙) → a)
     square-with-equivalences a b γ f-is-an-equivalence =
       pullback-square-from-equivalence-of-maps
         (λ _ → b) (λ _ → a) id-as-equivalence (f is-an-equivalence-because f-is-an-equivalence)
@@ -53,7 +53,7 @@ module EquivalenceCharacterization where
       in types-equivalent-to-contractibles-are-contractible
         (deduce-equivalence-of-vertices (rotate-cospan (fiber-square b))
          (square-with-equivalences (f⁻¹ b) b (counit b) f-is-an-equivalence))
-        One-is-contractible
+        𝟙-is-contractible
 
     to-fiber-condition :
       f is-an-equivalence → (∀ (b : B) → (fiber-of f at b) is-contractible) 

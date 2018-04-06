@@ -29,7 +29,7 @@ module Fiber where
   ι-fiber = as-point-in-the-domain
 
   fibers-equalize :
-    ∀ {A B : U₀} (f : A → B)
+    ∀ {A B : 𝒰₀} (f : A → B)
     → (b : B) → f ∘ ι-fiber ⇒ (λ (_ : fiber-of f at b) → b)
   fibers-equalize f b (a is-in-the-fiber-by γ) = γ
 
@@ -43,17 +43,17 @@ module Fiber where
     → (η : a ≈ a′) → (a is-in-the-fiber-by γ) ≈ (a′ is-in-the-fiber-by (f ⁎ η ⁻¹ • γ))
   equality-action-on-the-fiber-of_at_acting-on-the-point-witnessed-by_ f b γ refl = refl
   
-  _as-map-from-One : ∀ {A : U₀} → A → (𝟙 → A)
-  a as-map-from-One = λ x → a 
+  _as-map-from-𝟙 : ∀ {A : 𝒰₀} → A → (𝟙 → A)
+  a as-map-from-𝟙 = λ x → a 
   
   induced-map-to-the-fiber : 
-    ∀ {A B Z : U₀} (f : A → B) (b : B) 
+    ∀ {A B Z : 𝒰₀} (f : A → B) (b : B) 
     → (φ : Z → A) (γ : f ∘ φ ⇒ (λ _ → b))
     → (Z → fiber-of f at b)
   induced-map-to-the-fiber f b φ γ z = (φ z) is-in-the-fiber-by γ z
 
   fiber-as-sum :
-    ∀ {A B : U₀} {f : A → B} {b : B}
+    ∀ {A B : 𝒰₀} {f : A → B} {b : B}
     → fiber-of f at b ≃ ∑ (λ a → f(a) ≈ b)
   fiber-as-sum = (λ {(a is-in-the-fiber-by γ) → (a , γ)}) is-an-equivalence-because
                  (has-left-inverse (λ {(a , γ) → a is-in-the-fiber-by γ}) by (λ {(a is-in-the-fiber-by γ) → refl})

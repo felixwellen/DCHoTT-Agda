@@ -23,7 +23,7 @@ module Univalence where
      and-right-inverse U-transport by (λ x → (∑π₁ univalence-is-an-equivalence) x ⁻¹))
 
   propositions-are-equivalence-invariant :
-    ∀ {P : U₀ → U₀} {A A′ : U₀}
+    ∀ {P : 𝒰₀ → 𝒰₀} {A A′ : 𝒰₀}
     → (A ≃ A′) → P A → P A′
   propositions-are-equivalence-invariant e = transport _ (univalence e)
 

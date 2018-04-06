@@ -15,12 +15,12 @@ module FormalDisk where
 
 
   _is-infinitesimally-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
+    {X : 𝒰₀} → (x x′ : X) → 𝒰₀
   x is-infinitesimally-close-to x′ = ℑ-unit x ≈ ℑ-unit x′
 
   -- shorthand
   _is-close-to_ :
-    {X : U₀} → (x x′ : X) → U₀
+    {X : 𝒰₀} → (x x′ : X) → 𝒰₀
   _is-close-to_ = _is-infinitesimally-close-to_
 
 
@@ -28,7 +28,7 @@ module FormalDisk where
   -- they also preserve infinitesimal proximity:
   
   mapping-with_preserves-infinitesimal-proximity :
-    ∀ {X Y : U₀} {x x′ : X}
+    ∀ {X Y : 𝒰₀} {x x′ : X}
     → (f : X → Y)
     → (x is-close-to x′) → (f x) is-close-to (f x′)
   mapping-with f preserves-infinitesimal-proximity γ = ℑ⁎ f ⁎ γ  -- see 'Im.agda'
@@ -36,17 +36,17 @@ module FormalDisk where
 
   -- T∞ as dependent type
   formal-disk-at_ :
-    ∀ {X : U₀}
-    → (x : X) → U₀
+    ∀ {X : 𝒰₀}
+    → (x : X) → 𝒰₀
   formal-disk-at x = ∑ (λ x′ → x is-close-to x′)
 
   𝔻 :
-    ∀ (X : U₀)
-    → (x : X) → U₀
+    ∀ (X : 𝒰₀)
+    → (x : X) → 𝒰₀
   𝔻 X x = formal-disk-at x
   
   inclusion-of-formal-disk-at :
-    ∀ {X : U₀}
+    ∀ {X : 𝒰₀}
     → (x : X)
     → formal-disk-at x → X
   inclusion-of-formal-disk-at x (y , γ) = y
@@ -54,13 +54,13 @@ module FormalDisk where
   ι-𝔻 = inclusion-of-formal-disk-at
   
   ∗-𝔻 :
-    ∀ {X : 𝒰} {x : X}
+    ∀ {X : 𝒰₀} {x : X}
     → 𝔻 X x
   ∗-𝔻 = (_ , refl)
 
 
   induced-map-on-formal-disks :
-    ∀ {X Y : 𝒰}
+    ∀ {X Y : 𝒰₀}
     → (f : X → Y)
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   induced-map-on-formal-disks f x (x′ , x′-is-close-to-x) =
@@ -68,14 +68,14 @@ module FormalDisk where
 
   -- first order terminology
   push-forward : 
-    ∀ {X Y : 𝒰}
+    ∀ {X Y : 𝒰₀}
     → (f : X → Y)
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   push-forward = induced-map-on-formal-disks
   
   -- the generalized differential of a function
   d :
-    ∀ {X Y : 𝒰}
+    ∀ {X Y : 𝒰₀}
     → (f : X → Y)
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
@@ -89,7 +89,7 @@ module FormalDisk where
 
 
   module equivalences-induce-equivalences-on-formal-disks
-    {A B : U₀} (f≃ : A ≃ B) where
+    {A B : 𝒰₀} (f≃ : A ≃ B) where
 
     f = underlying-map-of f≃
 
@@ -115,7 +115,7 @@ module FormalDisk where
     may be calculated componentwise
   -}
 
-  module 𝔻-commutes-with-× {A B C : 𝒰} (f : A → B × C) where 
+  module 𝔻-commutes-with-× {A B C : 𝒰₀} (f : A → B × C) where 
     open ℑ-preserves-products B C
 
     df : (x : A) → 𝔻 A x → 𝔻 (B × C) (f x)
@@ -160,3 +160,6 @@ module FormalDisk where
       → 𝔻 B (π₁ y) × 𝔻 C (π₂ y) → 𝔻 (B × C) y
     join-𝔻× (b₀ , c₀) ((b , b₀∼b) , (c , c₀∼c)) =
       ((b , c) , pair-construction b₀ c₀ ⁻¹ • φ ⁎ (b₀∼b ,≈ c₀∼c) • pair-construction b c)
+
+
+    {- ... -}

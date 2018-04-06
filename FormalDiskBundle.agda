@@ -25,21 +25,21 @@ module FormalDiskBundle where
   -- |      x₀
   -- ↓      ↓
   -- X ---> ℑ X
-  D : ∀ (X : U₀) → (x₀ : X) → U₀
-  D X x₀ = pullback (λ (x : One) → ℑ-unit x₀) (ℑ-unit-at X)
+  D : ∀ (X : 𝒰₀) → (x₀ : X) → 𝒰₀
+  D X x₀ = pullback (λ (x : 𝟙) → ℑ-unit x₀) (ℑ-unit-at X)
 
   {-
     the jet bundle
   -}
   J∞ :
-    ∀ {X : U₀}
-    → (E : X → U₀)
-    → (X → U₀)
+    ∀ {X : 𝒰₀}
+    → (E : X → 𝒰₀)
+    → (X → 𝒰₀)
   J∞ E x = formal-disk-at x → E(x)
 
   J∞→ :
-    ∀ {X : U₀}
-    → {E : X → U₀} {F : X → U₀}
+    ∀ {X : 𝒰₀}
+    → {E : X → 𝒰₀} {F : X → 𝒰₀}
     → (φ : (x : X) → E x → F x)
     → ((x : X) → J∞ E x → J∞ F x)
   J∞→ {_} {E} {_} φ x = λ (f : formal-disk-at x → E x) → φ x ∘ f
@@ -51,8 +51,8 @@ module FormalDiskBundle where
 
   -}
 
-  j∞ : ∀ {X : U₀}
-    → (E : X → U₀)
+  j∞ : ∀ {X : 𝒰₀}
+    → (E : X → 𝒰₀)
     → Π E → Π (J∞ E)
   j∞ {X} E s = λ (x : X) (γ : formal-disk-at x) → s x
 
@@ -61,14 +61,14 @@ module FormalDiskBundle where
   -}
 
   T∞′ : 
-    ∀ {X : U₀}
-    → (E : X → U₀)
-    → (X → U₀)
+    ∀ {X : 𝒰₀}
+    → (E : X → 𝒰₀)
+    → (X → 𝒰₀)
   T∞′ E x = (formal-disk-at x) × E(x)
 
 {-
   T∞′-of-the-inclusion-of_is-the-formal-disk :
-    ∀ {X : U₀}
+    ∀ {X : 𝒰₀}
     → (x₀ : X)
     → (T∞′ (dependent-replacement (λ ∗ → x₀))) ≃χ (λ (x : X) → x is-infinitesimally-close-to x₀)
   T∞′-of-the-inclusion-of x₀ is-the-formal-disk =
@@ -83,8 +83,8 @@ module FormalDiskBundle where
   -}
 
   fiberwise-adjunction-of-T∞-and-J∞ :
-    ∀ {X : U₀}
-    → (E : X → U₀) (F : X → U₀)
+    ∀ {X : 𝒰₀}
+    → (E : X → 𝒰₀) (F : X → 𝒰₀)
     → (x : X) → (E(x) → J∞(F)(x)) ≃ (T∞′(E)(x) → F(x))
   fiberwise-adjunction-of-T∞-and-J∞ E F x =
     let
@@ -100,7 +100,7 @@ module FormalDiskBundle where
 
   -- the definitions of the formal disk agree
   module pullback-and-sum-definition-of-formal-disks-are-equivalent
-    {X : U₀} (x₀ : X) where
+    {X : 𝒰₀} (x₀ : X) where
 
     D-pullback = D X x₀
     D-sum = formal-disk-at x₀
@@ -115,21 +115,21 @@ module FormalDiskBundle where
 -}
   T∞→ = induced-map-on-formal-disks
 
-  formal-disk-bundle : (X : U₀) → U₀
+  formal-disk-bundle : (X : 𝒰₀) → 𝒰₀
   formal-disk-bundle X = pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
-  T∞ : (X : U₀) → U₀
+  T∞ : (X : 𝒰₀) → 𝒰₀
   T∞ X = formal-disk-bundle X
 
   T∞-as-dependent-type :
-    (X : U₀) → X → U₀
+    (X : 𝒰₀) → X → 𝒰₀
   T∞-as-dependent-type X x = formal-disk-at x 
   
-  p-of-T∞ : (X : U₀) → (T∞ X) → X
+  p-of-T∞ : (X : 𝒰₀) → (T∞ X) → X
   p-of-T∞ X = p₁-of-pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
   formal-disk-bundle-as-pullback-square :
-    ∀ (X : U₀) → pullback-square-with-right ℑ-unit bottom ℑ-unit top p₁ left p₂
+    ∀ (X : 𝒰₀) → pullback-square-with-right ℑ-unit bottom ℑ-unit top p₁ left p₂
   formal-disk-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
 
   {-
@@ -137,7 +137,7 @@ module FormalDiskBundle where
     one constructed as a pullback, the other
     as the sum over the T∞-as-dependent-type
   -}
-  module pullback-definition-and-dependent-version-agree (X : U₀) where
+  module pullback-definition-and-dependent-version-agree (X : 𝒰₀) where
 
     φ : T∞ X → ∑ (T∞-as-dependent-type X)
     φ (x and y are-in-the-same-fiber-by γ) = (x , (y , γ))
@@ -162,7 +162,7 @@ module FormalDiskBundle where
             (∑π₁-from T∞-as-dependent-type X) (p-of-T∞ X) conclusion id-as-equivalence (λ _ → refl)) x)
 
   module paths-induce-equivalences-of-formal-disks
-    {A : U₀} {x y : A} (γ : x ≈ y) where
+    {A : 𝒰₀} {x y : A} (γ : x ≈ y) where
 
     transport-in-T∞ :
       formal-disk-at x ≃ formal-disk-at y
@@ -175,7 +175,7 @@ module FormalDiskBundle where
     most general variant of the triviality theorem
   -}
   module triviality-of-the-formal-disk-bundle-over-homogeneous-types
-    {V : 𝒰} (V′ : homogeneous-structure-on V) where
+    {V : 𝒰₀} (V′ : homogeneous-structure-on V) where
 
     open homogeneous-structure-on_ V′
 

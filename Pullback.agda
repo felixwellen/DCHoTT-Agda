@@ -11,7 +11,7 @@ module Pullback where
   open import FunctionExtensionality
   open import Language
 
-  representability : ∀ (A : U₀) → (𝟙 → A) ≃ A
+  representability : ∀ (A : 𝒰₀) → (𝟙 → A) ≃ A
   representability A = ((λ t → t ∗) is-an-equivalence-because
                    let to-constant-map : A → (𝟙 → A)
                        to-constant-map a = λ x → a
@@ -33,30 +33,30 @@ module Pullback where
       b : B 
       γ : f(a) ≈ g(b)
 
-  p₁ : ∀ {A B C : U₀} {f : A → C} {g : B → C} → pullback f g → A
+  p₁ : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} → pullback f g → A
   p₁ (a and b are-in-the-same-fiber-by γ) = a
                                             
-  p₂ : ∀ {A B C : U₀} {f : A → C} {g : B → C} → pullback f g → B
+  p₂ : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} → pullback f g → B
   p₂ (a and b are-in-the-same-fiber-by γ) = b
 
-  p-homotopy : ∀ {A B C : U₀} {f : A → C} {g : B → C} → (x : pullback f g) → f(p₁ x) ≈ g(p₂ x)
+  p-homotopy : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} → (x : pullback f g) → f(p₁ x) ≈ g(p₂ x)
   p-homotopy (a and b are-in-the-same-fiber-by γ) = γ
 
-  p₁-of-pullback : ∀ {A B C : U₀} (f : A → C) (g : B → C) → pullback f g → A
+  p₁-of-pullback : ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C) → pullback f g → A
   p₁-of-pullback f g = p₁ {_} {_} {_} {f} {g}
 
-  p₂-of-pullback : ∀ {A B C : U₀} (f : A → C) (g : B → C) → pullback f g → B
+  p₂-of-pullback : ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C) → pullback f g → B
   p₂-of-pullback f g = p₂ {_} {_} {_} {f} {g}
 
-  p-homotopy-of-pullback : ∀ {A B C : U₀} (f : A → C) (g : B → C) → (x : pullback f g) → f(p₁ x) ≈ g(p₂ x)
+  p-homotopy-of-pullback : ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C) → (x : pullback f g) → f(p₁ x) ≈ g(p₂ x)
   p-homotopy-of-pullback f g x = p-homotopy {_} {_} {_} {f} {g} x
 
-  uniqueness-for-pullbacks : ∀ {A B C : U₀} {f : A → C} {g : B → C} 
+  uniqueness-for-pullbacks : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} 
                                → (x : pullback f g) →  ((p₁ x) and (p₂ x) are-in-the-same-fiber-by (p-homotopy x)) ≈ x
   uniqueness-for-pullbacks (a and b are-in-the-same-fiber-by x) = refl
 
   -- the path groupoid of A acts on the elements of the pullback of f and g
-  equality-action : ∀ {A B C : U₀} (f : A → C) (g : B → C)
+  equality-action : ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C)
                        (a a′ : A) (η : a ≈ a′) (b : B) (γ : f(a) ≈ g(b)) 
                      → in-the-type (pullback f g) we-have-an-equality
                         (a and b are-in-the-same-fiber-by γ) ≈ 
@@ -64,7 +64,7 @@ module Pullback where
   equality-action f g a .a refl b γ = refl
 
   -- the path groupoid of A acts on the elements of the pullback of f and g
-  equality-action′ : ∀ {A B C : U₀} (f : A → C) (g : B → C)
+  equality-action′ : ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C)
                        (b b′ : B) (η : b ≈ b′) (a : A) (γ : f(a) ≈ g(b)) 
                      → in-the-type (pullback f g) we-have-an-equality
                         (a and b are-in-the-same-fiber-by γ) ≈ 
@@ -72,7 +72,7 @@ module Pullback where
   equality-action′ f g b .b refl a γ = (λ ξ → a and b are-in-the-same-fiber-by ξ) ⁎
                                           refl-is-right-neutral γ
 
-  homotopy-action-as-a-map : ∀ {U V W : U₀} (u₀ : U → W) (v₀ : V → W)
+  homotopy-action-as-a-map : ∀ {U V W : 𝒰₀} (u₀ : U → W) (v₀ : V → W)
                             → (T : U → U)
                             → (H : (u : U) → u ≈ T u)
                             → pullback u₀ v₀ → pullback u₀ v₀
@@ -81,8 +81,8 @@ module Pullback where
 
 
 
-  module simple-reformulation {A B C : U₀} (f : A → C) (g : B → C) where
-    fibration : A × B → U₀
+  module simple-reformulation {A B C : 𝒰₀} (f : A → C) (g : B → C) where
+    fibration : A × B → 𝒰₀
     fibration (a , b) = f(a) ≈ g(b)
     as-sum : (pullback f g) ≃ ∑ fibration
     as-sum = (λ { (a and b are-in-the-same-fiber-by γ) → ((a , b) , γ) }) 
@@ -136,36 +136,36 @@ module Pullback where
                                          ⁎ ⁻¹-is-right-inversion η
                                  }))
 
-  data cone {A B C : U₀} (Z : U₀) (f : A → C) (g : B → C) : U₀ where
+  data cone {A B C : 𝒰₀} (Z : 𝒰₀) (f : A → C) (g : B → C) : 𝒰₀ where
     _and_commute-by_ : (z₁ : Z → A) → (z₂ : Z → B) → f ∘ z₁ ∼ g ∘ z₂ → cone Z f g
 
-  pc₁ : ∀ {A B C Z : U₀} {f : A → C} {g : B → C} → cone Z f g → (Z → A)
+  pc₁ : ∀ {A B C Z : 𝒰₀} {f : A → C} {g : B → C} → cone Z f g → (Z → A)
   pc₁ (z₁ and z₂ commute-by γ) = z₁ 
-  pc₂ : ∀ {A B C Z : U₀} {f : A → C} {g : B → C} → cone Z f g → (Z → B)
+  pc₂ : ∀ {A B C Z : 𝒰₀} {f : A → C} {g : B → C} → cone Z f g → (Z → B)
   pc₂ (z₁ and z₂ commute-by γ) = z₂
-  pc-homotopy : ∀ {A B C Z : U₀} {f : A → C} {g : B → C} → (c : cone Z f g) → f ∘ (pc₁ c) ∼ g ∘ (pc₂ c)
+  pc-homotopy : ∀ {A B C Z : 𝒰₀} {f : A → C} {g : B → C} → (c : cone Z f g) → f ∘ (pc₁ c) ∼ g ∘ (pc₂ c)
   pc-homotopy (z₁ and z₂ commute-by x) z = x z
 
-  uniqueness-for-cones : ∀ {A B C Z : U₀} → (f : A → C) → (g : B → C) 
+  uniqueness-for-cones : ∀ {A B C Z : 𝒰₀} → (f : A → C) → (g : B → C) 
                             → (c : cone Z f g) → ((pc₁ c) and (pc₂ c) commute-by (pc-homotopy c)) ≈ c
   uniqueness-for-cones f g (z₁ and z₂ commute-by γ) = refl
 
   module pullback-uniqueness where
-      map-to-cone : ∀ {A B C : U₀} {f : A → C} {g : B → C} {Z : U₀} → (Z → pullback f g) → cone Z f g
+      map-to-cone : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} {Z : 𝒰₀} → (Z → pullback f g) → cone Z f g
       map-to-cone φ = p₁ ∘ φ and p₂ ∘ φ commute-by (λ z → p-homotopy (φ z))
                                                                           
-      cone-to-map : ∀ {A B C : U₀} {f : A → C} {g : B → C} {Z : U₀} → cone Z f g → (Z → pullback f g) 
+      cone-to-map : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} {Z : 𝒰₀} → cone Z f g → (Z → pullback f g) 
       cone-to-map (z₁ and z₂ commute-by γ) z = z₁ z and z₂ z are-in-the-same-fiber-by γ z
   
-      left-invertible : ∀ {A B C : U₀} {f : A → C} {g : B → C} {Z : U₀} 
+      left-invertible : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} {Z : 𝒰₀} 
         → (φ : Z → pullback f g) → cone-to-map (map-to-cone φ) ≈ φ
       left-invertible φ = fun-ext (λ z → uniqueness-for-pullbacks (φ z))
   
-      right-invertible : ∀ {A B C : U₀} {f : A → C} {g : B → C} {Z : U₀} 
+      right-invertible : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} {Z : 𝒰₀} 
         → (c : cone Z f g) →  c ≈ map-to-cone (cone-to-map c)
       right-invertible (z₁ and z₂ commute-by γ) = refl
 
-  pullback-is-universal : ∀ {A B C : U₀} {f : A → C} {g : B → C} {Z : U₀} →  cone Z f g ≃ (Z → pullback f g)
+  pullback-is-universal : ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C} {Z : 𝒰₀} →  cone Z f g ≃ (Z → pullback f g)
   pullback-is-universal = 
     pullback-uniqueness.cone-to-map is-an-equivalence-because 
         (has-left-inverse pullback-uniqueness.map-to-cone by 
@@ -181,7 +181,7 @@ module Pullback where
     (z₁ z) and (z₂ z) are-in-the-same-fiber-by γ z 
 
   uniqueness-of-induced-maps :
-    ∀ {Z A B C : U₀} {f : A → C} {g : B → C}
+    ∀ {Z A B C : 𝒰₀} {f : A → C} {g : B → C}
     → (z₁ : Z → A) → (z₂ : Z → B) → (γ : f ∘ z₁ ∼ g ∘ z₂)
     → (φ : Z → pullback f g) → (H1 :  p₁ ∘ φ ∼ z₁) → (H2 : p₂ ∘ φ ∼ z₂)
     → ((z : Z) → f ⁎ H1 z ⁻¹ • (p-homotopy (φ z)) • g ⁎ H2 z ≈ γ z)
@@ -208,23 +208,23 @@ module Pullback where
       induced-map-to-pullback z₁ z₂ γ z 
      ≈∎
 
-  module products-are-special-pullbacks (A B : U₀) where
+  module products-are-special-pullbacks (A B : 𝒰₀) where
     π-A : A × B → A
     π-A = π₁
 
     π-B : A × B → B
     π-B = π₂
 
-    A-to-One : A → 𝟙
-    A-to-One a = ∗
+    A-to-𝟙 : A → 𝟙
+    A-to-𝟙 a = ∗
 
-    B-to-One : B → 𝟙
-    B-to-One b = ∗
+    B-to-𝟙 : B → 𝟙
+    B-to-𝟙 b = ∗
 
-    induced-map : A × B → pullback A-to-One B-to-One
+    induced-map : A × B → pullback A-to-𝟙 B-to-𝟙
     induced-map = induced-map-to-pullback π-A π-B (λ x → refl)
     
-    inverse : pullback A-to-One B-to-One → A × B
+    inverse : pullback A-to-𝟙 B-to-𝟙 → A × B
     inverse (a and b are-in-the-same-fiber-by γ) = (a , b)
 
     induced-map-is-an-equivalence : induced-map is-an-equivalence
@@ -242,7 +242,7 @@ module Pullback where
   -- this module was intended to take less parameters
   -- the additional parameters are due to a work around
   -- there were strange results with staight forward implementations...
-  module equivalence-invariance {A A′ B C : U₀} 
+  module equivalence-invariance {A A′ B C : 𝒰₀} 
       (f : A → C) (g : B → C) 
       (e : A′ → A) (proof-of-equivalence : e is-an-equivalence) where
 
@@ -340,7 +340,7 @@ module Pullback where
 
   -- invariance of pullbacks under 
   -- substitution of homotopic right-maps in the cospan
-  module homotopy-invariance {A B C : U₀} 
+  module homotopy-invariance {A B C : 𝒰₀} 
       (f f′ : A → C) (g : B → C) (H : f′ ∼ f) where
     --   P′----\ 
     --   |     ↓
@@ -384,8 +384,8 @@ module Pullback where
                               is-again-an-equivalence
 
   module switching-the-maps-factors-cones-by-an-equivalence
-      {A B C : U₀} (f : A → C) (g : B → C) 
-      (Z : U₀) (z₁ : Z → A) (z₂ : Z → B) (γ : f ∘ z₁ ∼ g ∘ z₂) where
+      {A B C : 𝒰₀} (f : A → C) (g : B → C) 
+      (Z : 𝒰₀) (z₁ : Z → A) (z₂ : Z → B) (γ : f ∘ z₁ ∼ g ∘ z₂) where
     e : pullback f g → pullback g f
     e = λ {(a and b are-in-the-same-fiber-by γ) → b and a are-in-the-same-fiber-by γ ⁻¹}
 
@@ -437,8 +437,8 @@ module Pullback where
                                                               
   -- language
   map-from_to-the-pullback-of_and_induced-by : 
-    ∀ {A B C : U₀}
-    → (Z : U₀)
+    ∀ {A B C : 𝒰₀}
+    → (Z : 𝒰₀)
     → (f : A → C) → (g : B → C)
     → (z₁ : Z → A) → (z₂ : Z → B) → (γ : (z : Z) → f(z₁ z) ≈ g(z₂ z))
     → (Z → pullback f g)
@@ -448,17 +448,17 @@ module Pullback where
 
 
   -- pullback id f
-  id-pullback-to-domain : ∀ (A B : U₀) (f : A → B)
+  id-pullback-to-domain : ∀ (A B : 𝒰₀) (f : A → B)
                           → pullback id f → A 
   id-pullback-to-domain A B f (b and a are-in-the-same-fiber-by γ) = a 
 
-  domain-to-id-pullback : ∀ (A B : U₀) (f : A → B)
+  domain-to-id-pullback : ∀ (A B : 𝒰₀) (f : A → B)
                            → A → pullback id f
   domain-to-id-pullback A B f a = f a and a are-in-the-same-fiber-by refl
 
 
 
-  id-pullback-is-domain : ∀ (A B : U₀) (f : A → B)
+  id-pullback-is-domain : ∀ (A B : 𝒰₀) (f : A → B)
                        → (id-pullback-to-domain A B f) is-an-equivalence
   id-pullback-is-domain A B f = has-left-inverse domain-to-id-pullback A B f
                                by (λ {(b and a are-in-the-same-fiber-by γ) →
@@ -469,7 +469,7 @@ module Pullback where
                                          • equality-action id f b (f a) γ a γ ⁻¹})
                              and-right-inverse domain-to-id-pullback A B f
                                by (λ x → refl)
-  id-pullback-as-equivalence : ∀ (A B : U₀) (f : A → B) 
+  id-pullback-as-equivalence : ∀ (A B : 𝒰₀) (f : A → B) 
                                → pullback id f ≃ A 
   id-pullback-as-equivalence A B f = id-pullback-to-domain A B f is-an-equivalence-because
                                        id-pullback-is-domain A B f
@@ -477,17 +477,17 @@ module Pullback where
   
       
   -- pullback f id
-  id-pullback-to-domain′ : ∀ (A B : U₀) (f : A → B)
+  id-pullback-to-domain′ : ∀ (A B : 𝒰₀) (f : A → B)
                           → pullback f id → A 
   id-pullback-to-domain′ A B f (a and b are-in-the-same-fiber-by γ) = a 
 
-  domain-to-id-pullback′ : ∀ (A B : U₀) (f : A → B)
+  domain-to-id-pullback′ : ∀ (A B : 𝒰₀) (f : A → B)
                            → A → pullback f id
   domain-to-id-pullback′ A B f a = a and f a are-in-the-same-fiber-by refl
 
 
 
-  id-pullback-is-domain′ : ∀ (A B : U₀) (f : A → B)
+  id-pullback-is-domain′ : ∀ (A B : 𝒰₀) (f : A → B)
                        → (id-pullback-to-domain′ A B f) is-an-equivalence
   id-pullback-is-domain′ A B f = has-left-inverse domain-to-id-pullback′ A B f
                                by (λ {(a and b are-in-the-same-fiber-by γ) →
@@ -503,7 +503,7 @@ module Pullback where
                                          ≈∎ })
                              and-right-inverse domain-to-id-pullback′ A B f
                                by (λ x → refl)
-  id-pullback-as-equivalence′ : ∀ (A B : U₀) (f : A → B) 
+  id-pullback-as-equivalence′ : ∀ (A B : 𝒰₀) (f : A → B) 
                                → pullback f id ≃ A 
   id-pullback-as-equivalence′ A B f = id-pullback-to-domain′ A B f is-an-equivalence-because
                                        id-pullback-is-domain′ A B f

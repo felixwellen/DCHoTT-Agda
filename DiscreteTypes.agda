@@ -14,6 +14,7 @@ module DiscreteTypes where
   open import EqualityAndPaths
   open import Homotopies
   open import Equivalences
+  open import Contractibility using (const)
   open import CommonEquivalences
   open import HalfAdjointEquivalences
   open import FunctionExtensionality
@@ -75,7 +76,9 @@ module DiscreteTypes where
 
   Π♭ : ∀ {A : 𝒰₀} → (P : A → 𝒰♭) → 𝒰♭
   Π♭ P = (Π♭′ P) , (Π-preserves-discreteness P)
-  
+
+
+  {-
   ≈-preserves-discreteness :
     ∀ {A : 𝒰₀} {a a′ : A}
     → A is-discrete → (a ≈ a′) is-discrete
@@ -91,3 +94,4 @@ module DiscreteTypes where
     in the-map const is-an-equivalence-since-it-is-homotopic-to-the-equivalence
      ψ by (λ x → {!!}) 
 
+  -}

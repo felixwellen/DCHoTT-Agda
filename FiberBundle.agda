@@ -9,7 +9,7 @@ module FiberBundle where
   open import Equivalences
   open import Fiber
   open import Language
-  open import OneImage
+  open import Image
   open import DependentTypes
   open import InfinityGroups
 
@@ -25,25 +25,25 @@ module FiberBundle where
     
   -}
 
-  record _is-a_-fiber-bundle {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where
+  record _is-a_-fiber-bundle {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where
     field
       all-fibers-are-merely-equivalent : ∀ (b : B) → ∥ φ b ≃ F ∥
 
-    canonical-cover′ : B → 𝒰
+    canonical-cover′ : B → 𝒰₀
     canonical-cover′ b = φ b ≃ F
 
     canonical-cover : ∑ canonical-cover′ → B
     canonical-cover (F′ , _) = F′
 
-  record _is-a′_-fiber-bundle′ {E B : 𝒰} (p : E → B) (F : 𝒰) : 𝒰₁ where
+  record _is-a′_-fiber-bundle′ {E B : 𝒰₀} (p : E → B) (F : 𝒰₀) : 𝒰₁ where
     field
       χ : B → BAut F
       classyfies : equivalence-of (λ b → fiber-of p at b) and (universal-family-over-BAut′ F) over χ
       
   -- product property expressed by pullback square
   _is-a-product-with-projections_and_ :
-    ∀ {A B : U₀} (Z : U₀) (z₁ : Z → A) (z₂ : Z → B)
-    → U₀
+    ∀ {A B : 𝒰₀} (Z : 𝒰₀) (z₁ : Z → A) (z₂ : Z → B)
+    → 𝒰₀
   Z is-a-product-with-projections z₁ and z₂ =
     pullback-square-with-right (λ a → ∗)
         bottom (λ b → ∗)
@@ -51,20 +51,20 @@ module FiberBundle where
         left z₂
 
   _is-a-product-of_and_ :
-    (Z A B : U₀) → U₀
+    (Z A B : 𝒰₀) → 𝒰₀
   Z is-a-product-of A and B =
     ∑ (λ (z₁ : Z → A) →
     ∑ (λ (z₂ : Z → B) → Z is-a-product-with-projections z₁ and z₂))
 
-  _*_ : ∀ {E B B′ : U₀}
-    → (f : B′ → B) → (φ : E → B) → U₀
+  _*_ : ∀ {E B B′ : 𝒰₀}
+    → (f : B′ → B) → (φ : E → B) → 𝒰₀
   f * φ = upper-left-vertex-of (complete-to-pullback-square φ f)
   
-  _*→_ : ∀ {E B B′ : U₀}
+  _*→_ : ∀ {E B B′ : 𝒰₀}
     → (f : B′ → B) → (φ : E → B) → ((f * φ) → B′)
   f *→ φ = left-map-of (complete-to-pullback-square φ f)
 
-  ^ = underlying-map-of-the-1-epimorphism
+  ^ = underlying-map-of-the-surjection
 
 
   {- 
@@ -81,13 +81,13 @@ module FiberBundle where
      
   -}
 
-  record _is-a‴_-fiber-bundle‴ {E B : U₀} (φ : E → B) (F : U₀) : U₁ where
+  record _is-a‴_-fiber-bundle‴ {E B : 𝒰₀} (φ : E → B) (F : 𝒰₀) : U₁ where
     field
-      V : U₀
+      V : 𝒰₀
       v : V ↠ B
       v′ : V × F → E
       □ : pullback-square-with-right φ
-            bottom (underlying-map-of-the-1-epimorphism v)
+            bottom (underlying-map-of-the-surjection v)
             top v′
             left π₁
 
@@ -96,17 +96,17 @@ module FiberBundle where
     a dependent version of the above
   -}
 
-  record _is-a″_-fiber-bundle″ {B : 𝒰} (φ : B → 𝒰) (F : 𝒰) : 𝒰₁ where 
+  record _is-a″_-fiber-bundle″ {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where 
     field
-      V : U₀
+      V : 𝒰₀
       v : V ↠ B
       pullback-trivializes : (x : V) → φ(v $↠ x) ≃ F
 
 
   module logical-equivalences-between-the-four-definitions-of-fiber-bundles
-    {B F : 𝒰} where
+    {B F : 𝒰₀} where
 
-    def‴-to-def″ : ∀ {E : 𝒰} (p : E → B)
+    def‴-to-def″ : ∀ {E : 𝒰₀} (p : E → B)
       → p is-a‴ F -fiber-bundle‴
       → (λ b → fiber-of p at b) is-a″ F -fiber-bundle″
     def‴-to-def″ p record { V = V ; v = v ; v′ = v′ ; □ = □ } =
@@ -119,7 +119,7 @@ module FiberBundle where
                 pullback-trivializes = λ x → fiber-of-π₁-is-second-factor x ∘≃ (equivalence-at x) ⁻¹≃
          }
 
-    def″-to-def‴ : ∀ (φ : B → 𝒰)
+    def″-to-def‴ : ∀ (φ : B → 𝒰₀)
       → φ is-a″ F -fiber-bundle″
       → (∑π₁-from φ) is-a‴ F -fiber-bundle‴
     def″-to-def‴ φ
@@ -139,7 +139,7 @@ module FiberBundle where
 
 
     def″-to-def :
-      ∀ (φ : B → 𝒰)
+      ∀ (φ : B → 𝒰₀)
       → φ is-a″ F -fiber-bundle″
       → φ is-a F -fiber-bundle
     def″-to-def φ
@@ -151,12 +151,12 @@ module FiberBundle where
       in record
         {
           all-fibers-are-merely-equivalent =
-          λ x → ∥→ step1 x ∥→ ((proof-that v is-1-epi) x)
+          λ x → ∥→ step1 x ∥→ ((proof-that v is-surjective) x)
         }
 
 
     def-to-def″ :
-      ∀ (φ : B → 𝒰)
+      ∀ (φ : B → 𝒰₀)
       → φ is-a F -fiber-bundle
       → φ is-a″ F -fiber-bundle″
     def-to-def″ φ
@@ -166,7 +166,7 @@ module FiberBundle where
       in record
          {
            V = _ ;
-           v = canonical-cover is-1-epi-by
+           v = canonical-cover is-surjective-by
              (λ b →
                ∥≃ fiber-of-a-∑ {P = canonical-cover′} b ∥≃ ⁻¹≃
                  $≃ (all-fibers-are-merely-equivalent b) ) ;
@@ -178,15 +178,15 @@ module FiberBundle where
     open import Sums
 
     private
-      specialize-image-to-BAut : ∀ (φ : B → 𝒰)
-        → (x : B) → ∥ (φ x ≃ F) ∥ → the-1-image-of (λ ∗ → F) contains (φ x)
+      specialize-image-to-BAut : ∀ (φ : B → 𝒰₀)
+        → (x : B) → ∥ (φ x ≃ F) ∥ → the-image-of (λ ∗ → F) contains (φ x)
       specialize-image-to-BAut φ x = ∥→ (λ e → (∗ , univalence (e ⁻¹≃))) ∥→
-      specialize-image-to-BAut′ : ∀ (φ : B → 𝒰)
-        → (x : B) → the-1-image-of (λ ∗ → F) contains (φ x) → ∥ (φ x ≃ F) ∥ 
+      specialize-image-to-BAut′ : ∀ (φ : B → 𝒰₀)
+        → (x : B) → the-image-of (λ ∗ → F) contains (φ x) → ∥ (φ x ≃ F) ∥ 
       specialize-image-to-BAut′ φ x = ∥→ (λ {(∗ , p) → U-transport p ⁻¹≃}) ∥→
 
     def-to-def′ :
-      ∀ (φ : B → 𝒰)
+      ∀ (φ : B → 𝒰₀)
       → φ is-a F -fiber-bundle
       → (∑π₁-from φ) is-a′ F -fiber-bundle′
     def-to-def′ φ
@@ -199,7 +199,7 @@ module FiberBundle where
 
 
     def′-to-def :
-      ∀ {E : 𝒰} (p : E → B)
+      ∀ {E : 𝒰₀} (p : E → B)
       → p is-a′ F -fiber-bundle′
       → (λ x → fiber-of p at x) is-a F -fiber-bundle
     def′-to-def p
@@ -208,5 +208,5 @@ module FiberBundle where
       {
         all-fibers-are-merely-equivalent = λ b →
         specialize-image-to-BAut′ (λ x → fiber-of p at x) b
-          (U-transport ((λ z → the-1-image-of _ contains z) ⁎ univalence (classyfies b) ) ⁻¹≃ $≃ (∑π₂ (χ b)))
+          (U-transport ((λ z → the-image-of _ contains z) ⁎ univalence (classyfies b) ) ⁻¹≃ $≃ (∑π₂ (χ b)))
       }

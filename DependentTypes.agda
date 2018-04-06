@@ -10,79 +10,79 @@ module DependentTypes where
   open import Pullback
   open import PullbackSquare
   -- univalence is needed to transform pullback-squares to
-  -- morphisms over U₀
+  -- morphisms over 𝒰₀
   open import Univalence
 
   
-  record morphism-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
+  record morphism-of-dependent-types (A′ A : 𝒰₀) (E′ : A′ → 𝒰₀) (E : A → 𝒰₀) : 𝒰₀ where
     field 
       base-change : A′ → A
       morphism-of-fibers : (a′ : A′) → (E′(a′) → E(base-change a′))
 
-  record equivalence-of-dependent-types (A′ A : U₀) (E′ : A′ → U₀) (E : A → U₀) : U₀ where
+  record equivalence-of-dependent-types (A′ A : 𝒰₀) (E′ : A′ → 𝒰₀) (E : A → 𝒰₀) : 𝒰₀ where
     field 
       base-change : A′ ≃ A
       morphism-of-fibers : (a′ : A′) → (E′(a′) ≃ E(base-change $≃ a′))
 
 
-  equivalence-of_and_over_ : ∀ {i} {A′ : 𝒰} {A : 𝒰- i} (E′ : A′ → 𝒰) (E : A → 𝒰) (f : A′ → A) → 𝒰
+  equivalence-of_and_over_ : ∀ {i} {A′ : 𝒰₀} {A : 𝒰 i} (E′ : A′ → 𝒰₀) (E : A → 𝒰₀) (f : A′ → A) → 𝒰₀
   equivalence-of E′ and E over f = (x : _) → E′(x) ≃ E(f x)
   
       
 
   _→χ_ :
-    ∀ {A′ A : U₀}
-    → (E′ : A′ → U₀) (E : A → U₀)
-    → U₀
+    ∀ {A′ A : 𝒰₀}
+    → (E′ : A′ → 𝒰₀) (E : A → 𝒰₀)
+    → 𝒰₀
   E′ →χ E = morphism-of-dependent-types _ _ E′ E
 
   _≃χ_ :
-    ∀ {A′ A : U₀}
-    → (E′ : A′ → U₀) (E : A → U₀)
-    → U₀
+    ∀ {A′ A : 𝒰₀}
+    → (E′ : A′ → 𝒰₀) (E : A → 𝒰₀)
+    → 𝒰₀
   E′ ≃χ E = equivalence-of-dependent-types _ _ E′ E
 
   base-change-of :
-    ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
+    ∀ {A′ A : 𝒰₀} {E′ : A′ → 𝒰₀} {E : A → 𝒰₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (A′ → A)
   base-change-of record {base-change = φ ; morphism-of-fibers = _} = 
     φ
 
   _on-the-fiber-over_ :
-    ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
+    ∀ {A′ A : 𝒰₀} {E′ : A′ → 𝒰₀} {E : A → 𝒰₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (a′ : A′)
     → (E′(a′) → E((base-change-of F) a′))
   record {base-change = _ ; morphism-of-fibers = f} on-the-fiber-over a′ = f a′
 
   _is-an-equivalence-on-all-fibers : 
-    ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
+    ∀ {A′ A : 𝒰₀} {E′ : A′ → 𝒰₀} {E : A → 𝒰₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
-    → U₀
+    → 𝒰₀
   record {base-change = φ ; morphism-of-fibers = f} is-an-equivalence-on-all-fibers = 
     ∀ (a′ : _) → f(a′) is-an-equivalence
 
   dependent-type_as-map :
-    ∀ {A : U₀} 
-    → (E : A → U₀)
+    ∀ {A : 𝒰₀} 
+    → (E : A → 𝒰₀)
     → (∑ E → A) 
   dependent-type E as-map = ∑π₁ 
 
   the-map-on-total-spaces-induced-by_ :
-    ∀ {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀}
+    ∀ {A′ A : 𝒰₀} {E′ : A′ → 𝒰₀} {E : A → 𝒰₀}
     → (F : morphism-of-dependent-types A′ A E′ E)
     → (∑ E′ → ∑ E)
   the-map-on-total-spaces-induced-by record {base-change = φ ; morphism-of-fibers = f} = 
     λ {(a′ , e′) → ( φ(a′), (f a′)(e′) ) }
 
   dependent-replacement :
-    ∀ {A B : U₀} (f : A → B)
-    → (B → U₀)
+    ∀ {A B : 𝒰₀} (f : A → B)
+    → (B → 𝒰₀)
   dependent-replacement f b = fiber-of f at b 
 
   fiber-transport-is-concatenation :
-    ∀ {A B : U₀} (f : A → B)
+    ∀ {A B : 𝒰₀} (f : A → B)
     → (b b′ : B) → (γ : b ≈ b′)  
     → (a : A) (η : f(a) ≈ b) → transport (fiber-of f) γ (a is-in-the-fiber-by η) ≈ (a is-in-the-fiber-by η • γ)
   fiber-transport-is-concatenation f b .b refl a η = (λ ζ → a is-in-the-fiber-by ζ) ⁎ refl-is-right-neutral η
@@ -92,7 +92,7 @@ module DependentTypes where
   -- in the sense that the total spaces are equivalent
   -- and the triangle commutes (which is not shown because it does so definitionally)
   replacement-is-equivalent :
-    ∀ {A B : U₀} (f : A → B)
+    ∀ {A B : 𝒰₀} (f : A → B)
     → ∑ (dependent-replacement f) ≃ A
   replacement-is-equivalent f = (λ {(b , (a is-in-the-fiber-by γ)) → a}) is-an-equivalence-because
     (has-left-inverse (λ a → f a , (a is-in-the-fiber-by refl))
@@ -106,29 +106,29 @@ module DependentTypes where
 
      and-right-inverse (λ a → f a , (a is-in-the-fiber-by refl)) by (λ x → refl))
 
-  ∑-over-One-is-trivial :
-    ∀ (P : One → U₀)
+  ∑-over-𝟙-is-trivial :
+    ∀ (P : 𝟙 → 𝒰₀)
     → ∑ P ≈ P(∗)
-  ∑-over-One-is-trivial P = univalence
+  ∑-over-𝟙-is-trivial P = univalence
     ((λ {(∗ , p) → p }) is-an-equivalence-because
       (has-left-inverse (λ p → ∗ , p) by (λ {(∗ , p) → refl})
        and-right-inverse (λ p → ∗ , p) by (λ p → refl)))
 
-  replacement-over-One-is-constant :
-    ∀ {A : U₀} (f : A → One)
+  replacement-over-𝟙-is-constant :
+    ∀ {A : 𝒰₀} (f : A → 𝟙)
     → (dependent-replacement f) ∗ ≈ A
-  replacement-over-One-is-constant f = ∑-over-One-is-trivial (dependent-replacement f) ⁻¹
+  replacement-over-𝟙-is-constant f = ∑-over-𝟙-is-trivial (dependent-replacement f) ⁻¹
                                        • univalence (replacement-is-equivalent f)
 
   pullback-of_along-dependent-tpye :
-    ∀ {A : U₀} (P : A → U₀)
-    → (E : A → U₀)
-    → (∑ P → U₀)
+    ∀ {A : 𝒰₀} (P : A → 𝒰₀)
+    → (E : A → 𝒰₀)
+    → (∑ P → 𝒰₀)
   pullback-of P along-dependent-tpye E (a , pₐ) = E a
 
 
   module pullbacks-are-fiberwise-equivalences 
-        {Z A B C : U₀}
+        {Z A B C : 𝒰₀}
         {f : A → C}  {g : B → C}
         {z₁ : Z → A} {z₂ : Z → B}
         (□ : pullback-square f g z₁ z₂) where
@@ -171,7 +171,7 @@ module DependentTypes where
      as-triangle-over-the-universe : dependent-replacement z₂ ⇒ dependent-replacement f ∘ g
      as-triangle-over-the-universe b = univalence (equivalence-at b)
 
-  module fiberwise-equivalences-are-pullbacks {A′ A : U₀} {E′ : A′ → U₀} {E : A → U₀} 
+  module fiberwise-equivalences-are-pullbacks {A′ A : 𝒰₀} {E′ : A′ → 𝒰₀} {E : A → 𝒰₀} 
       (F : morphism-of-dependent-types A′ A E′ E)
       (F-is-an-equivalence-on-fibers : F is-an-equivalence-on-all-fibers) where
 
@@ -298,7 +298,7 @@ module DependentTypes where
 
 
   fibered-morphisms-are-slice-homs :
-    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
+    ∀ {S T X : 𝒰₀} (φₛ : S → X) (φₜ : T → X)
     → ∑ (λ ψ → φₜ ∘ ψ ⇒ φₛ) ≃ Π (λ (s : S) → fiber-of φₜ at (φₛ s))
   fibered-morphisms-are-slice-homs φₛ φₜ =
     let
@@ -311,7 +311,7 @@ module DependentTypes where
 
   
   if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic :
-    ∀ {S T X : U₀} (φₛ : S → X) (φₜ : T → X)
+    ∀ {S T X : 𝒰₀} (φₛ : S → X) (φₜ : T → X)
     → (ψ ψ′ : Π (λ (s : S) → fiber-of φₜ at (φₛ s)))
     → ψ ≈ ψ′ → (λ s → ι-fiber (ψ s)) ⇒ (λ s → ι-fiber (ψ′ s))
   if-fibered-morphisms-are-equal-the-underlying-maps-are-homotopic φₛ φₜ ψ ψ′ γ =
@@ -320,7 +320,7 @@ module DependentTypes where
   -- this should better be in some pullback-module,
   -- but due to some dependecy issues, it is here...
   module pullback-preserves-equivalences
-    {A B C : U₀} (f : A → B) (g : C → B) (f-is-an-equivalence : f is-an-equivalence) where
+    {A B C : 𝒰₀} (f : A → B) (g : C → B) (f-is-an-equivalence : f is-an-equivalence) where
 
   {-
     we pullback f and want to show that f′ is also an equivalence
@@ -417,7 +417,7 @@ module DependentTypes where
     -- deduce-equivalence... function in PullbackSquare
     -- since it preserves the 2-cell
     reverse-statement :
-      ∀ {Z : U₀}
+      ∀ {Z : 𝒰₀}
       → (z₁ : Z → A) (z₂ : Z → C)
       → (γ : f ∘ z₁ ⇒ g ∘ z₂)
       → z₂ is-an-equivalence
@@ -445,7 +445,7 @@ module DependentTypes where
     (This turned out to be proven also in HoTT-Book, Thm 4.7.7)
   -}
   module fiber-equivalences-along-an-equivalence-on-the-base
-    {A B : U₀} (P : A → U₀) (Q : B → U₀)
+    {A B : 𝒰₀} (P : A → 𝒰₀) (Q : B → 𝒰₀)
     (f≃ : A ≃ B) (s≃ : (a : A) → P a ≃ Q ((underlying-map-of f≃) a)) where
 
     -- some shortahnds
@@ -519,7 +519,7 @@ module DependentTypes where
          (λ _ → refl) which-is-an-equivalence-by proof-of-equivalency (f′≃ ∘≃ φ≃)
 
   module equivalence-from-equivalence-on-sums
-    {A : 𝒰} {P Q : A → 𝒰} (f : (x : A) → P x → Q x)
+    {A : 𝒰₀} {P Q : A → 𝒰₀} (f : (x : A) → P x → Q x)
     (map-on-sum-is-equivalence : (λ {(x , p) → (x , (f x) p)}) is-an-equivalence) where
 
     -- if the following ψ is an equivalence, then all fₓ are

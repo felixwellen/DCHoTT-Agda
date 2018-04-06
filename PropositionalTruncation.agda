@@ -25,13 +25,13 @@ module PropositionalTruncation where
     ∥-∥-recursion {A} B B-is-a-proposition f (#∣ a ∣) = f(a)
 
     ∥-∥-compute-recursion : 
-      ∀ {A : U₀} (B : U₀)
+      ∀ {A : 𝒰₀} (B : 𝒰₀)
       → (B-is-a-proposition : B is-a-proposition) → (f : A → B)
       → (a : A) → ∥-∥-recursion B B-is-a-proposition f (∣ a ∣) ≈ f a
     ∥-∥-compute-recursion B B-is-a-proposition f a = refl
 
     ∥-∥-induction : 
-      ∀ {A : U₀} {P : ∥ A ∥ → U₀} 
+      ∀ {A : 𝒰₀} {P : ∥ A ∥ → 𝒰₀} 
         (proposition : (x : ∥ A ∥) → P(x) is-a-proposition) 
         (true-on-constructed : (a : A) → P(∣ a ∣))
         → ((x : ∥ A ∥) → P x)

@@ -11,6 +11,7 @@ module Shape where
   open import Basics
   open import EqualityAndPaths
   open import Homotopies
+  open import Contractibility using (const)
   open import Equivalences
   open import FunctionExtensionality
   open import Flat renaming (_is-discrete to _is-crisply-discrete)
@@ -99,6 +100,9 @@ module Shape where
     and-right-inverse κ by (λ (γ : 𝔸 → ʃ A) → fun-ext (p1 γ))
 
 
+  {-
+    present approach does not work...
+
   module _ {A : 𝒰₀} where
     {-
        induction for the shape modality
@@ -131,3 +135,4 @@ module Shape where
 
   
 
+  -}

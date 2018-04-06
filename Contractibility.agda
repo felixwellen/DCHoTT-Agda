@@ -58,13 +58,13 @@ module Contractibility where
         (λ a → e⁻¹l ⁎ contraction-of-B (e a) • unit a)
 
   reformulate-contractibilty-as-homotopy :
-    ∀ (A : U₀) (a₀ : A)
+    ∀ (A : 𝒰₀) (a₀ : A)
     → id ∼ (λ a → a₀) → A is-contractible
   reformulate-contractibilty-as-homotopy A a₀ H =
     contracts-to a₀ by (λ a → H a ⁻¹)
 
   two-contractible-types-are-equivalent : 
-    ∀ {A B : U₀} 
+    ∀ {A B : 𝒰₀} 
     → (A is-contractible) → (B is-contractible)
     → A ≃ B
   two-contractible-types-are-equivalent 
@@ -74,7 +74,7 @@ module Contractibility where
       and-right-inverse (λ b → a₀) by (λ a → reverse-homotopy K a))
 
   all-contractible-types-are-sets :
-    ∀ (A : U₀) → A is-contractible
+    ∀ (A : 𝒰₀) → A is-contractible
     → ((a a′ : A) → (γ η : a ≈ a′) → γ ≈ η)
   all-contractible-types-are-sets 
     A (contracts-to center by contraction) a a′ γ η 

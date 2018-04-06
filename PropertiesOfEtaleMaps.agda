@@ -15,7 +15,7 @@ module PropertiesOfEtaleMaps where
   open import FormalDiskBundle
 
   module lifting-formal-disks
-    {A  : 𝒰} (f : A → 𝒰) (f-is-coreduced : (x : A) → (f x) is-coreduced) (a : A)
+    {A  : 𝒰₀} (f : A → 𝒰₀) (f-is-coreduced : (x : A) → (f x) is-coreduced) (a : A)
     where
 
     𝔻ₐ = 𝔻 A a   -- just for the comment below
@@ -36,7 +36,7 @@ module PropertiesOfEtaleMaps where
 
     -}
 
-    𝔻ₐ′ : A → 𝒰
+    𝔻ₐ′ : A → 𝒰₀
     𝔻ₐ′ x = a is-close-to x
 
     𝔻ₐ′-is-coreduced : (x : A) → (𝔻ₐ′ x) is-coreduced
@@ -50,7 +50,7 @@ module PropertiesOfEtaleMaps where
     -}
     {- ... -}
 
-  module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
+  module formal-disk-bundles-are-preserved-by-étale-base-change {A B : 𝒰₀} (f́ : A ─ét→ B) where
 
     f = underlying-map-of f́
 

@@ -21,11 +21,11 @@ module Flat where
   open import Contractibility
   open import DependentTypes
 
-  data ♭ {l :{♭} Level} (A :{♭} 𝒰- l) : 𝒰- l where
+  data ♭ {l :{♭} Level} (A :{♭} 𝒰 l) : 𝒰 l where
     con : (a :{♭} A) → ♭ A
 
-  ♭-induction : ∀ {c : Level} {l :{♭} Level}{A :{♭} 𝒰- l}
-         → (C : ♭ A → 𝒰- c)
+  ♭-induction : ∀ {c : Level} {l :{♭} Level}{A :{♭} 𝒰 l}
+         → (C : ♭ A → 𝒰 c)
          → ((u :{♭} A) → C (con u))
          → (x : ♭ A) → C x
   ♭-induction C f (con x) = f x
@@ -43,19 +43,19 @@ module Flat where
   
   syntax let♭ {C = C} s (λ u → t) = let♭ u := s in♭ t in-family C
 
-  ♭-counit : ∀ {l :{♭} Level} {A :{♭} 𝒰- l}
+  ♭-counit : ∀ {l :{♭} Level} {A :{♭} 𝒰 l}
     → (♭ A → A)
   ♭-counit (con x) = x
 
   ♭-counit-at : 
-      ∀ (A :{♭} 𝒰)
+      ∀ (A :{♭} 𝒰₀)
     → (♭ A → A)
   ♭-counit-at A = ♭-counit {_} {A}
 
-  _is-discrete : ∀ (A :{♭} 𝒰) → 𝒰
+  _is-discrete : ∀ (A :{♭} 𝒰₀) → 𝒰₀
   A is-discrete = (♭-counit-at A) is-an-equivalence
 
-  ♭-idempotent : ∀ (A :{♭} 𝒰)
+  ♭-idempotent : ∀ (A :{♭} 𝒰₀)
     → (♭ A) is-discrete
   ♭-idempotent A =
     has-left-inverse
@@ -66,45 +66,45 @@ module Flat where
       by (λ {(con x) → refl})
 
   ♭-uniqueness :
-    ∀ {A :{♭} 𝒰}
-      {C : ♭ A → 𝒰}
+    ∀ {A :{♭} 𝒰₀}
+      {C : ♭ A → 𝒰₀}
       (f : (x : ♭ A) → C x)
     → 
       (x : ♭ A) → (let♭ u := x in♭ f (con u) in-family C)  ≈ f(x)
   ♭-uniqueness f (con a) = refl
 
 
-  ♭→′ : ∀ {A B :{♭} 𝒰}
+  ♭→′ : ∀ {A B :{♭} 𝒰₀}
     → (f :{♭} A → B)
     → (♭ A → ♭ B)
   ♭→′ {_} {B} f x = let♭ u := x in♭ con (f u) in-family (λ _ → ♭ B)
   
-  ♭→ : ∀ {A B :{♭} 𝒰}
+  ♭→ : ∀ {A B :{♭} 𝒰₀}
     → (f :{♭} A → B)
     → (♭ A → ♭ B)
   ♭→ f (con a) = con (f a)
 
-  ♭→≈♭→′ : ∀ {A B :{♭} 𝒰}
+  ♭→≈♭→′ : ∀ {A B :{♭} 𝒰₀}
     → (f :{♭} A → B)
     → (x : ♭ A) → (♭→ f) x ≈ (♭→′ f) x
   ♭→≈♭→′ f (con a) = refl
 
-  ♭→-commutes-with-∘ : ∀ {A B C :{♭} 𝒰}
+  ♭→-commutes-with-∘ : ∀ {A B C :{♭} 𝒰₀}
     → (f :{♭} A → B) (g :{♭} B → C)
     → (♭→ g) ∘ (♭→ f) ⇒ ♭→ (g ∘ f)
   ♭→-commutes-with-∘ f g (con a) = refl
 
 
   ♭-identity-induction :
-    ∀ {A :{♭} 𝒰}
-    → (C :{♭} (x y :{♭} A) (p :{♭} x ≈ y) → 𝒰)
+    ∀ {A :{♭} 𝒰₀}
+    → (C :{♭} (x y :{♭} A) (p :{♭} x ≈ y) → 𝒰₀)
     → (d :{♭} (x :{♭} A) → C x x refl)
     → (x y :{♭} A) → (p :{♭} x ≈ y) → C x y p
   ♭-identity-induction C d x .x refl = d x
 
 
   ♭-preserves-identity-types :
-    ∀ {A :{♭} 𝒰}
+    ∀ {A :{♭} 𝒰₀}
     → (x y :{♭} A)
     → ♭(con x ≈ con y) ≃ x ≈ y
   ♭-preserves-identity-types x y =
@@ -116,7 +116,7 @@ module Flat where
         (λ {refl → con refl}) by (λ {refl → refl})) 
 
   ♭-encode-decode-is-enough :
-    ∀ {A :{♭} 𝒰} (code : ♭ A → ♭ A → 𝒰)
+    ∀ {A :{♭} 𝒰₀} (code : ♭ A → ♭ A → 𝒰₀)
     → (encode : (x y : ♭ A) → x ≈ y → code x y)
     → (decode : (x y : ♭ A) → code x y → x ≈ y)
     → (retract : (x y : ♭ A) → (encode x y) ∘ (decode x y) ⇒ id)
@@ -143,13 +143,13 @@ module Flat where
     in equivalence-from-equivalence-on-sums.conclusion (decode x) (step2 x) y
 
   ♭-commutes-with-identity-types :
-    ∀ {A :{♭} 𝒰}
+    ∀ {A :{♭} 𝒰₀}
     → (x y :{♭} A)
     → ♭ (x ≈ y) ≃ con x ≈ con y 
   ♭-commutes-with-identity-types {A} x y =
     let
       -- from Mike's Real-Cohesion Article, section 6
-      code : ♭ A → ♭ A → 𝒰
+      code : ♭ A → ♭ A → 𝒰₀
       code = λ {(con z) → λ {(con w) → ♭ (z ≈ w) }}
 
       step1 : code (con x) (con y) ≃ ♭ (x ≈ y)

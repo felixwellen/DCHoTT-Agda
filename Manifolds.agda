@@ -16,7 +16,7 @@ module Manifolds where
   open import FormalDiskBundle
   open import EtaleMaps
   open import Language
-  open import OneImage
+  open import Image
   open import FiberBundle
   open import FormalDisk
   open import HomogeneousType
@@ -24,20 +24,20 @@ module Manifolds where
   open import PropertiesOfEtaleMaps
 
 
-  record _-manifold {V′ : 𝒰} (V : homogeneous-structure-on V′) : 𝒰₁ where
+  record _-manifold {V′ : 𝒰₀} (V : homogeneous-structure-on V′) : 𝒰₁ where
     field
-      M : 𝒰
-      W : 𝒰
+      M : 𝒰₀
+      W : 𝒰₀
       w : W ─ét→ M
-      w-covers : (w ét→) is-1-epi 
+      w-covers : (w ét→) is-surjective 
       v : W ─ét→ V′
 
     cover-as-surjection : W ↠ M
-    cover-as-surjection = (w ét→) is-1-epi-by w-covers
+    cover-as-surjection = (w ét→) is-surjective-by w-covers
 
 
   homogeneous-space-as-manifold :
-    ∀ {V : U₀} (V′ : homogeneous-structure-on V)
+    ∀ {V : 𝒰₀} (V′ : homogeneous-structure-on V)
     → V′ -manifold   -- V is-a-manifold-with-cover id-as-étale-map locally-like structure-on-V by id-as-étale-map
   homogeneous-space-as-manifold _ =
     record
@@ -48,7 +48,7 @@ module Manifolds where
       }
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
-         {V′ : 𝒰} -- (w : U ─ét→ M) (v : U ─ét→ V) (M-is-a-manifold : M is-a-manifold-with-cover w locally-like structure-on-V by v) 
+         {V′ : 𝒰₀} -- (w : U ─ét→ M) (v : U ─ét→ V) (M-is-a-manifold : M is-a-manifold-with-cover w locally-like structure-on-V by v) 
          (V : homogeneous-structure-on V′)
          (M′ : V -manifold)
          where

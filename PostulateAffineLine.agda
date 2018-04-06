@@ -16,13 +16,14 @@ module PostulateAffineLine where
   open import Equivalences
   open import HomogeneousType
   open import Flat renaming (_is-discrete to _is-crisply-discrete)
+  open import Contractibility using (const)
 
   {-
     this auxilliary definition may find a better home some day...
   -}
 
   postulate
-    𝔸 : 𝒰
+    𝔸 : 𝒰₀
     𝔸′ : homogeneous-structure-on 𝔸
     𝔸-nullfies-discrete-types :
       ∀ (A :{♭} 𝒰₀)

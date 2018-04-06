@@ -37,7 +37,7 @@ module ImHomogeneousType where
   open import Im
   open import FormalDisk
 
-  module ℑ-homogene-sequence {A : 𝒰} (A′ : homogeneous-structure-on A) where
+  module ℑ-homogene-sequence {A : 𝒰₀} (A′ : homogeneous-structure-on A) where
     open homogeneous-structure-on_ A′
 
     ιe = ι e
@@ -89,7 +89,7 @@ module ImHomogeneousType where
     structure = record { e = ιe ; ψ = ℑψ ; is-translation-to = ℑψ-is-a-family-of-translations }
 
 
-    𝔻ₑ′ : A → 𝒰
+    𝔻ₑ′ : A → 𝒰₀
     𝔻ₑ′ a = e is-infinitesimally-close-to a
 
     𝔻ₑ = 𝔻 _ e
