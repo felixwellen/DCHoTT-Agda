@@ -27,8 +27,6 @@ module DependentTypes where
 
   equivalence-of_and_over_ : ∀ {i} {A′ : 𝒰₀} {A : 𝒰 i} (E′ : A′ → 𝒰₀) (E : A → 𝒰₀) (f : A′ → A) → 𝒰₀
   equivalence-of E′ and E over f = (x : _) → E′(x) ≃ E(f x)
-  
-      
 
   _→χ_ :
     ∀ {A′ A : 𝒰₀}
@@ -294,7 +292,20 @@ module DependentTypes where
           (has-left-inverse induced-map⁻¹ by left-invertible
            and-right-inverse induced-map⁻¹ by right-invertible)
 
-  
+  fiberwise-equivalences-are-pullbacks′ : 
+    ∀ {A B : 𝒰₀} {f : A → B}
+    → (P : A → 𝒰₀) (Q : B → 𝒰₀)
+    → (e : equivalence-of P and Q over f)
+    → pullback-square-with-right (∑π₁-from Q)
+        bottom f
+        top (λ {(a , pₐ) → (f a) , e a $≃ pₐ})
+        left (∑π₁-from P)
+  fiberwise-equivalences-are-pullbacks′ {A} {B} {f} P Q fo =
+    fiberwise-equivalences-are-pullbacks.fiberwise-equivalences-are-pullbacks {A} {B} {P} {Q}
+      (record {
+        base-change = f ;
+        morphism-of-fibers = λ a → λ pₐ → fo a $≃ pₐ})
+      (λ a′ → proof-of-equivalency (fo a′))
 
 
   fibered-morphisms-are-slice-homs :

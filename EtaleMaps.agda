@@ -54,6 +54,11 @@ module EtaleMaps where
   _─ét→_ : (A B : 𝒰₀) → 𝒰₀
   A ─ét→ B = ∑ (λ (f : A → B) → f is-an-étale-map)
 
+  _is-étale-because_ : {A B : U₀}
+    → (f : A → B) → f is-an-étale-map
+    → (A ─ét→ B)
+  f is-étale-because p = f , p
+
   id-as-étale-map :
     ∀ {A : 𝒰₀}
     → A ─ét→ A
@@ -86,3 +91,5 @@ module EtaleMaps where
   pullback-square-of (f , (the-induced-map-is-an-equivalence-by pullback-property)) =
     the-square-commuting-by (naturality-of-ℑ-unit f)
       and-inducing-an-equivalence-by pullback-property
+
+

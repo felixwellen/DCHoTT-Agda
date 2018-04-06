@@ -7,8 +7,6 @@ module Manifolds where
   open import DependentTypes
   open import Fiber
   open import Equivalences renaming (underlying-map-of to underlying-map-of-the-equivalence)
-  open import Pullback
-  open import PullbackSquare
   open import InfinityGroups
   open import Contractibility
   open import Homotopies
@@ -48,13 +46,14 @@ module Manifolds where
       }
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
-         {V′ : 𝒰₀} -- (w : U ─ét→ M) (v : U ─ét→ V) (M-is-a-manifold : M is-a-manifold-with-cover w locally-like structure-on-V by v) 
+         {V′ : 𝒰₀} 
          (V : homogeneous-structure-on V′)
          (M′ : V -manifold)
          where
 
          open homogeneous-structure-on_ V
-         𝔻ₑ = 𝔻 V′ e -- formal-disk-at e
+         𝔻ₑ = 𝔻 V′ e
+         
          open _-manifold M′
 
          trivialization-of-𝔻U : (x : W) → 𝔻 W x ≃ 𝔻ₑ
@@ -95,6 +94,7 @@ module Manifolds where
              open _is-a′_-fiber-bundle′ 𝔻M-is-a-fiber-bundle⁗
            in χ
 
+
          classifying-morphism-is-natural :
            ι-BAut 𝔻ₑ ∘ classifying-morphism ⇒ (𝔻 M)
          classifying-morphism-is-natural x = refl
@@ -112,4 +112,51 @@ module Manifolds where
          commutes-with-the-dependent-replacement-of-T∞′′ x = refl
 
 
-  
+  {-
+    Let V be homogeneous, and 𝔻ₑ its unit disk.
+    Then the formal disk bundle T∞M of a V-manifold M
+    is a 𝔻ₑ×V-manifold.
+  -}
+  module the-formal-disk-bundle-of-a-manifold-is-a-manifold  
+         {V′ : 𝒰₀} 
+         (V : homogeneous-structure-on V′)
+         (M′ : V -manifold)
+         where
+
+         open homogeneous-structure-on_ V
+         𝔻ₑ′ = 𝔻 V′ e
+         𝔻ₑ : homogeneous-structure-on 𝔻ₑ′
+         𝔻ₑ = ℑ-homogene-sequence.homogeneous-structure V
+         open _-manifold M′
+
+         T∞M : 𝒰₀
+         T∞M = ∑ (𝔻 M)
+
+       {-
+
+         T∞M-is-a-manifold : (V ×ₕ 𝔻ₑ) -manifold
+         T∞M-is-a-manifold =
+           let
+             φ : ∑ (𝔻 V′) → V′ × 𝔻ₑ′
+             φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.trivialize V
+
+             dv : (x : W) → 𝔻 M (w $ét x) → 𝔻 V′ (v $ét x)
+             dv x = d (underlying-map-of v) x ∘ d⁻¹ w x
+           in record
+           {
+             M = T∞M ;
+             W = ∑ (λ (x : W) → 𝔻 M (w $ét x)) ;
+             w = ((λ {(x , (y , d)) → ((w $ét x) , (y , d))})
+                 is-étale-because {!!}) ;
+             w-covers = λ {(x , (y , d))
+               → ∥→
+                   (λ {(x′ is-in-the-fiber-by γ)
+                    → ((x′ , transport (𝔻 M) (γ ⁻¹) (y , d))
+                      is-in-the-fiber-by (equality-action-on-∑ _ _ (γ ⁻¹) (y , d) ⁻¹))})
+                 ∥→
+                 (w-covers x)} ;
+             v = (λ {(x , d) → φ ((v $ét x) , dv x d)})
+                 is-étale-because {!!}
+           }
+           -}
+         {- ... -}

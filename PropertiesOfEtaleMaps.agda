@@ -153,3 +153,25 @@ module PropertiesOfEtaleMaps where
         step1 = pullback-definition-and-dependent-version-agree.on-fibers A
         step2 = pullback-definition-and-dependent-version-agree.on-fibers B
       in (step2 (f x)) ∘≃ (equivalence-at x) ∘≃ (step1 x ⁻¹≃)
+
+  d⁻¹ : {A B : 𝒰₀} (f : A ─ét→ B)
+    → (x : A) → 𝔻 _ (f $ét x) → 𝔻 _ x
+  d⁻¹ (f , p) x =
+    let
+      open formal-disk-bundles-are-preserved-by-étale-base-change (f , p)
+        renaming (f to f′)
+      e : equivalence-of (𝔻 _) and (𝔻 _) over f
+      e = conclusion-as-equivalence-above-the-map 
+    in underlying-map-of-the-equivalence (e x ⁻¹≃)
+
+  d⁻¹≃ : {A B : 𝒰₀} (f : A ─ét→ B)
+    → (x : A) → 𝔻 _ (f $ét x) ≃ 𝔻 _ x
+  d⁻¹≃ (f , p) x =
+    let
+      open formal-disk-bundles-are-preserved-by-étale-base-change (f , p)
+        renaming (f to f′)
+      e : equivalence-of (𝔻 _) and (𝔻 _) over f
+      e = conclusion-as-equivalence-above-the-map 
+    in (e x ⁻¹≃)
+
+

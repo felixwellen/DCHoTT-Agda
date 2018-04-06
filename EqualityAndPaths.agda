@@ -162,7 +162,9 @@ module EqualityAndPaths where
                       → (γ : a ≈ a′) → (η : b ≈ b′)
                       → (a , b) ≈ (a′ , b′)
   γ ,≈ η = ×-create-equality γ η
-  
+
+  _×≈_ = _,≈_
+
   ×-uniqueness-of-equality : 
     ∀ {A B : 𝒰₀} → {x y : A × B} → (γ : x ≈ y)
     → γ ≈ ×-uniqueness x • (×-create-equality (π₁ ⁎ γ) (π₂ ⁎ γ)) • ×-uniqueness y ⁻¹

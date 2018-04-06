@@ -81,7 +81,7 @@ module FiberBundle where
      
   -}
 
-  record _is-a‴_-fiber-bundle‴ {E B : 𝒰₀} (φ : E → B) (F : 𝒰₀) : U₁ where
+  record _is-a‴_-fiber-bundle‴ {E B : 𝒰₀} (φ : E → B) (F : 𝒰₀) : 𝒰₁ where
     field
       V : 𝒰₀
       v : V ↠ B
