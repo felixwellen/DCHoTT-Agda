@@ -36,9 +36,9 @@ module Im where
   A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
 
   ℑ𝒰 : 𝒰₁
-  ℑ𝒰 = ∑ λ (A : 𝒰) → A is-coreduced
+  ℑ𝒰 = ∑ λ (A : 𝒰₀) → A is-coreduced
 
-  ι-ℑ𝒰 : ℑ𝒰 → 𝒰
+  ι-ℑ𝒰 : ℑ𝒰 → 𝒰₀
   ι-ℑ𝒰 (A , _) = A
 
   postulate
@@ -46,18 +46,18 @@ module Im where
     ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
 
     ℑ-induction :  
-      ∀ {i} {A : 𝒰} {B : ℑ A → 𝒰- i}
+      ∀ {i} {A : 𝒰₀} {B : ℑ A → 𝒰 i}
       → (∀ (a : ℑ A) → B(a) is-coreduced)
       → ((a : A) → B(ℑ-unit a))
       → ((a : ℑ A) → B(a))
     ℑ-compute-induction :  
-      ∀ {A : U₀} {B : ℑ A → U₀}
+      ∀ {A : 𝒰₀} {B : ℑ A → 𝒰₀}
       → (coreducedness : ∀ (a : ℑ A) → B(a) is-coreduced)
       → (f : (a : A) → B(ℑ-unit a))
       → (a : A) → (ℑ-induction coreducedness f) (ℑ-unit a) ≈ f a
 
     coreduced-types-have-coreduced-identity-types :
-      ∀ (B : U₀) → (B is-coreduced) → (b b′ : B) 
+      ∀ (B : 𝒰₀) → (B is-coreduced) → (b b′ : B) 
       → (b ≈ b′) is-coreduced
 
 
@@ -70,26 +70,26 @@ module Im where
 
 
   ℑ-recursion : 
-    ∀ {i} {A : U₀} {B : 𝒰- i} 
+    ∀ {i} {A : 𝒰₀} {B : 𝒰 i} 
     → B is-coreduced 
     → (f : A → B) 
     → (ℑ A → B)
   ℑ-recursion coreducedness f = ℑ-induction (λ a → coreducedness) (λ a → f a)
 
   ℑ-compute-recursion :
-    ∀ {A B : U₀} 
+    ∀ {A B : 𝒰₀} 
     → (coreducedness : B is-coreduced) 
     → (f : A → B)
     → (a : A) → (ℑ-recursion coreducedness f) (ℑ-unit a) ≈ f a
   ℑ-compute-recursion coreducedness f = ℑ-compute-induction (λ a → coreducedness) f
 
   apply-ℑ-to-map :
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (A → B)
     → (ℑ A → ℑ B)
   apply-ℑ-to-map {_} {B} f = ℑ-recursion (ℑ-is-coreduced B) (ℑ-unit-at B ∘ f)
 
-  apply-ℑ : ∀ {A B : U₀}
+  apply-ℑ : ∀ {A B : 𝒰₀}
             → (A → B)
             → (ℑ A → ℑ B)
   apply-ℑ f = apply-ℑ-to-map f
@@ -97,33 +97,33 @@ module Im where
   ℑ→ = apply-ℑ
 
   naturality-square-for-ℑ : 
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (f : A → B)
     → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
   naturality-square-for-ℑ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
   naturality-of-ℑ-unit : 
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (f : A → B)
     → (a : A) → (ℑ→ f(ℑ-unit-at A a) ≈ ℑ-unit-at B (f a))
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
-  ℑ⇒ : ∀ {A B : U₀} {f g : A → B}
+  ℑ⇒ : ∀ {A B : 𝒰₀} {f g : A → B}
        → (f ⇒ g) → (ℑ→ f ⇒ ℑ→ g)
   ℑ⇒ H = ℑ-induction
          (λ a → coreduced-types-have-coreduced-identity-types (ℑ _) (ℑ-is-coreduced _) (ℑ→ _ a) (ℑ→ _ a))
          (λ a → naturality-square-for-ℑ _ a • ℑ-unit ⁎ (H a) • naturality-square-for-ℑ _ a ⁻¹)
 
   ℑ⁎_⁎_ :
-    ∀ {A B : U₀} {x y : A}
+    ∀ {A B : 𝒰₀} {x y : A}
     → (f : A → B)
     → ((ℑ-unit x ≈ ℑ-unit y) → (ℑ-unit (f(x)) ≈ ℑ-unit (f(y))))
   ℑ⁎ f ⁎ γ = naturality-square-for-ℑ f _ ⁻¹ • ℑ→ f ⁎ γ • naturality-square-for-ℑ f _
 
   -- define coreduced connectedness
   _is-ℑ-connected :
-    ∀ {A B : U₀} (f : A → B)
-    → U₀ 
+    ∀ {A B : 𝒰₀} (f : A → B)
+    → 𝒰₀ 
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
 
@@ -132,7 +132,7 @@ module Im where
 
 
   ℑ-recursion-is-unique : 
-    ∀ {A B : U₀} (f : A → B) (coreducedness : B is-coreduced)
+    ∀ {A B : 𝒰₀} (f : A → B) (coreducedness : B is-coreduced)
     → (φ : ℑ A → B) → f ⇒ φ ∘ ℑ-unit 
     → ℑ-recursion coreducedness f ⇒ φ
   ℑ-recursion-is-unique {A} {B} f coreducedness φ φ-factors = 
@@ -158,7 +158,7 @@ module Im where
            (factoring-is-nice φ))
 
 
-  module ℑ-is-idempotent (E : U₀) (E-is-coreduced : E is-coreduced) where
+  module ℑ-is-idempotent (E : 𝒰₀) (E-is-coreduced : E is-coreduced) where
   -- 'idempotency for ℑ' 
   -- here, we merely define the inverse to the equivalence appearing in
   -- the axiom stating that ℑA is coreduced, for all A
@@ -170,12 +170,12 @@ module Im where
     left-invertible = ℑ-compute-recursion E-is-coreduced id
 
   cancel-one-ℑ-on :
-    ∀ (A : U₀)
+    ∀ (A : 𝒰₀)
     → ℑ (ℑ A) → ℑ A
   cancel-one-ℑ-on A = ℑ-recursion (ℑ-is-coreduced A) id
 
   apply-ℑ-commutes-with-∘ : 
-    ∀ {A B C : U₀}
+    ∀ {A B C : 𝒰₀}
     → (f : A → B) → (g : B → C)
     → apply-ℑ (g ∘ f) ⇒ (apply-ℑ g) ∘ (apply-ℑ f)
   apply-ℑ-commutes-with-∘ f g = 
@@ -186,12 +186,12 @@ module Im where
            (λ a → naturality-square-for-ℑ g (f a) ⁻¹ 
                   • (λ x → apply-ℑ g x) ⁎ naturality-square-for-ℑ f a ⁻¹)
 
-  applying-ℑ-preserves-id : ∀ (A : U₀)
+  applying-ℑ-preserves-id : ∀ (A : 𝒰₀)
                             → apply-ℑ (id {_} {A}) ⇒ id {_} {ℑ A}
   applying-ℑ-preserves-id A =
     ℑ-recursion-is-unique (ℑ-unit ∘ id {_} {A}) (ℑ-is-coreduced A) id (λ _ → refl)
 
-  applying-ℑ-preserves-equivalences : ∀ {A B : U₀} (f : A → B)
+  applying-ℑ-preserves-equivalences : ∀ {A B : 𝒰₀} (f : A → B)
                                       → f is-an-equivalence
                                       → (ℑ→ f) is-an-equivalence
   applying-ℑ-preserves-equivalences f witness =
@@ -217,7 +217,7 @@ module Im where
        and-right-inverse 
          ℑr by counit
 
-  apply-ℑ-to-the-equivalence : ∀ {A B : U₀}
+  apply-ℑ-to-the-equivalence : ∀ {A B : 𝒰₀}
                                → A ≃ B → ℑ A ≃ ℑ B
   apply-ℑ-to-the-equivalence 
     (f is-an-equivalence-because proof-of-invertibility) =
@@ -225,12 +225,12 @@ module Im where
         applying-ℑ-preserves-equivalences f proof-of-invertibility
 
   -- shorthand
-  ℑ≃ : ∀ {A B : 𝒰} 
+  ℑ≃ : ∀ {A B : 𝒰₀} 
     → A ≃ B → ℑ A ≃ ℑ B
   ℑ≃ = apply-ℑ-to-the-equivalence
   
   -- this is put to use later to conclude that equivalences can 'move' formal disks
-  module equivalences-induce-equivalences-on-the-coreduced-identity-types {A B : U₀} (f≃ : A ≃ B) (x y : A) where
+  module equivalences-induce-equivalences-on-the-coreduced-identity-types {A B : 𝒰₀} (f≃ : A ≃ B) (x y : A) where
     f = underlying-map-of f≃
     ℑf⁎ : ℑ-unit(x) ≈ ℑ-unit(y) → ℑ-unit(f x) ≈ ℑ-unit(f y)
     ℑf⁎ = λ γ → (ℑ⁎ f ⁎ γ)
@@ -285,7 +285,7 @@ module Im where
 
 
   module the-ℑ-preimages-of-equivalences-are-ℑ-connected -- not yet complete, not needed anyway
-    {A B : U₀} (f : A → B) (ℑf-is-an-equivalence : (ℑ→ f) is-an-equivalence) where
+    {A B : 𝒰₀} (f : A → B) (ℑf-is-an-equivalence : (ℑ→ f) is-an-equivalence) where
 
     ℑf = ℑ→ f
     
@@ -307,7 +307,7 @@ module Im where
 -}
 
   types-equivalent-to-their-coreduction-are-coreduced :
-    ∀ {A : U₀} (f : A ≃ ℑ A)
+    ∀ {A : 𝒰₀} (f : A ≃ ℑ A)
     → ℑ-unit-at A is-an-equivalence
   types-equivalent-to-their-coreduction-are-coreduced {A} f =
     let f⁻¹-as-map = underlying-map-of (f ⁻¹≃)
@@ -332,36 +332,36 @@ module Im where
           the-composition-is-an-equivalence (compose-homotopies step1 step2)
 
 
-  ℑ-One-is-contractible : (ℑ One) is-contractible
-  ℑ-One-is-contractible = 
-    let ∗̂ = (id ∘ ℑ-unit {_} {One}) ∗
-        constant-∗̂ : ∀ {A : U₀} → A → ℑ One
+  ℑ-𝟙-is-contractible : (ℑ 𝟙) is-contractible
+  ℑ-𝟙-is-contractible = 
+    let ∗̂ = (id ∘ ℑ-unit {_} {𝟙}) ∗
+        constant-∗̂ : ∀ {A : 𝒰₀} → A → ℑ 𝟙
         constant-∗̂ = λ x → ∗̂
                                                     
         id∘ℑ-unit∼constant-∗̂ : id ∘ ℑ-unit ∼ constant-∗̂
         id∘ℑ-unit∼constant-∗̂ = λ {∗ → refl}
                                                                
-        factored-trivial-map = ℑ-recursion (ℑ-is-coreduced One) (id ∘ ℑ-unit)
+        factored-trivial-map = ℑ-recursion (ℑ-is-coreduced 𝟙) (id ∘ ℑ-unit)
                                                                       
         step1 : factored-trivial-map ∼ id 
         step1 = ℑ-recursion-is-unique
-              (id ∘ ℑ-unit) (ℑ-is-coreduced One) id (λ a → refl) 
+              (id ∘ ℑ-unit) (ℑ-is-coreduced 𝟙) id (λ a → refl) 
                                                          
         step2 : factored-trivial-map ∼ constant-∗̂
-        step2 = ℑ-recursion-is-unique (id ∘ ℑ-unit) (ℑ-is-coreduced One)
+        step2 = ℑ-recursion-is-unique (id ∘ ℑ-unit) (ℑ-is-coreduced 𝟙)
                 constant-∗̂ id∘ℑ-unit∼constant-∗̂
                                                       
         step3 : id ∼ constant-∗̂
         step3 = compose-homotopies (reverse-homotopy step1) step2
                                                                                     
-    in reformulate-contractibilty-as-homotopy (ℑ One) ∗̂
+    in reformulate-contractibilty-as-homotopy (ℑ 𝟙) ∗̂
        step3
 
 
 
   -- the hott book told me the following is true:
   retracts-of-coreduced-types-are-coreduced : 
-    ∀ (A E : U₀) → (E is-coreduced) 
+    ∀ (A E : 𝒰₀) → (E is-coreduced) 
     → (ι : A → E) (r : E → A)
     → r ∘ ι ⇒ id
     → (ℑ-unit-at A) is-an-equivalence
@@ -391,7 +391,7 @@ module Im where
 
   -- from the book "7.7 Modalities"
   module Π-of-coreduced-types-is-coreduced
-    {A : U₀} (P : A → U₀)
+    {A : 𝒰₀} (P : A → 𝒰₀)
     (P-is-coreduced : (a : A) → (P a) is-coreduced) where
     
     inverse : ℑ(Π(λ a → ℑ(P a))) → Π(λ a → ℑ(P a))
@@ -414,14 +414,14 @@ module Im where
     
     coreducedness : Π(λ a → P a) is-coreduced
     coreducedness = transport
-                      (λ (X : U₀) → X is-coreduced)
+                      (λ (X : 𝒰₀) → X is-coreduced)
                       (Π ⁎ fun-ext (λ (a : A) → univalence (ℑ-unit-at (P a) is-an-equivalence-because (P-is-coreduced a)) ⁻¹))
                       coreducedness′
                       
 
   {- experiment for lex modalities -}
   module identity-types-of-sums
-    {A : U₀} (P : A → U₀) where
+    {A : 𝒰₀} (P : A → 𝒰₀) where
 
     ℑ-transport′ : {a a′ : A}
       → ℑ (a ≈ a′) → (ℑ (P a) →  ℑ (P a′))
@@ -455,8 +455,8 @@ module Im where
 
   -- from the book, thm 7.7.4
   ∑-of-coreduced-types-is-coreduced : 
-    ∀ (E : U₀)
-    → (E is-coreduced) → (P : E → U₀)
+    ∀ (E : 𝒰₀)
+    → (E is-coreduced) → (P : E → 𝒰₀)
     → ((e : E) → (P e) is-coreduced)
     → (∑ P) is-coreduced
   ∑-of-coreduced-types-is-coreduced E E-is-coreduced P P-is-coreduced =
@@ -477,7 +477,7 @@ module Im where
         π-is-compatible-to-π′ x = unit-of-the-equivalence ℑ-unit-E (π x) ⁻¹ 
                                   • underlying-map-of ℑ-unit-E⁻¹ ⁎ naturality-square-for-ℑ π x ⁻¹
 
-        P′ : ℑ (∑ P) → U₀
+        P′ : ℑ (∑ P) → 𝒰₀
         P′ p̂ = P (π′ p̂)
 
         -- construct a section of the bundle '∑ P → ℑ ∑ P'
@@ -512,8 +512,8 @@ module Im where
 
 
   cancel-ℑ-of-∑ : 
-    ∀ (E : U₀)
-    → (E is-coreduced) → (P : E → U₀)
+    ∀ (E : 𝒰₀)
+    → (E is-coreduced) → (P : E → 𝒰₀)
     → ((e : E) → (P e) is-coreduced)
     → ∑ P ≃ ℑ (∑ P)
   cancel-ℑ-of-∑ E E-is-coreduced P P-is-coreduced = 
@@ -521,7 +521,7 @@ module Im where
       ∑-of-coreduced-types-is-coreduced E E-is-coreduced P P-is-coreduced) 
 
   canonical-pullback-of-coreduced-types-is-coreduced :
-    ∀ {A B C : U₀} {f : A → C} {g : B → C}
+    ∀ {A B C : 𝒰₀} {f : A → C} {g : B → C}
     → pullback (ℑ→ f) (ℑ→ g) is-coreduced
   canonical-pullback-of-coreduced-types-is-coreduced {A} {B} {C} {f} {g} = 
     let
@@ -542,28 +542,28 @@ module Im where
 
 
   to-show-that_is-coreduced,-it-suffices-to-show-that_is-coreduced-since-it-is-equivalent-by_ :
-    ∀ (A B : U₀)
+    ∀ (A B : 𝒰₀)
     → (A ≃ B) → (B is-coreduced → A is-coreduced)
   to-show-that A is-coreduced,-it-suffices-to-show-that B is-coreduced-since-it-is-equivalent-by φ =
     transport _is-coreduced (univalence (φ ⁻¹≃))
 
 
   homotopies-in-coreduced-types-are-coreduced :
-      ∀ {A B : U₀} {f g : ℑ A → ℑ B} → (f ⇒ g) is-coreduced
+      ∀ {A B : 𝒰₀} {f g : ℑ A → ℑ B} → (f ⇒ g) is-coreduced
   homotopies-in-coreduced-types-are-coreduced {A} {B} {_} {_} =
       Π-of-coreduced-types-is-coreduced.coreducedness _
         (λ (a : ℑ A) →
           coreduced-types-have-coreduced-identity-types (ℑ B) (ℑ-is-coreduced _) _ _)
 
   induce-homotopy-on-coreduced-types :
-      ∀ {A B : U₀} (f g : ℑ A → ℑ B)
+      ∀ {A B : 𝒰₀} (f g : ℑ A → ℑ B)
       → f ∘ ℑ-unit ⇒ g ∘ ℑ-unit
       → f ⇒ g
   induce-homotopy-on-coreduced-types f g H =
       ℑ-induction (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _) H
 
   coreduced-types-have-a-coreduced-equivalence-proposition :
-      ∀ {A B : U₀}
+      ∀ {A B : 𝒰₀}
       → (f : ℑ A → ℑ B) → (f is-an-equivalence) is-coreduced
   coreduced-types-have-a-coreduced-equivalence-proposition {A} {B} f =
        (to-show-that (f is-an-equivalence) is-coreduced,-it-suffices-to-show-that (∑ _)
@@ -579,7 +579,7 @@ module Im where
                          (λ _ → id ⇒ f ∘ h)
                            (λ _ → homotopies-in-coreduced-types-are-coreduced)}))
 
-  ℑ≃-is-coreduced : ∀ {A B : 𝒰}
+  ℑ≃-is-coreduced : ∀ {A B : 𝒰₀}
     → (ℑ A ≃ ℑ B) is-coreduced
   ℑ≃-is-coreduced {A} {B} =
     (to-show-that (ℑ A ≃ ℑ B) is-coreduced,-it-suffices-to-show-that
@@ -594,24 +594,24 @@ module Im where
            f)))
 
   naturality-of-ℑ-unit≃ : 
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (f : A ≃ B)
     → (a : A) → (ℑ≃ f $≃ (ℑ-unit a) ≈ ℑ-unit (f $≃ a))
   naturality-of-ℑ-unit≃ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (underlying-map-of f z)) 
 
 
   ×-coreduced :
-    ∀ (A B : 𝒰)
+    ∀ (A B : 𝒰₀)
     → (ℑ A × ℑ B) is-coreduced
   ×-coreduced A B = ∑-of-coreduced-types-is-coreduced 
                   (ℑ A) (ℑ-is-coreduced A) (λ _ → ℑ B) (λ _ → ℑ-is-coreduced B)
 
 
-  module ℑ-preserves-products (A B : 𝒰) where
-    curry : ∀ {A B C : U₀} → (A × B → C) → (A → (B → C))
+  module ℑ-preserves-products (A B : 𝒰₀) where
+    curry : ∀ {A B C : 𝒰₀} → (A × B → C) → (A → (B → C))
     curry f = λ a → (λ b → f (a , b))
     
-    uncurry : ∀ {A B C : U₀} → (A → (B → C)) → (A × B → C)
+    uncurry : ∀ {A B C : 𝒰₀} → (A → (B → C)) → (A × B → C)
     uncurry f (a , b) = f a b
 
     ψ : A → (B → ℑ(A × B))
@@ -692,7 +692,7 @@ module Im where
      for ×, with the only difference, that coreducedness
      of ℑ𝒰 and therefore left exactness is needed once in 
      the beginning of the contruction -}
-  module ℑ-commutes-with-∑ {A : 𝒰} (P : A → 𝒰) where
+  module ℑ-commutes-with-∑ {A : 𝒰₀} (P : A → 𝒰₀) where
     ℑA = ℑ A
 
     ℑP : ℑA → ℑ𝒰

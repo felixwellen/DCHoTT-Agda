@@ -14,7 +14,43 @@ module PropertiesOfEtaleMaps where
   open import FormalDisk
   open import FormalDiskBundle
 
-  module formal-disk-bundles-are-preserved-by-étale-base-change {A B : U₀} (f́ : A ─ét→ B) where
+  module lifting-formal-disks
+    {A  : 𝒰₀} (f : A → 𝒰₀) (f-is-coreduced : (x : A) → (f x) is-coreduced) (a : A)
+    where
+
+    𝔻ₐ = 𝔻 A a   -- just for the comment below
+
+    {-
+
+      The formal disk 𝔻ₐ is analogous to the universal covering
+      in that the following lift φ exists for any f as above:
+
+
+        𝔻ₐ --φ--→ ∑ f
+         \       /
+        ι \     / π₁
+           ↘   ↙ 
+             A
+
+      We will proceed with a more dependently typed point of view
+
+    -}
+
+    𝔻ₐ′ : A → 𝒰₀
+    𝔻ₐ′ x = a is-close-to x
+
+    𝔻ₐ′-is-coreduced : (x : A) → (𝔻ₐ′ x) is-coreduced
+    𝔻ₐ′-is-coreduced x = coreduced-types-have-coreduced-identity-types (ℑ A) (ℑ-is-coreduced _) _ _
+
+    {-
+    lift : (f₀ : f a)
+      → (x : A) (d : a is-close-to x)
+      → f x
+    lift f₀ x d = {!(λ (u : ℑ A) (v : ℑ A) (γ : u ≈ v) → transport (ι-ℑ𝒰 ∘ (ℑ-recursion ℑ𝒰-is-coreduced (λ (x : A) → (f x , f-is-coreduced x)))) γ) (ι a) (ι x) d  !}
+    -}
+    {- ... -}
+
+  module formal-disk-bundles-are-preserved-by-étale-base-change {A B : 𝒰₀} (f́ : A ─ét→ B) where
 
     f = underlying-map-of f́
 
@@ -139,45 +175,3 @@ module PropertiesOfEtaleMaps where
     in (e x ⁻¹≃)
 
 
-{-
-  _is-étale-because-it-induces-equivalences-on-coreduced-points-by_ :
-    ∀ {A B : 𝒰₀}
-    → (f : A → B)
-    → ((x : ℑ A) → (d f x) is-an-equivalence)
-  f is-étale-because-it-induces-equivalences-on-coreduced-points-by p = ?
--}
-  module lifting-formal-disks
-    {A  : 𝒰} (f : A → 𝒰) (f-is-coreduced : (x : A) → (f x) is-coreduced) (a : A)
-    where
-
-    𝔻ₐ = 𝔻 A a   -- just for the comment below
-
-    {-
-
-      The formal disk 𝔻ₐ is analogous to the universal covering
-      in that the following lift φ exists for any f as above:
-
-
-        𝔻ₐ --φ--→ ∑ f
-         \       /
-        ι \     / π₁
-           ↘   ↙ 
-             A
-
-      We will proceed with a more dependently typed point of view
-
-    -}
-
-    𝔻ₐ′ : A → 𝒰
-    𝔻ₐ′ x = a is-close-to x
-
-    𝔻ₐ′-is-coreduced : (x : A) → (𝔻ₐ′ x) is-coreduced
-    𝔻ₐ′-is-coreduced x = coreduced-types-have-coreduced-identity-types (ℑ A) (ℑ-is-coreduced _) _ _
-
-    {-
-    lift : (f₀ : f a)
-      → (x : A) (d : a is-close-to x)
-      → f x
-    lift f₀ x d = {!(λ (u : ℑ A) (v : ℑ A) (γ : u ≈ v) → transport (ι-ℑ𝒰 ∘ (ℑ-recursion ℑ𝒰-is-coreduced (λ (x : A) → (f x , f-is-coreduced x)))) γ) (ι a) (ι x) d  !}
-    -}
-    {- ... -}

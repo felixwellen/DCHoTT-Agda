@@ -9,26 +9,27 @@ module CommonEquivalences where
   open import Equivalences
   open import HalfAdjointEquivalences
   open import Language
-
-
-  ×-One-is-trivial : ∀ {A : U₀} → A × One ≃ A
-  ×-One-is-trivial = (λ { (a , x) → a }) is-an-equivalence-because
+  open import FunctionExtensionality
+  open import Contractibility
+  
+  ×-𝟙-is-trivial : ∀ {A : 𝒰₀} → A × 𝟙 ≃ A
+  ×-𝟙-is-trivial = (λ { (a , x) → a }) is-an-equivalence-because
                      (has-left-inverse (λ a → a , ∗) by (λ { (a , ∗) → refl })
                       and-right-inverse (λ a → a , ∗) by (λ a → refl))
 
 
-  swap-× : ∀ {A B : U₀} → A × B → B × A
+  swap-× : ∀ {A B : 𝒰₀} → A × B → B × A
   swap-× (a , b) = (b , a)
 
   swap-×-is-an-equivalence :
-    ∀ {A B : U₀} → swap-× {A} {B} is-an-equivalence
+    ∀ {A B : 𝒰₀} → swap-× {A} {B} is-an-equivalence
   swap-×-is-an-equivalence = has-left-inverse swap-× by (λ { (a , b) → refl })
                              and-right-inverse swap-× by (λ { (b , a) → refl })
 
-  swap-×-as-equivalence : ∀ {A B : U₀} → A × B ≃ B × A
+  swap-×-as-equivalence : ∀ {A B : 𝒰₀} → A × B ≃ B × A
   swap-×-as-equivalence = swap-× is-an-equivalence-because swap-×-is-an-equivalence
 
-  module restricted-product-projections (A B : U₀) (restrict-at : A) where
+  module restricted-product-projections (A B : 𝒰₀) (restrict-at : A) where
       a₀ = restrict-at
       
       fiber-over-a₀ = fiber-of (π₁-from A × B) at a₀
@@ -61,7 +62,7 @@ module CommonEquivalences where
       as-equivalence = restricted-projection is-an-equivalence-because conclusion
       
 
-  module proof-that-right-composition-is-an-equivalence (A : U₀) (a a′ : A) where
+  module proof-that-right-composition-is-an-equivalence (A : 𝒰₀) (a a′ : A) where
       -- (a -η-> a′, a′ -γ-> x)  ↦ (a -η•γ-> x)
       right-compose : ∀ {x : A} (γ : a′ ≈ x)
                       → a ≈ a′ → a ≈ x
@@ -110,50 +111,50 @@ module CommonEquivalences where
                 and-right-inverse
                   go-back-left γ by right-inverse-left γ
 
-  right-compose : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
+  right-compose : ∀ {A : 𝒰₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                   → a ≈ a′ → a ≈ a″ 
   right-compose {_} {a} {a′} {_} γ = proof-that-right-composition-is-an-equivalence.right-compose _ a a′ γ
 
-  compute-right-compose : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
+  compute-right-compose : ∀ {A : 𝒰₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                   → (η : a ≈ a′) → right-compose γ η ≈ η • γ
   compute-right-compose refl refl = refl
 
-  right-compose-is-an-equivalence : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
+  right-compose-is-an-equivalence : ∀ {A : 𝒰₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                                     → (right-compose {_} {a} {_} {_} γ) is-an-equivalence
   right-compose-is-an-equivalence γ = proof-that-right-composition-is-an-equivalence.proof _ _ _ γ
 
   infix 30 _•r≃
-  _•r≃ : ∀ {A : U₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
+  _•r≃ : ∀ {A : 𝒰₀} {a a′ a″ : A} (γ : a′ ≈ a″) 
                   → a ≈ a′ ≃ a ≈ a″ 
   γ •r≃ = right-compose γ is-an-equivalence-because right-compose-is-an-equivalence γ
 
-  left-compose : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a) 
+  left-compose : ∀ {A : 𝒰₀} {x a a′ : A} (γ : x ≈ a) 
                   → a ≈ a′ → x ≈ a′
   left-compose γ = proof-that-right-composition-is-an-equivalence.left-compose _ _ _ γ
 
-  compute-left-compose : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a)
+  compute-left-compose : ∀ {A : 𝒰₀} {x a a′ : A} (γ : x ≈ a)
     → (η : a ≈ a′) → left-compose γ η ≈ γ • η
   compute-left-compose refl η = refl
   
-  left-compose-is-an-equivalence : ∀ {A : U₀} {x a a′ : A} (γ : x ≈ a) 
+  left-compose-is-an-equivalence : ∀ {A : 𝒰₀} {x a a′ : A} (γ : x ≈ a) 
                                     → (left-compose {_} {_} {_} {a′} γ) is-an-equivalence
   left-compose-is-an-equivalence γ = proof-that-right-composition-is-an-equivalence.proof-left _ _ _ γ
 
   infix 30 _•l≃
-  _•l≃ : ∀ {A : 𝒰} {x a a′ : A} (γ : x ≈ a) 
+  _•l≃ : ∀ {A : 𝒰₀} {x a a′ : A} (γ : x ≈ a) 
                   → a ≈ a′ ≃ x ≈ a′
   γ •l≃ = left-compose γ is-an-equivalence-because  left-compose-is-an-equivalence γ 
 
-  module ∑-is-universal (A : U₀) (P : A → U₀) where
-    map-to-cone : ∀ (Z : U₀) 
+  module ∑-is-universal (A : 𝒰₀) (P : A → 𝒰₀) where
+    map-to-cone : ∀ (Z : 𝒰₀) 
                   → (∑ P → Z) → Π (λ a → (P a → Z))
     map-to-cone Z φ = λ a → λ p → φ (a , p)
   
-    cone-to-map : ∀ (Z : U₀) 
+    cone-to-map : ∀ (Z : 𝒰₀) 
                   → Π (λ a → (P a → Z)) → (∑ P → Z) 
     cone-to-map Z f (a , p) = f a p
 
-    equivalence : ∀ (Z : U₀) 
+    equivalence : ∀ (Z : 𝒰₀) 
                   → (map-to-cone Z) is-an-equivalence
     equivalence Z = has-left-inverse 
                       cone-to-map Z by (λ φ → refl) 
@@ -161,7 +162,7 @@ module CommonEquivalences where
                       cone-to-map Z by (λ f → refl)
 
   module proof-that-equivalences-induce-equivalences-on-path-spaces 
-         (A B : U₀) (f-as-equivalence : A ≃ B) where
+         (A B : 𝒰₀) (f-as-equivalence : A ≃ B) where
 
     f : A → B
     f = _≃_.the-equivalence f-as-equivalence
@@ -272,7 +273,7 @@ module CommonEquivalences where
 
 
   infix 50 _∗≃ 
-  _∗≃ : ∀ {A B : 𝒰} {x y : A}
+  _∗≃ : ∀ {A B : 𝒰₀} {x y : A}
     → (f : A ≃ B) → (x ≈ y) ≃ (underlying-map-of f) x ≈ (underlying-map-of f) y
   f ∗≃ =
     proof-that-equivalences-induce-equivalences-on-path-spaces.f⁎ _ _ f
@@ -281,7 +282,7 @@ module CommonEquivalences where
 
 -- algebraic manipulations of equations are equivalences
   module concatenation-is-an-equivalence 
-    {A : U₀} {a a′ : A} (η ζ : a ≈ a′) where
+    {A : 𝒰₀} {a a′ : A} (η ζ : a ≈ a′) where
 
     concatenate-right : 
                   ∀ {a″ : A} (γ : a′ ≈ a″)
@@ -364,23 +365,23 @@ module CommonEquivalences where
                                    • (cancel-the′ rη left-of H)) ⁻¹
 
 
-  concatenate-right : ∀ {A : U₀} {a a′ a″ : A} (η ζ : a ≈ a′) (γ : a′ ≈ a″)
+  concatenate-right : ∀ {A : 𝒰₀} {a a′ a″ : A} (η ζ : a ≈ a′) (γ : a′ ≈ a″)
                     → η ≈ ζ → η • γ ≈ ζ • γ
   concatenate-right η ζ γ = concatenation-is-an-equivalence.concatenate-right η ζ γ
 
-  cancel-right′ : ∀ {A : U₀} {a a′ a″ : A} (η ζ : a ≈ a′) (γ : a′ ≈ a″)
+  cancel-right′ : ∀ {A : 𝒰₀} {a a′ a″ : A} (η ζ : a ≈ a′) (γ : a′ ≈ a″)
                    → η • γ ≈ ζ • γ → η ≈ ζ 
   cancel-right′ η ζ γ = concatenation-is-an-equivalence.cancel-right′ η ζ γ
 
   concatenating-is-an-equivalence : 
-    ∀ {A : U₀} {a a′ a″ : A} (η ζ : a ≈ a′)
+    ∀ {A : 𝒰₀} {a a′ a″ : A} (η ζ : a ≈ a′)
     → (γ : a′ ≈ a″)
     → concatenation-is-an-equivalence.concatenate-right η ζ γ is-an-equivalence
   concatenating-is-an-equivalence η ζ γ = concatenation-is-an-equivalence.proof-of-equivalence η ζ γ
 
 
   module substitution-as-equivalence
-    {A : U₀} {a a′ : A} (η : a ≈ a′) where
+    {A : 𝒰₀} {a a′ : A} (η : a ≈ a′) where
 
     substitute-right : ∀ {a″ : A} (ζ : a ≈ a′) (γ γ′ : a ≈ a′)
                      → γ ≈ γ′
@@ -395,105 +396,26 @@ module CommonEquivalences where
 
 
   module inversion-is-an-equivalence
-    {A : U₀} where
+    {A : 𝒰₀} where
 
     proof : ∀ {a a′ : A}
             → (λ (γ : a ≈ a′) → γ ⁻¹) is-an-equivalence
     proof = has-left-inverse (λ γ → γ ⁻¹) by (λ γ → ⁻¹-is-selfinverse γ)
             and-right-inverse (λ γ → γ ⁻¹) by (λ γ → ⁻¹-is-selfinverse γ ⁻¹) 
                              
+
 {-
-  {- moved to DependentTypes
-    ∑ P - - ∑ Q
-     |       |
-     ↓       ↓ 
-     A ─f──→ B  
 
-    if f is an equivalence and the fiber over a and f(a) are equivalent,
-    there is an equivalence on the total spaces.
-    (this probably also follows from stuff on pullbacks...)
-    (its in the Book, 4.7.7)
-  -}
-  module fiber-equivalences-along-an-equivalence-on-the-base
-    {A B : U₀} (P : A → U₀) (Q : B → U₀)
-    (f≃ : A ≃ha B) (s≃ : (a : A) → P a ≃ha Q ((underlying-map-of-the-half-adjoint f≃) a)) where
+  homotopies-between-constant-functions : 
+    ∀ {A B : 𝒰₀} {x y : B} 
+    → (const {A} {B} x ≈ const {A} {B} y) ≃ (x ≈ y)
+  homotopies-between-constant-functions = {!!}
+    is-an-equivalence-because {!!}
 
-    -- some shortahnds
-    f = underlying-map-of-the-half-adjoint f≃
-    f⁻¹ = inverse-of-the-half-adjoint f≃
-    f∘f⁻¹⇒id = right-invertibility-of-the-half-adjoint f≃
-    id⇒f⁻¹∘f = left-invertibility-of-the-half-adjoint f≃
-
-    s : (a : A) → P a → Q (f a)
-    s a = underlying-map-of-the-half-adjoint (s≃ a)
-
-
-    {-
-      the goal is to construct an equivalence φ : ∑ P → ∑ Q
-      by using f and s
-      the situation is surprigingly asymmetric and we use
-      different fiberwise right and left inverses, s⁻¹r and s⁻¹l 
-      for s to construct different right and left inverses for φ
-    -}
-    s⁻¹r : (b : B) → Q b → P (f⁻¹ b)
-    s⁻¹r b =
-      (inverse-of-the-half-adjoint (s≃ (f⁻¹ b)))
-      ∘
-      transport Q (f∘f⁻¹⇒id b ⁻¹)
-
-    s∘s⁻¹r⇒transport :
-      (b : B) → s (f⁻¹ b) ∘ s⁻¹r b ⇒ transport Q (f∘f⁻¹⇒id b ⁻¹)
-    s∘s⁻¹r⇒transport b q =
-        s (f⁻¹ b) (s⁻¹r b q)
-      ≈⟨ right-invertibility-of-the-half-adjoint (s≃ (f⁻¹ b)) _ ⟩
-        transport Q (f∘f⁻¹⇒id b ⁻¹) q
-      ≈∎
-
-
-    s⁻¹l : (a : A) → Q (f a) → P (f⁻¹ (f a))
-    s⁻¹l a = transport P (id⇒f⁻¹∘f a ⁻¹) ∘ inverse-of-the-half-adjoint (s≃ a) 
-    
-    transport⇒s⁻¹l∘s :
-      (a : A) → transport P (id⇒f⁻¹∘f a ⁻¹) ⇒ s⁻¹l a ∘ s a 
-    transport⇒s⁻¹l∘s a p =
-        transport P (id⇒f⁻¹∘f a ⁻¹) p
-      ≈⟨ transport P (id⇒f⁻¹∘f a ⁻¹) ⁎
-           left-invertibility-of-the-half-adjoint (s≃ a) p ⁻¹ ⟩
-        (s⁻¹l a ∘ s a) p
-      ≈∎
-
-    φ : ∑ P → ∑ Q
-    φ (a , p) = ((f a) , s a p)
-
-    φ⁻¹r : ∑ Q → ∑ P
-    φ⁻¹r (b , q) = (f⁻¹ b , s⁻¹r b q)
-
-    φ∘φ⁻¹r⇒id : φ ∘ φ⁻¹r ⇒ id
-    φ∘φ⁻¹r⇒id (b , q) =
-        (f (f⁻¹ b) , s (f⁻¹ b) (s⁻¹r b q))
-      ≈⟨ (λ p → f (f⁻¹ b) , p) ⁎ s∘s⁻¹r⇒transport b q ⟩ 
-        (f (f⁻¹ b) , transport Q (f∘f⁻¹⇒id b ⁻¹) q)
-      ≈⟨ equality-action-on-∑ (f (f⁻¹ b)) b (f∘f⁻¹⇒id b) _ ⟩
-        (b , transport Q (f∘f⁻¹⇒id b) (transport Q (f∘f⁻¹⇒id b ⁻¹) q))
-      ≈⟨ (λ p → b , p) ⁎ transport-invertibility _ (f∘f⁻¹⇒id b) q ⟩ 
-        (b , q)
-      ≈∎
-
-
-    φ⁻¹l : ∑ (λ b → Q (f (f⁻¹ b))) → ∑ P
-    φ⁻¹l (b , q) = (f⁻¹ b , transport P (id⇒f⁻¹∘f (f⁻¹ b)) (s⁻¹l (f⁻¹ b) q))
-
-    φ⁻¹l∘φ⇒id : φ⁻¹l ∘ φ ⇒ id
-    φ⁻¹l∘φ⇒id (a , p) =
-         (φ⁻¹l ∘ φ) (a , p)
-      ≈⟨ by-definition-of φ ⟩
-        φ⁻¹l (f a , s a p)
-      ≈⟨ by-definition-of φ⁻¹l ⟩
-        (f⁻¹ (f a) , s⁻¹l (f⁻¹ (f a)) (transport Q (f∘f⁻¹⇒id (f a) ⁻¹) (s a p)))
-      ≈⟨ {!!} ⟩ 
-        (a , p)
-      ≈∎
-
-    induced-equivalence : ∑ P ≃ ∑ Q
-    induced-equivalence = {!!}
+  homotopies-between-constant-functions : 
+    ∀ {A B : 𝒰₀} {x y : B} 
+    → (const {A} {B} x ≈ const {A} {B} y) ≃ (A → (x ≈ y))
+  homotopies-between-constant-functions = (λ H a → (λ f → f a) ⁎ H)
+    is-an-equivalence-because
+      (has-left-inverse (λ f → fun-ext f) by (λ p → {!cancel-fun-ext (equality-to-homotopy p)!}) and-right-inverse {!!} by {!!})
 -}

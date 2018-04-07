@@ -7,6 +7,24 @@ module FunctionExtensionality where
   open import Homotopies
   open import Interval
 
+  {-
+    This approach to function extensionality
+    uses an interval, i.e. a higher inductive
+    type with two points and one equality between them.
+    There is also an approach with univalence, 
+    described in the HoTT-Book and implemented in HoTT-Agda.
+    Equality of maps 
+
+      f,g : A → B with f ⇒ g
+
+    is shown by constructing first a map
+
+      H : A × I → B
+
+    and applying this to the segment of the interval I.
+    This works also for dependent functions.
+  -}
+
 
   function-extensionality : ∀ {i j} (A : U i) (P : A → U j)
                             → (f g : (a : A) → P a)
@@ -21,26 +39,10 @@ module FunctionExtensionality where
               → ((a : A) → f(a) ≈ g(a)) → f ≈ g
   fun-ext = function-extensionality _ _ _ _
   
-  equality-to-homotopy : ∀ {i} {A B : U i} {f g : A → B}
-                         → f ≈ g → (a : A) → f a ≈ g a
-  equality-to-homotopy refl a = refl
-  
-  equality-to-homotopy′ : ∀ {A B : U₀} {f g : A → B}
-                        → f ≈ g → (a : A) → f a ≈ g a
-  equality-to-homotopy′ γ a = (λ f → f a) ⁎ γ
-  
-  those-are-equal : ∀ {A B : U₀} {f g : A → B}
-                    → (γ : f ≈ g) → (a : A)
-                    → equality-to-homotopy γ a ≈ equality-to-homotopy′ γ a
-  those-are-equal refl a = refl                  
-  
-  f-swap : ∀ {A B C : U₀} → (A → B → C) → (B → A → C)
+  f-swap : ∀ {A B C : 𝒰₀} → (A → B → C) → (B → A → C)
   f-swap f = λ b a → f a b
-  -- _ ⁎ _ : (f : A → B → C) → x ≈A y → f(x) ≈B→C f(y)
-  -- _ ⁎ _ : (f : B → A → C) → x ≈B y → f(x) ≈A→C f(y)
-  -- _ ⁎ _ : (f : A × B → C) → x ≈A×B y → f(x) ≈C f(y)
   
-  cancel-fun-ext′ : ∀ {A B : U₀} (f g : A → B)
+  cancel-fun-ext′ : ∀ {A B : 𝒰₀} (f g : A → B)
                   → (H : (a : A) → f(a) ≈ g(a))
                   → (a : A) → equality-to-homotopy′ (fun-ext H) a ≈ H a
   cancel-fun-ext′ f g H a = 
@@ -48,14 +50,21 @@ module FunctionExtensionality where
                                (λ i a₁ → I-recursion (f a₁) (g a₁) (H a₁) i)
                                • uniqueness-of-I-recursion (f a) (g a) (H a)
 
-  cancel-fun-ext : ∀ {A B : U₀} {f g : A → B}
+  cancel-fun-ext : ∀ {A B : 𝒰₀} {f g : A → B}
                    → (H : (a : A) → f(a) ≈ g(a))
                    → (a : A) → equality-to-homotopy (fun-ext H) a ≈ H a
   cancel-fun-ext H a = those-are-equal (fun-ext H) a
                        • (cancel-fun-ext′ _ _ H a)
-
-  mapping-preserves-homotopy : ∀ {A B C D : U₀} {f g : A → B} (map : (A → B) → (C → D)) 
-                               → (H : f ⇒ g) 
-                               → map f ⇒ map g
+{-
+  cancel-fun-ext-left : ∀ {A B : 𝒰₀} {f g : A → B}
+                        → (γ : f ≈ g)
+                        → fun-ext (equality-to-homotopy γ) ≈ γ
+  cancel-fun-ext-left = {!!} 
+-}
+  
+  mapping-preserves-homotopy :
+    ∀ {A B C D : 𝒰₀} {f g : A → B} (map : (A → B) → (C → D)) 
+    → (H : f ⇒ g) 
+    → map f ⇒ map g
   mapping-preserves-homotopy map H = equality-to-homotopy (map ⁎ fun-ext H)
 

@@ -6,10 +6,10 @@ module Interval where
 
   module _ where
     private
-      data #I : U₀ where
+      data #I : 𝒰₀ where
         #zero : #I
         #one : #I
-    I : U₀
+    I : 𝒰₀
     I = #I
 
     a : I

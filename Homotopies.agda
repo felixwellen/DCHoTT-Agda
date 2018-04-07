@@ -17,6 +17,9 @@ refl⇒ a = refl
 
 id⇒ = refl⇒ 
 
+_⇒Π_ : ∀ {i j} {A : U i} {B : A → U j} → (f g : Π B) → U (i ⊔ j)
+f ⇒Π g = (x : _) → f(x) ≈ g(x)
+
 -- homotopies are natural as morphisms of the induced 
 -- functors of path groupoids 
 -- f(a) ∼ Ha ∼ g(a)
@@ -24,14 +27,14 @@ id⇒ = refl⇒
 --  fγ          gγ
 --  ||          ||
 -- f(a′) ∼Ha′∼ g(a)
-naturality-of-homotopies : ∀ {A B : U₀} {a a′ : A} (f g : A → B)
+naturality-of-homotopies : ∀ {A B : 𝒰₀} {a a′ : A} (f g : A → B)
                            → (H : f ∼ g) → (γ : a ≈ a′)
                            → H a • g ⁎ γ ≈ f ⁎ γ • H a′
 naturality-of-homotopies f g H refl =
                              refl-is-right-neutral (H _) ⁻¹ • refl-is-left-neutral (H _)
 
 conjugate-with-homotopy : 
-  ∀ {A B : U₀} {a a′ : A}
+  ∀ {A B : 𝒰₀} {a a′ : A}
   → (f g : A → B) → (H : f ∼ g) → (γ : a ≈ a′)
   → f ⁎ γ ≈ H a • g ⁎ γ • H a′ ⁻¹ 
 conjugate-with-homotopy f g H refl =
@@ -40,13 +43,13 @@ conjugate-with-homotopy f g H refl =
            
 
 
-compose-homotopies : ∀ {A B : U₀} {f g h : A → B}
+compose-homotopies : ∀ {A B : 𝒰₀} {f g h : A → B}
                      → (H : f ⇒ g) (K : g ⇒ h)
                      → f ⇒ h
 compose-homotopies H K = λ a → H a • K a
 
 
-naturality-for-units : ∀ {A B : U₀} (f : A → B) (g : B → A)
+naturality-for-units : ∀ {A B : 𝒰₀} (f : A → B) (g : B → A)
                        → (unit :  g ∘ f ∼ id) 
                        → (a : A) → (g ∘ f) ⁎ unit a ≈ unit (g (f a)) 
 naturality-for-units f g unit a = (refl-is-right-neutral (unit (g (f a))) •
@@ -79,9 +82,9 @@ H ⁻¹⇒ = reverse-homotopy H
 --F ⁎∼ H = {!!}
 
 -- 2-categorical stuff
-_right-whisker_ : ∀ {i} {A B C : U i} {f g : A → B} 
+_right-whisker_ : ∀ {i j k} {A : 𝒰 i} {B : 𝒰 j} {C : 𝒰 k} {f g : A → B} 
                       → f ⇒ g → (h : B → C) → h ∘ f ⇒ h ∘ g
-_right-whisker_ {i} {A} {B} {C} {f} {g} H h = λ (a : A) → h ⁎ H a
+_right-whisker_ {_} {_} {_} {A} {B} {C} {f} {g} H h = λ (a : A) → h ⁎ H a
 _left-whisker_ : ∀ {i j k} {A : U i} {B : U j} {C : U k} {f g : B → C} 
                       →  (h : A → B) → f ⇒ g → f ∘ h ⇒ g ∘ h
 _left-whisker_ {i} {_} {_} {A} {B} {C} {f} {g} h H = λ (a : A) → H (h a)
@@ -98,17 +101,17 @@ post-whisker_to_ = _right-whisker_
 
 
 infixl 50 _•∼_ 
-_•∼_ : ∀ {i} {A B : U i} {f g h : A → B} 
+_•∼_ : ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} {f g h : A → B} 
       → f ∼ g → g ∼ h → f ∼ h
-_•∼_ {i} {A} {B} {f} {g} {h} H-fg H-gh = λ (a : A) → (H-fg a) • (H-gh a)
+_•∼_ {i} {j} {A} {B} {f} {g} {h} H-fg H-gh = λ (a : A) → (H-fg a) • (H-gh a)
 
 infixl 50 _∘⇒_ 
-_∘⇒_ : ∀ {i} {A B : U i} {f g h : A → B} 
+_∘⇒_ : ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} {f g h : A → B} 
       → g ⇒ h → f ⇒ g → f ⇒ h
 H-gh ∘⇒ H-fg = H-fg •∼ H-gh
 
 infixl 50 _•⇒_ 
-_•⇒_ : ∀ {i} {A B : U i} {f g h : A → B} 
+_•⇒_ : ∀ {i j} {A : 𝒰 i} {B : 𝒰 j} {f g h : A → B} 
       → f ⇒ g → g ⇒ h → f ⇒ h
 H-fg •⇒ H-gh = H-fg •∼ H-gh
 
@@ -124,3 +127,18 @@ f ⇒∎ = refl⇒
 _⇒-⟨_⟩_ : ∀ {i} {A B : U i} (f : A → B) {g h : A → B}
          → f ⇒ g → g ⇒ h → f ⇒ h
 f ⇒-⟨ reason ⟩ H = reason •⇒ H
+
+
+equality-to-homotopy : ∀ {i} {A B : U i} {f g : A → B}
+                         → f ≈ g → (a : A) → f a ≈ g a
+equality-to-homotopy refl a = refl
+  
+equality-to-homotopy′ : ∀ {A B : 𝒰₀} {f g : A → B}
+                        → f ≈ g → (a : A) → f a ≈ g a
+equality-to-homotopy′ γ a = (λ f → f a) ⁎ γ
+  
+those-are-equal : ∀ {A B : 𝒰₀} {f g : A → B}
+                    → (γ : f ≈ g) → (a : A)
+                    → equality-to-homotopy γ a ≈ equality-to-homotopy′ γ a
+those-are-equal refl a = refl                  
+  

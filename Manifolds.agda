@@ -7,8 +7,6 @@ module Manifolds where
   open import DependentTypes
   open import Fiber
   open import Equivalences renaming (underlying-map-of to underlying-map-of-the-equivalence)
-  open import Pullback
-  open import PullbackSquare
   open import InfinityGroups
   open import Contractibility
   open import Homotopies
@@ -16,7 +14,7 @@ module Manifolds where
   open import FormalDiskBundle
   open import EtaleMaps
   open import Language
-  open import OneImage
+  open import Image
   open import FiberBundle
   open import FormalDisk
   open import HomogeneousType
@@ -26,18 +24,18 @@ module Manifolds where
 
   record _-manifold {V′ : 𝒰₀} (V : homogeneous-structure-on V′) : 𝒰₁ where
     field
-      M : 𝒰
-      W : 𝒰
+      M : 𝒰₀
+      W : 𝒰₀
       w : W ─ét→ M
-      w-covers : (w ét→) is-1-epi 
+      w-covers : (w ét→) is-surjective 
       v : W ─ét→ V′
 
     cover-as-surjection : W ↠ M
-    cover-as-surjection = (w ét→) is-1-epi-by w-covers
+    cover-as-surjection = (w ét→) is-surjective-by w-covers
 
 
   homogeneous-space-as-manifold :
-    ∀ {V : U₀} (V′ : homogeneous-structure-on V)
+    ∀ {V : 𝒰₀} (V′ : homogeneous-structure-on V)
     → V′ -manifold   -- V is-a-manifold-with-cover id-as-étale-map locally-like structure-on-V by id-as-étale-map
   homogeneous-space-as-manifold _ =
     record
@@ -48,7 +46,7 @@ module Manifolds where
       }
 
   module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
-         {V′ : 𝒰} 
+         {V′ : 𝒰₀} 
          (V : homogeneous-structure-on V′)
          (M′ : V -manifold)
          where
@@ -120,7 +118,7 @@ module Manifolds where
     is a 𝔻ₑ×V-manifold.
   -}
   module the-formal-disk-bundle-of-a-manifold-is-a-manifold  
-         {V′ : 𝒰} 
+         {V′ : 𝒰₀} 
          (V : homogeneous-structure-on V′)
          (M′ : V -manifold)
          where

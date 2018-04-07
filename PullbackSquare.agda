@@ -42,26 +42,26 @@ module PullbackSquare where
 
   -- Language
   pullback-square-with-right_bottom_top_left_ :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       (f : A → C)  (g : B → C) 
       (z₁ : Z → A) (z₂ : Z → B)
-      → U₀
+      → 𝒰₀
   pullback-square-with-right f bottom g top z₁ left z₂ =
     pullback-square f g z₁ z₂
 
   the-square-with-right_bottom_top_left_commuting-by_is-a-pullback-square :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       (f : A → C)  (g : B → C) 
       (z₁ : Z → A) (z₂ : Z → B)
       → (γ : f ∘ z₁ ⇒ g ∘ z₂)
-      → U₀
+      → 𝒰₀
   the-square-with-right f bottom g top z₁ left z₂ commuting-by γ is-a-pullback-square =
     is-a-pullback-square f g z₁ z₂ γ
     
 
   -- projections
   underlying-2-cell : 
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       → pullback-square f g z₁ z₂
@@ -70,7 +70,7 @@ module PullbackSquare where
     (the-square-commuting-by γ and-inducing-an-equivalence-by _)  = γ
 
   the-induced-map-in_is-an-equivalence : 
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       → (□ : pullback-square f g z₁ z₂)
@@ -79,39 +79,39 @@ module PullbackSquare where
     proof
 
   upper-left-vertex-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
-    → U₀
+    → 𝒰₀
   upper-left-vertex-of {Z} {_} {_} {_} {_} {_} {_} {_} _ = Z
 
   lower-left-vertex-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
-    → U₀
+    → 𝒰₀
   lower-left-vertex-of {_} {_} {B} {_} {_} {_} {_} {_} _ = B
 
   lower-right-vertex-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
-    → U₀
+    → 𝒰₀
   lower-right-vertex-of {_} {_} {_} {C} {_} {_} {_} {_} _ = C
 
   upper-right-vertex-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
-    → U₀
+    → 𝒰₀
   upper-right-vertex-of {_} {A} {_} {_} {_} {_} {_} {_} _ = A
 
   left-map-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -119,7 +119,7 @@ module PullbackSquare where
   left-map-of {_} {_} {_} {_} {_} {_} {_} {z₂} _ = z₂
 
   right-map-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -127,7 +127,7 @@ module PullbackSquare where
   right-map-of {_} {_} {_} {_} {f} {_} {_} {_} _ = f
 
   bottom-map-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -135,7 +135,7 @@ module PullbackSquare where
   bottom-map-of {_} {_} {_} {_} {_} {g} {_} {_} _ = g
 
   top-map-of :
-    ∀ {Z A B C : U₀}
+    ∀ {Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -144,7 +144,7 @@ module PullbackSquare where
 
   -- induced maps to abstract pullbacks
   induced-map-to-pullback-vertex :
-    ∀ {W Z A B C : U₀}
+    ∀ {W Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       → (□ : pullback-square f g z₁ z₂)
@@ -159,7 +159,7 @@ module PullbackSquare where
     in ψ⁻¹ ∘ φ
 
   deduce-equivalence-of-vertices :
-    ∀ {W Z A B C : U₀}
+    ∀ {W Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       {w₁ : W → A} {w₂ : W → B}
@@ -178,7 +178,7 @@ module PullbackSquare where
 
   -- get factorization for this equivalence
   deduced-equivalence-factors-the-left-map : 
-    ∀ {W Z A B C : U₀}
+    ∀ {W Z A B C : 𝒰₀}
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       {w₁ : W → A} {w₂ : W → B}
@@ -212,7 +212,7 @@ module PullbackSquare where
              z₂ z ≈∎
 
   equality-of-squares-preserve-the-pullback-property : 
-    ∀ {Z A B C : U₀} 
+    ∀ {Z A B C : 𝒰₀} 
       {f : A → C}  {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
      → (□ : pullback-square f g z₁ z₂)
@@ -245,7 +245,7 @@ module PullbackSquare where
 
   -- given any cospan, we may construct a pullback square:
   complete-to-pullback-square :
-    ∀ {A B C : U₀} (f : A → C) (g : B → C)
+    ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C)
     → pullback-square f g (p₁-of-pullback f g) (p₂-of-pullback f g)
   complete-to-pullback-square f g = 
     let step1 : id left-inverse-of induced-map-to-pullback (p₁-of-pullback _ _) (p₂-of-pullback _ _) p-homotopy
@@ -260,7 +260,7 @@ module PullbackSquare where
 
  
   square-with-pullback-as-iterated-∑ :
-    ∀ {A B C : U₀} (f : A → C) (g : B → C)
+    ∀ {A B C : 𝒰₀} (f : A → C) (g : B → C)
     → pullback-square f g ∑π₁ (λ x → ∑π₁ (∑π₂ x))
   square-with-pullback-as-iterated-∑ {A} {B} {C} f g =
     let
@@ -287,7 +287,7 @@ module PullbackSquare where
      B ────→ 1
   -}
   product-square : 
-    ∀ (A B : U₀)
+    ∀ (A B : 𝒰₀)
     → pullback-square-with-right (λ (a : A) → ∗)
         bottom (λ (b : B) → ∗)
         top π₁
@@ -298,7 +298,7 @@ module PullbackSquare where
       products-are-special-pullbacks.induced-map-is-an-equivalence A B
 
   pullback-square-from-identity-of-morphisms : 
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (f : A → B)
     → pullback-square-with-right f bottom id top id left f
   pullback-square-from-identity-of-morphisms f = 
@@ -321,7 +321,7 @@ module PullbackSquare where
   -}
 
   fiber-square-for_at_ : 
-    ∀ {A B : U₀} (f : A → B) (b : B)
+    ∀ {A B : 𝒰₀} (f : A → B) (b : B)
     → pullback-square-with-right f
         bottom (λ _ → b)
         top ι-fiber
@@ -336,7 +336,7 @@ module PullbackSquare where
 
   -- switching the maps in the cospan
   rotate-cospan : 
-    ∀ {Z A B C : U₀} 
+    ∀ {Z A B C : 𝒰₀} 
     {f : A → C}  {g : B → C}
     {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -350,7 +350,7 @@ module PullbackSquare where
 
 
   substitute-homotopic-right-map : 
-    ∀ {Z A B C : U₀} 
+    ∀ {Z A B C : 𝒰₀} 
      {f : A → C}  {g : B → C}
      {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -391,7 +391,7 @@ module PullbackSquare where
        and-inducing-an-equivalence-by induced-map-is-an-equivalence
 
   substitute-homotopic-bottom-map : 
-    ∀ {Z A B C : U₀} 
+    ∀ {Z A B C : 𝒰₀} 
      {f : A → C}  {g : B → C}
      {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -402,7 +402,7 @@ module PullbackSquare where
     rotate-cospan (substitute-homotopic-right-map (rotate-cospan □) g′ H)
 
   substitute-equivalent : 
-    ∀ {Z A A′ B C : U₀} 
+    ∀ {Z A A′ B C : 𝒰₀} 
     {f : A → C}  {g : B → C}
     {z₁ : Z → A} {z₂ : Z → B}
     (e : A′ → A)
@@ -472,7 +472,7 @@ module PullbackSquare where
 
 
   substitute-equivalent-cone :
-    ∀ {Z Z′ A B C : U₀} 
+    ∀ {Z Z′ A B C : 𝒰₀} 
       {f : A → C} {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       (z₁′ : Z′ → A) (z₂′ : Z′ → B)
@@ -502,7 +502,7 @@ module PullbackSquare where
        induced-map-is-an-equivalence
 
   substitute-equivalent-cone′ :
-    ∀ {Z Z′ A B C : U₀} 
+    ∀ {Z Z′ A B C : 𝒰₀} 
       {f : A → C} {g : B → C}
       {z₁ : Z → A} {z₂ : Z → B}
       (z₁′ : Z′ → A) (z₂′ : Z′ → B)
@@ -513,7 +513,7 @@ module PullbackSquare where
   substitute-equivalent-cone′ z₁ z₂ e = substitute-equivalent-cone z₁ z₂ (underlying-map-of e) (proof-of-equivalency e)
 
   substitute-homotopic-top-map :
-    ∀ {Z A B C : U₀} 
+    ∀ {Z A B C : 𝒰₀} 
      {f : A → C}  {g : B → C}
      {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -524,7 +524,7 @@ module PullbackSquare where
     substitute-equivalent-cone z₁′ z₂ id id-is-an-equivalence (H ⁻¹⇒) (λ a → refl) □
 
   substitute-homotopic-left-map :
-    ∀ {Z A B C : U₀} 
+    ∀ {Z A B C : 𝒰₀} 
      {f : A → C}  {g : B → C}
      {z₁ : Z → A} {z₂ : Z → B}
     → pullback-square f g z₁ z₂
@@ -536,7 +536,7 @@ module PullbackSquare where
 
 
   _and_pull-back-the-same-cospan-so-the-first-may-be-replaced-by-the-second-in-the-square_ :
-    ∀ {W Z A B C A′ B′ C′ : U₀}
+    ∀ {W Z A B C A′ B′ C′ : 𝒰₀}
       {f : A → C}  {g : B → C}
       {f′ : A′ → C′}  {g′ : B′ → C′}
       {z₁ : Z → A} {z₂ : Z → B}
@@ -567,7 +567,7 @@ module PullbackSquare where
 
 
   pullback-square-from-equivalence-of-maps :
-    ∀ {A B A′ B′ : U₀}
+    ∀ {A B A′ B′ : 𝒰₀}
     → (f : A → B) → (f′ : A′ → B′)
     → (eA : A′ ≃ A) → (eB : B′ ≃ B)
     → f ∘ (underlying-map-of eA) ⇒ (underlying-map-of eB) ∘ f′
@@ -609,7 +609,7 @@ module PullbackSquare where
   
   -}
   pasting-of-pullback-squares : 
-    ∀ {W Z A B C D : U₀} 
+    ∀ {W Z A B C D : 𝒰₀} 
     {f : A → C} {g : B → C} {h : D → B}
     {z₁ : Z → A} {z₂ : Z → B}
     {w₁ : W → Z} {w₂ : W → D}
@@ -750,7 +750,7 @@ module PullbackSquare where
 
 
   cancel-right-pullback-square′ : 
-    ∀ {W Z A B C D : U₀} 
+    ∀ {W Z A B C D : 𝒰₀} 
     {f : A → C} {g : B → C} {h : D → B}
     {z₁ : Z → A} {z₂ : Z → B}
     {w₁ : W → Z} {w₂ : W → D}
@@ -879,7 +879,7 @@ module PullbackSquare where
   -}
 
   cancel-the-right-pullback-square_from_ : 
-    ∀ {W Z A B C D : U₀} 
+    ∀ {W Z A B C D : 𝒰₀} 
     {f : A → C} {g : B → C} {h : D → B}
     {z₁ : Z → A} {z₂ : Z → B}
     {w₁ : W → A} {w₂ : W → D}

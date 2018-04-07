@@ -10,8 +10,8 @@ module EqualityAndPaths where
     refl : a ≈ a
   
   
-  One-contraction : (x : One) → x ≈ ∗
-  One-contraction ∗ = refl
+  𝟙-contraction : (x : 𝟙) → x ≈ ∗
+  𝟙-contraction ∗ = refl
   
   transport : ∀ {i j} {A : U i}  {x y : A} → (P : A → U j) → (γ : x ≈ y) → (P x → P y)
   transport P refl = id
@@ -61,30 +61,33 @@ module EqualityAndPaths where
   ⁻¹-is-selfinverse : ∀ {i} {A : U i} {x y : A}  (γ : x ≈ y) → (γ ⁻¹) ⁻¹ ≈ γ
   ⁻¹-is-selfinverse refl = refl
   
-  invert-both-sides : ∀ {A : U₀} {a a′ : A} {γ γ′ : a ≈ a′}
+  invert-both-sides : ∀ {A : 𝒰₀} {a a′ : A} {γ γ′ : a ≈ a′}
                     → γ ≈ γ′ → γ ⁻¹ ≈ γ′ ⁻¹
   invert-both-sides refl = refl                  
   
   -- application extends to paths
-  apply_to-path : {A B : U₀} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
+  apply_to-path : {A B : 𝒰₀} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
   apply f to-path refl = refl
   
   
   infixr 70 _⁎_  -- \asterisk
   _⁎_ : ∀ {i j} {A : U i} {B : U j} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
   _⁎_ {_} {_} {_} {_} {x} {.x} f  refl = refl {a = f(x)} 
-  
-  apply-preserves-refl : {A B : U₀} {x : A} (f : A → B) → f ⁎ refl {a = x} ≈ refl {a = f(x)}
+
+  ap : ∀ {i j} {A : U i} {B : U j} {x y : A} (f : A → B) → x ≈ y → f(x) ≈ f(y)
+  ap f γ = f ⁎ γ
+
+  apply-preserves-refl : {A B : 𝒰₀} {x : A} (f : A → B) → f ⁎ refl {a = x} ≈ refl {a = f(x)}
   apply-preserves-refl f = refl
   
   application-commutes-with-composition :
-    ∀ {A B C : U₀} {a a′ : A}
+    ∀ {A B C : 𝒰₀} {a a′ : A}
       → (f : A → B) → (g : B → C)
       → (γ : a ≈ a′)
       → g ⁎ (f ⁎ γ) ≈ (g ∘ f) ⁎ γ
   application-commutes-with-composition f g refl = refl
   
-  apply-commutes-with-evaluation : ∀ {A B C : U₀} {a a′ : A}
+  apply-commutes-with-evaluation : ∀ {A B C : 𝒰₀} {a a′ : A}
                                    → (γ : a ≈ a′) → (b : B)
                                    → (f : A → B → C)
                                    → (λ g → g b) ⁎ (f ⁎ γ) ≈ ((λ g → λ a → g a b) f) ⁎ γ
@@ -95,24 +98,24 @@ module EqualityAndPaths where
                                       → f ⁎ (γ ⁻¹) ≈ (f ⁎ γ) ⁻¹ 
   application-commutes-with-inversion f refl = refl
   
-  application-commutes-with-concatenation : ∀ {A B : U₀} {a a′ a″ : A} (f : A → B) (γ : a ≈ a′) (γ′ : a′ ≈ a″)
+  application-commutes-with-concatenation : ∀ {A B : 𝒰₀} {a a′ a″ : A} (f : A → B) (γ : a ≈ a′) (γ′ : a′ ≈ a″)
                                           → f ⁎ (γ • γ′) ≈ (f ⁎ γ) • (f ⁎ γ′)
   application-commutes-with-concatenation f refl refl = refl                                        
   
   
-  id-has-trivial-application : ∀ {A : U₀} {a a′ : A} 
+  id-has-trivial-application : ∀ {A : 𝒰₀} {a a′ : A} 
                              → (γ : a ≈ a′)
                              → id ⁎ γ ≈ γ
   id-has-trivial-application refl = refl
   
-  codomaining-has-trivial-application : ∀ {A : U₀} {a a′ : A}
+  codomaining-has-trivial-application : ∀ {A : 𝒰₀} {a a′ : A}
                                         → (γ γ′ : a ≈ a′) → (ζ : γ ≈ γ′) 
                                         → (λ (η : a ≈ a′) → a′) ⁎ ζ ≈ refl
   codomaining-has-trivial-application γ .γ refl = refl
   
   
   -- calculate with equalities
-  construct-path-in-∑ : ∀ {A : U₀} {P : A → U₀} (a a′ : A) (p : P a) (p′ : P a′)
+  construct-path-in-∑ : ∀ {A : 𝒰₀} {P : A → 𝒰₀} (a a′ : A) (p : P a) (p′ : P a′)
                         → (γ : a ≈ a′) (η : transport P γ p ≈ p′)
                         → (a , p) ≈ (a′ , p′)
   construct-path-in-∑ a .a _ _ refl η = (λ q → (a , q)) ⁎ η
@@ -124,14 +127,14 @@ module EqualityAndPaths where
                                 → transport P γ′ ∘ transport P γ ≈ transport P (γ • γ′)
   transport-is-contravariant P refl relf = refl
   
-  compute-endo-id-transport : ∀ {A : U₀} {a a′ : A} (f : A → A) 
+  compute-endo-id-transport : ∀ {A : 𝒰₀} {a a′ : A} (f : A → A) 
                               → (γ : a ≈ a′) 
                               → (η : f a ≈ a)
                               → transport (λ a → f a ≈ a) γ η ≈ (f ⁎ γ) ⁻¹ • η • γ
   compute-endo-id-transport f refl η = refl-is-right-neutral η
   
   compute-endo-apply-transport : 
-    ∀ {A B : U₀} {a a′ : A} (f : A → B) 
+    ∀ {A B : 𝒰₀} {a a′ : A} (f : A → B) 
     → (z z′ : B → B)
     → (ζ : z ≈ z′)
     → (η : z (f a) ≈ z (f a′))
@@ -144,18 +147,18 @@ module EqualityAndPaths where
   _is-a-proposition : ∀ {i} (A : U i) → U i
   A is-a-proposition = (x y : A) → x ≈ y
   
-  in-the-type_we-have-an-equality_≈_ : ∀ (A : U₀) → A → A → U₀
+  in-the-type_we-have-an-equality_≈_ : ∀ (A : 𝒰₀) → A → A → 𝒰₀
   in-the-type A we-have-an-equality x ≈ y = x ≈ y
   
-  ×-uniqueness : ∀ {A B : U₀} → (x : A × B) → x ≈ (π₁ x , π₂ x)
+  ×-uniqueness : ∀ {A B : 𝒰₀} → (x : A × B) → x ≈ (π₁ x , π₂ x)
   ×-uniqueness (a , b) = refl
   
-  ×-create-equality : ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+  ×-create-equality : ∀ {A B : 𝒰₀} {a a′ : A} {b b′ : B}
                       → (γ : a ≈ a′) → (η : b ≈ b′)
                       → (a , b) ≈ (a′ , b′)
   ×-create-equality refl refl = refl
 
-  _,≈_ : ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+  _,≈_ : ∀ {A B : 𝒰₀} {a a′ : A} {b b′ : B}
                       → (γ : a ≈ a′) → (η : b ≈ b′)
                       → (a , b) ≈ (a′ , b′)
   γ ,≈ η = ×-create-equality γ η
@@ -163,19 +166,19 @@ module EqualityAndPaths where
   _×≈_ = _,≈_
 
   ×-uniqueness-of-equality : 
-    ∀ {A B : U₀} → {x y : A × B} → (γ : x ≈ y)
+    ∀ {A B : 𝒰₀} → {x y : A × B} → (γ : x ≈ y)
     → γ ≈ ×-uniqueness x • (×-create-equality (π₁ ⁎ γ) (π₂ ⁎ γ)) • ×-uniqueness y ⁻¹
   ×-uniqueness-of-equality {_} {_} {x} {.x} refl = ⁻¹-is-right-inversion (×-uniqueness x) ⁻¹ •
                                             (λ η → η • ×-uniqueness x ⁻¹) ⁎
                                             refl-is-right-neutral (×-uniqueness x)
   ×-compute-π₁-of-equality : 
-    ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+    ∀ {A B : 𝒰₀} {a a′ : A} {b b′ : B}
     → (γ : a ≈ a′) → (η : b ≈ b′)
     → π₁ ⁎ ×-create-equality γ η ≈ γ
   ×-compute-π₁-of-equality refl refl = refl
   
   ×-compute-π₂-of-equality : 
-    ∀ {A B : U₀} {a a′ : A} {b b′ : B}
+    ∀ {A B : 𝒰₀} {a a′ : A} {b b′ : B}
     → (γ : a ≈ a′) → (η : b ≈ b′)
     → π₂ ⁎ ×-create-equality γ η ≈ η
   ×-compute-π₂-of-equality refl refl = refl
@@ -211,7 +214,7 @@ module EqualityAndPaths where
   
   -- computations for transports
   compute-path-fibration-transport : 
-    ∀ {A : U₀} (x₀ y z : A) (γ : y ≈ z) (η : x₀ ≈ y)
+    ∀ {A : 𝒰₀} (x₀ y z : A) (γ : y ≈ z) (η : x₀ ≈ y)
     → transport (λ x → x₀ ≈ x) γ η ≈ η • γ 
   compute-path-fibration-transport x₀ y .y refl η = 
     refl-is-right-neutral η
@@ -231,13 +234,13 @@ module EqualityAndPaths where
   
   
   -- inequality
-  _≠_ : {A : U₀} (a a′ : A) → U₀  -- \neq
+  _≠_ : {A : 𝒰₀} (a a′ : A) → 𝒰₀  -- \neq
   a ≠ a′ = a ≈ a → Zero
   
 
   -- do some stupid calculations needed in Im.agda
   stupid-but-necessary-calculation-with-associativity : 
-    ∀ {A : U₀} {x y z w : A}
+    ∀ {A : 𝒰₀} {x y z w : A}
     → (γ : x ≈ y) (η : x ≈ z) (ζ : y ≈ w)
     → η • (η ⁻¹ • γ • ζ) • ζ ⁻¹ ≈ γ
   stupid-but-necessary-calculation-with-associativity refl refl refl =
@@ -247,7 +250,7 @@ module EqualityAndPaths where
     ≈∎
 
   another-stupid-but-necessary-calculation-with-associativity : 
-    ∀ {A : U₀} {x y z w : A}
+    ∀ {A : 𝒰₀} {x y z w : A}
     → (γ : x ≈ y) (η : z ≈ x) (ζ : w ≈ y)
     → η ⁻¹ • (η • γ • ζ ⁻¹) • ζ ≈ γ
   another-stupid-but-necessary-calculation-with-associativity refl refl refl =
@@ -258,7 +261,7 @@ module EqualityAndPaths where
 
 
   calculation-for-im :
-    ∀ {A : U₀} {x y : A}
+    ∀ {A : 𝒰₀} {x y : A}
     → (f : A → A)
     → (γ : f(x) ≈ y) (η : f(x) ≈ x)
     → (f ⁎ (η ⁻¹ • γ) ⁻¹) • γ ≈ (f ⁎ γ) ⁻¹ • (f ⁎ η) • γ  
@@ -278,6 +281,6 @@ module EqualityAndPaths where
 
 
   J-right :
-    ∀ {A : 𝒰} {a : A} (C : (x : A) → a ≈ x → 𝒰)
+    ∀ {A : 𝒰₀} {a : A} (C : (x : A) → a ≈ x → 𝒰₀)
     → (r : C a refl) → ((y : A) (γ : a ≈ y) → C y γ)
   J-right C r y refl = r 

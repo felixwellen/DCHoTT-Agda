@@ -15,12 +15,11 @@ module HomogeneousType where
     A homogeneous space 'A' is pointed by 'a₀'
     and 'ψ x' is an equivalence of 'A' mapping 'a₀' to 'x'.
   -} 
-  record homogeneous-structure-on_ (A : U₀) : U₀ where
+  record homogeneous-structure-on_ (A : 𝒰₀) : 𝒰₀ where
     field
       e : A
       ψ : (x : A) → (A ≃ A)
       is-translation-to : (x : A) → ((ψ x) $≃ e) ≈ x
-
 
   _×ₕ_ :
     ∀ {A′ B′ : 𝒰₀}
@@ -34,7 +33,7 @@ module HomogeneousType where
         is-translation-to = λ {(x , y) → tA x ×≈ tB y}
       }  
   
-  module structure-inherited-from-codomain {A B : 𝒰} (B' : homogeneous-structure-on B) where
+  module structure-inherited-from-codomain {A B : 𝒰₀} (B' : homogeneous-structure-on B) where
 
     open homogeneous-structure-on_ B'
 
@@ -58,7 +57,7 @@ module HomogeneousType where
     structure = record { e = e→ ; ψ = ψ→ ; is-translation-to = is-translation-to→ }
 
 
-  record _─hom→_ {A B : U₀} (A′ : homogeneous-structure-on A) (B′ : homogeneous-structure-on B) : 𝒰 where
+  record _─hom→_ {A B : 𝒰₀} (A′ : homogeneous-structure-on A) (B′ : homogeneous-structure-on B) : 𝒰₀ where
     open homogeneous-structure-on_
     field
       φ : A → B
@@ -78,17 +77,17 @@ module HomogeneousType where
       -- so I stopped here and tried to do what I want to know directly
       -- for the one known example of a morphism, i.e. the unit ι of ℑ
   
-  module kernel {A B : 𝒰}
+  module kernel {A B : 𝒰₀}
     {A′ : homogeneous-structure-on A} {B′ : homogeneous-structure-on B}
     (φ′ : A′ ─hom→ B′) where
 
     open homogeneous-structure-on_
     open _─hom→_ φ′
 
-    K′ : A → 𝒰
+    K′ : A → 𝒰₀
     K′ a = φ a ≈ e B′
 
-    K : 𝒰
+    K : 𝒰₀
     K = ∑ λ a → φ a ≈ e B′
 
     e-K : K

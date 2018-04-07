@@ -12,7 +12,7 @@ module EtaleMaps where
   open import Language
 
   _as-plain-map :
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (f : A ≃ B) → (A → B)
   f as-plain-map = underlying-map-of-the-equivalence f 
 
@@ -22,7 +22,7 @@ module EtaleMaps where
   -- ↓      ↓
   -- Y --→ ℑ Y
   
-  _is-an-étale-map : ∀ {X Y : U₀} (f : X → Y) → U₀ 
+  _is-an-étale-map : ∀ {X Y : 𝒰₀} (f : X → Y) → 𝒰₀ 
   f is-an-étale-map = 
     the-square-with-right (apply-ℑ-to-map f) 
       bottom ℑ-unit 
@@ -33,7 +33,7 @@ module EtaleMaps where
 
   -- this also follows from stuff in the proof of the triviality theorem
   equivalences-are-étale :
-    ∀ {A B : U₀} (f : A ≃ B)
+    ∀ {A B : 𝒰₀} (f : A ≃ B)
     → (f as-plain-map) is-an-étale-map
   equivalences-are-étale {A} {B} f =
     let
@@ -51,7 +51,7 @@ module EtaleMaps where
      (the-induced-map-in □ is-an-equivalence)
 
 
-  _─ét→_ : (A B : U₀) → U₀
+  _─ét→_ : (A B : 𝒰₀) → 𝒰₀
   A ─ét→ B = ∑ (λ (f : A → B) → f is-an-étale-map)
 
   _is-étale-because_ : {A B : U₀}
@@ -60,29 +60,29 @@ module EtaleMaps where
   f is-étale-because p = f , p
 
   id-as-étale-map :
-    ∀ {A : U₀}
+    ∀ {A : 𝒰₀}
     → A ─ét→ A
   id-as-étale-map = (id , equivalences-are-étale id-as-equivalence)
 
   underlying-map-of : 
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (A ─ét→ B) → (A → B)
   underlying-map-of (f , _) = f
 
   _ét→ : 
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (A ─ét→ B) → (A → B)
   f ét→ = underlying-map-of f
 
   _$ét_ :
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (A ─ét→ B) → A → B
   f $ét x = (f ét→) x
   
   _is-étale = _is-an-étale-map
 
   pullback-square-of :
-    ∀ {A B : U₀}
+    ∀ {A B : 𝒰₀}
     → (f́ : A ─ét→ B) 
     → pullback-square-with-right (ℑ→ (underlying-map-of f́))
         bottom ℑ-unit

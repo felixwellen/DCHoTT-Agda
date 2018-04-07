@@ -6,13 +6,13 @@ module Language where
 
   
   -- language constructs indicating typing
-  the-map : ∀ {A B : U₀} → (A → B) → (A → B)
+  the-map : ∀ {A B : 𝒰₀} → (A → B) → (A → B)
   the-map f = f
 
-  This-follows-from : ∀ {A : 𝒰} → A → A
+  This-follows-from : ∀ {A : 𝒰₀} → A → A
   This-follows-from = id
   
-  equal-by-definition : ∀ {A : U₀} {a : A} → a ≈ a
+  equal-by-definition : ∀ {A : 𝒰₀} {a : A} → a ≈ a
   equal-by-definition = refl
 
   by-definition-of :
@@ -21,32 +21,32 @@ module Language where
   by-definition-of _ = refl
 
   -- language constructs for readable manipulation of equations
-  concatenate_on-the-right-to_ : ∀ {A : U₀} {a a′ a″ : A} {η ζ : a ≈ a′}
+  concatenate_on-the-right-to_ : ∀ {A : 𝒰₀} {a a′ a″ : A} {η ζ : a ≈ a′}
                                       → (γ : a′ ≈ a″)
                                       → (eq : η ≈ ζ)
                                       → η • γ ≈ ζ • γ
   concatenate γ on-the-right-to eq = (λ ξ → ξ • γ) ⁎ eq
 
-  concatenate_on-the-left-to_ : ∀ {A : U₀} {a a′ a″ : A} {η ζ : a ≈ a′}
+  concatenate_on-the-left-to_ : ∀ {A : 𝒰₀} {a a′ a″ : A} {η ζ : a ≈ a′}
                                       → (γ : a″ ≈ a)
                                       → (eq : η ≈ ζ)
                                       → γ • η ≈ γ • ζ
   concatenate γ on-the-left-to eq = (λ ξ → γ • ξ) ⁎ eq
 
 
-  cancel-the_left-of_ : ∀ {A : U₀} {a a′ a″ : A}
+  cancel-the_left-of_ : ∀ {A : 𝒰₀} {a a′ a″ : A}
                            → (γ : a″ ≈ a)
                            → (η : a ≈ a′)
                            → γ ⁻¹ • γ • η ≈ η
   cancel-the γ left-of η = (λ ζ → ζ • η) ⁎ ⁻¹-is-left-inversion γ
 
-  cancel-the′_left-of_ : ∀ {A : U₀} {a a′ a″ : A}
+  cancel-the′_left-of_ : ∀ {A : 𝒰₀} {a a′ a″ : A}
                            → (γ : a ≈ a″)
                            → (η : a ≈ a′)
                            → γ • γ ⁻¹ • η ≈ η
   cancel-the′ γ left-of η = (λ ζ → ζ • η) ⁎ ⁻¹-is-right-inversion γ
 
-  cancel-the_right-of_ : ∀ {A : U₀} {a a′ a″ : A}
+  cancel-the_right-of_ : ∀ {A : 𝒰₀} {a a′ a″ : A}
                            → (γ : a″ ≈ a′)
                            → (η : a ≈ a′)
                            → η • γ ⁻¹ • γ ≈ η
@@ -54,7 +54,7 @@ module Language where
                               (λ ζ → η • ζ) ⁎ ⁻¹-is-left-inversion γ
                               • refl-is-right-neutral η ⁻¹ 
   
-  cancel-the′_right-of_ : ∀ {A : U₀} {a a′ a″ : A}
+  cancel-the′_right-of_ : ∀ {A : 𝒰₀} {a a′ a″ : A}
                            → (γ : a′ ≈ a″)
                            → (η : a ≈ a′)
                            → η • γ • γ ⁻¹ ≈ η
@@ -63,7 +63,7 @@ module Language where
                               • refl-is-right-neutral η ⁻¹ 
 
   cancel_on-the-right-in_ :
-    ∀ {A : U₀} {a a′ a″ : A} {η ζ : a ≈ a′}
+    ∀ {A : 𝒰₀} {a a′ a″ : A} {η ζ : a ≈ a′}
     → (γ : a′ ≈ a″)
     → η • γ ≈ ζ • γ
     → η ≈ ζ
@@ -72,7 +72,7 @@ module Language where
 
 
   cancel_and_,-which-are-equal-by_,-on-the-right-in_ :
-    ∀ {A : U₀} {a a′ a″ : A} {η ζ : a ≈ a′}
+    ∀ {A : 𝒰₀} {a a′ a″ : A} {η ζ : a ≈ a′}
     → (γ : a′ ≈ a″) (γ′ : a′ ≈ a″)
     → γ ≈ γ′ 
     → η • γ ≈ ζ • γ′
@@ -84,7 +84,7 @@ module Language where
          (cancel-the′ γ right-of ζ)
 
   cancel_on-the-left-in_ :
-    ∀ {A : U₀} {a a′ a″ : A} {η ζ : a′ ≈ a″}
+    ∀ {A : 𝒰₀} {a a′ a″ : A} {η ζ : a′ ≈ a″}
     → (γ : a ≈ a′)
     → γ • η ≈ γ • ζ
     → η ≈ ζ
@@ -92,7 +92,7 @@ module Language where
     H
 
   concatenating_and-its-inverse-to-the-right-of_changes-nothing :
-    ∀ {A : U₀} {a a′ a″ : A} 
+    ∀ {A : 𝒰₀} {a a′ a″ : A} 
     → (γ : a′ ≈ a″)
     → (η : a ≈ a′)
     → η ≈ η • γ • γ ⁻¹
@@ -102,7 +102,7 @@ module Language where
       • •-is-associative η γ (γ ⁻¹)
 
   concatenating-its-inverse-and_to-the-right-of_changes-nothing :
-    ∀ {A : U₀} {a a′ a″ : A} 
+    ∀ {A : 𝒰₀} {a a′ a″ : A} 
     → (γ : a″ ≈ a′)
     → (η : a ≈ a′)
     → η ≈ η • γ ⁻¹ • γ
@@ -112,7 +112,7 @@ module Language where
       • •-is-associative η (γ ⁻¹) γ
 
   concatenating-its-inverse-and_to-the-left-of_changes-nothing :
-    ∀ {A : U₀} {a a′ a″ : A} 
+    ∀ {A : 𝒰₀} {a a′ a″ : A} 
     → (γ : a″ ≈ a)
     → (η : a ≈ a′)
     → η ≈ γ ⁻¹ • γ • η
@@ -120,7 +120,7 @@ module Language where
      refl-is-left-neutral η • (λ ζ → ζ • η) ⁎ ⁻¹-is-left-inversion γ ⁻¹
 
   concatenating_and-its-inverse-to-the-left-of_changes-nothing :
-    ∀ {A : U₀} {a a′ a″ : A} 
+    ∀ {A : 𝒰₀} {a a′ a″ : A} 
     → (γ : a ≈ a″)
     → (η : a ≈ a′)
     → η ≈ γ • γ ⁻¹ • η
@@ -129,7 +129,7 @@ module Language where
       (λ ζ → ζ • η) ⁎ ⁻¹-is-right-inversion γ ⁻¹
 
 
-  move-up-left : ∀ {A : U₀} {a a′ a″ : A} (γ : a ≈ a′) (γ′ : a″ ≈ a′) (γ″ : a ≈ a″)
+  move-up-left : ∀ {A : 𝒰₀} {a a′ a″ : A} (γ : a ≈ a′) (γ′ : a″ ≈ a′) (γ″ : a ≈ a″)
                  → γ • γ′ ⁻¹ ≈ γ″
                  → γ ≈ γ″ • γ′
   move-up-left γ γ′ .(γ • γ′ ⁻¹) refl = 
@@ -137,7 +137,7 @@ module Language where
                         • (λ η → γ • η) ⁎ ⁻¹-is-left-inversion γ′ ⁻¹ 
                         • •-is-associative γ (γ′ ⁻¹) γ′
 
-  move-down-right : ∀ {A : U₀} {a a′ a″ : A} (γ : a ≈ a′) (γ′ : a″ ≈ a′) (γ″ : a ≈ a″)
+  move-down-right : ∀ {A : 𝒰₀} {a a′ a″ : A} (γ : a ≈ a′) (γ′ : a″ ≈ a′) (γ″ : a ≈ a″)
                   → γ ≈ γ″ • γ′
                   → γ • γ′ ⁻¹ ≈ γ″
   move-down-right .(γ″ • γ′) γ′ γ″ refl = 
@@ -146,7 +146,7 @@ module Language where
                          • refl-is-right-neutral γ″ ⁻¹)
 
   move-the_left-of_in-the-equation_to-the-left-hand-side :
-    ∀ {A : U₀} {a a′ a″ : A} {γ : a ≈ a′} (γ″ : a ≈ a″) (γ′ : a″ ≈ a′) 
+    ∀ {A : 𝒰₀} {a a′ a″ : A} {γ : a ≈ a′} (γ″ : a ≈ a″) (γ′ : a″ ≈ a′) 
     → γ ≈ γ″ • γ′
     → γ″ ⁻¹ • γ ≈ γ′
   move-the refl left-of γ′ in-the-equation equation to-the-left-hand-side = 

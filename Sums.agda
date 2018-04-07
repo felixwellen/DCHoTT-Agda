@@ -13,7 +13,7 @@ module Sums where
 
 
   the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ :
-    ∀ {A : U₀} {P Q : A → U₀}
+    ∀ {A : 𝒰₀} {P Q : A → 𝒰₀}
     → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
     → (λ {(a , pₐ) → (a , ((e a) pₐ))}) is-an-equivalence
   the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ {A} {P} {Q} e e-is-an-equivalence
@@ -35,14 +35,14 @@ module Sums where
 
 
   the-equivalence-of-sums-given-by_being-fiberwise-an-equivalence-by_ :
-    ∀ {A : U₀} {P Q : A → U₀}
+    ∀ {A : 𝒰₀} {P Q : A → 𝒰₀}
     → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
     → ∑ P ≃ ∑ Q
   the-equivalence-of-sums-given-by e being-fiberwise-an-equivalence-by e-is-an-equivalence =
      (λ {(a , pₐ) → (a , (e a) pₐ)}) is-an-equivalence-because
       (the-map-of-sums-given-by e is-an-equivalence-since-it-is-fiberwise-an-equivalence-by e-is-an-equivalence)
     
-  module iterated-sums-over-independent-bases (A B : U₀) (P : A → B → U₀) where
+  module iterated-sums-over-independent-bases (A B : 𝒰₀) (P : A → B → 𝒰₀) where
     iterated-sum = ∑ (λ (a : A) → ∑ λ (b : B) → P a b)
     switched-iterated-sum = ∑ (λ (b : B) → ∑ λ (a : A) → P a b)
 
@@ -73,7 +73,7 @@ module Sums where
       and-right-inverse curry by (λ _ → refl)
 
   module sums-over-contractibles
-    (A : U₀) (P : A → U₀) (all-contractible : (a : A) → (P a) is-contractible) where
+    (A : 𝒰₀) (P : A → 𝒰₀) (all-contractible : (a : A) → (P a) is-contractible) where
 
     open _is-contractible
     
@@ -93,7 +93,7 @@ module Sums where
       the-inverse-of ∑π₁ which-is-an-equivalence-by
       (proof-of-invertibility equivalence-to-base) is-again-an-equivalence 
 
-  module sum-of-free-path-at-a-point-is-contractible (A : U₀) (a₀ : A) where
+  module sum-of-free-path-at-a-point-is-contractible (A : 𝒰₀) (a₀ : A) where
 
     center : ∑ (λ (a : A) → a ≈ a₀)
     center = (a₀ , refl)
@@ -103,7 +103,7 @@ module Sums where
 
 
   sum-over-1 :
-    ∀ {A : 𝒰} {F : 𝒰}
+    ∀ {A : 𝒰₀} {F : 𝒰₀}
     → ∑ (λ {∗ → F}) ≃ F
   sum-over-1 = (λ {(∗ , x) → x}) is-an-equivalence-because
     (has-left-inverse (λ x → ∗ , x) by (λ {(∗ , x) → refl}) and-right-inverse (λ x → ∗ , x) by (λ a → refl))
