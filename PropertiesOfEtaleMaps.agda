@@ -139,6 +139,13 @@ module PropertiesOfEtaleMaps where
     in (e x ⁻¹≃)
 
 
+{-
+  _is-étale-because-it-induces-equivalences-on-coreduced-points-by_ :
+    ∀ {A B : 𝒰₀}
+    → (f : A → B)
+    → ((x : ℑ A) → (d f x) is-an-equivalence)
+  f is-étale-because-it-induces-equivalences-on-coreduced-points-by p = ?
+-}
   module lifting-formal-disks
     {A  : 𝒰} (f : A → 𝒰) (f-is-coreduced : (x : A) → (f x) is-coreduced) (a : A)
     where

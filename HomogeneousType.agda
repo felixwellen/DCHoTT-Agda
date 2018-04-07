@@ -64,6 +64,10 @@ module HomogeneousType where
       φ : A → B
       φ-respects-e : φ(e A′) ≈ e B′
       φ-respects-translations : (x y : A) → ψ B′ (φ x) $≃ (φ y) ≈ φ (ψ A′ x $≃ y)
+      all-compatible : (x : A) →
+         (ψ B′ (φ x) ∗≃) $≃ φ-respects-e ⁻¹• • φ-respects-translations x (e A′) • φ ⁎ (is-translation-to A′ x) ≈ is-translation-to B′ (φ x)
+
+      -- update: I am giving it another try....
       
       -- taking translations commutes with φ
       -- this notion of morphism is problematic, since
@@ -98,17 +102,28 @@ module HomogeneousType where
         ψ-φ⟨x⟩′ = underlying-map-of ψ-φ⟨x⟩
         
       in  K′ a
+      
         ≃⟨ equivalent-by-definition ⟩
+        
           φ a  ≈  e B′
-        ≃⟨ ψ-φ⟨x⟩ ∗≃ ⟩ 
+        ≃⟨ ψ-φ⟨x⟩ ∗≃ ⟩
+        
           ψ-φ⟨x⟩′ (φ a)  ≈  ψ-φ⟨x⟩′ (e B′)
-        ≃⟨ is-translation-to B′ (φ x) •r≃ ⟩ 
+          
+        ≃⟨ is-translation-to B′ (φ x) •r≃ ⟩
+        
           ψ-φ⟨x⟩′ (φ a)  ≈  φ(x)
-        ≃⟨ γ •r≃ ⟩ 
+          
+        ≃⟨ γ •r≃ ⟩
+        
           ψ-φ⟨x⟩′ (φ a)  ≈  e B′
+          
         ≃⟨ (φ-respects-translations x a •l≃) ⁻¹≃ ⟩
+        
           φ (ψ A′ x $≃ a)  ≈  e B′
+          
         ≃⟨ equivalent-by-definition ⟩
+        
           K′ (ψ A′ x $≃ a)
         ≃∎
 
@@ -121,7 +136,7 @@ module HomogeneousType where
       is-an-equivalence-because
       induced-map-is-an-equivalence (ψ A′ x) (ψ-K′ (x , γ))
 
-{- discontinued - reasons are at the morphism definition
+-- discontinued - reasons are at the morphism definition
     𝒯 :
       ∀ (x : A)
       → K′ (ψ A′ x $≃ e A′) ≃ K′ x
@@ -131,9 +146,13 @@ module HomogeneousType where
       ∀ (p : K)
       → (𝒯 (∑π₁ p) ∘≃ ψ-K′ p (e A′)) $≃ φ-respects-e  ≈  ∑π₂ p
     the-ψ-K′-translate (x , γ) =
+    
        (𝒯 x ∘≃ ψ-K′ (x , γ) (e A′)) $≃ φ-respects-e
+       
       ≈⟨ {!!} ⟩
+      
        γ
+       
       ≈∎
 
     homogeneous-structure : homogeneous-structure-on K
@@ -141,4 +160,4 @@ module HomogeneousType where
       record { e = e-K ;
                ψ = ψ-K ;
                is-translation-to = {!!} } 
--}
+--

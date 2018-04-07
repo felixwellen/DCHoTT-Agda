@@ -100,21 +100,32 @@ module ImHomogeneousType where
         ℑψ-is-a-family-of-translations (ι x) ⁻¹• • ι-commutator x e ≈ ι ⁎ is-translation-to x ⁻¹•
       ℑ-compute-family-witness =
           ℑψ-is-a-family-of-translations (ι x) ⁻¹• • ι-commutator x e
+          
         ≈⟨
            (λ η → η ⁻¹• • ι-commutator x e) ⁎
            ℑ-compute-induction
              (λ _ → coreduced-types-have-coreduced-identity-types _ (ℑ-is-coreduced _) _ _)
              (λ x → ι-commutator x e • ι ⁎ is-translation-to x) x
           ⟩
+          
           (ι-commutator x e • ι ⁎ is-translation-to x) ⁻¹• • ι-commutator x e
+          
         ≈⟨ (λ η → η • ι-commutator x e) ⁎ ⁻¹-of-product (ι-commutator x e) (ι ⁎ is-translation-to x) ⟩
+        
           (ι ⁎ is-translation-to x ⁻¹• • ι-commutator x e ⁻¹•) • ι-commutator x e
+          
         ≈⟨ •-is-associative (ι ⁎ is-translation-to x ⁻¹•) _ _ ⁻¹• ⟩
+        
           ι ⁎ is-translation-to x ⁻¹• • (ι-commutator x e ⁻¹• • ι-commutator x e)
+          
         ≈⟨ (λ η → ι ⁎ is-translation-to x ⁻¹• • η) ⁎ ⁻¹-is-left-inversion  (ι-commutator x e) ⟩
+        
            ι ⁎ is-translation-to x ⁻¹• • refl
+           
         ≈⟨ refl-is-right-neutral (ι ⁎ is-translation-to x ⁻¹•) ⁻¹• ⟩
+        
           ι ⁎ is-translation-to x ⁻¹•
+          
         ≈∎
 
       step1 : ∀ (a : A)

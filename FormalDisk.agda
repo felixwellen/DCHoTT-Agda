@@ -44,7 +44,12 @@ module FormalDisk where
     ∀ (X : U₀)
     → (x : X) → U₀
   𝔻 X x = formal-disk-at x
-  
+
+  𝔻ᵣ :
+    ∀ (X : 𝒰₀)
+    → (x : ℑ X) → 𝒰₀
+  𝔻ᵣ X x = ∑ (λ x′ → x ≈ ℑ-unit x′)
+
   inclusion-of-formal-disk-at :
     ∀ {X : U₀}
     → (x : X)
@@ -80,6 +85,13 @@ module FormalDisk where
     → (x : X) → 𝔻 _ x → 𝔻 _ (f x)
   d f x (x′ , x′-is-close-to-x) = induced-map-on-formal-disks f x (x′ , x′-is-close-to-x)
 
+{-
+  dᵣ :
+    ∀ {X Y : 𝒰}
+    → (f : X → Y)
+    → (x : ℑ X) → 𝔻ᵣ _ x → 𝔻ᵣ _ ((ℑ→ f) x)
+  dᵣ f x (x′ , γ) = (f x′) , {!mapping-with f preserves-infinitesimal-proximity (naturality-of-ℑ-unit γ!}
+-}
 
   {-
     Above, for a morphism f : A → B, we defined the induced
