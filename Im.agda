@@ -6,6 +6,7 @@ module Im where
   open import Homotopies
   open import Contractibility
   open import Equivalences
+  open import Sums using (dependent-curry)
   open import CommonEquivalences
   open import InfinityGroups
   open import FunctionExtensionality
@@ -19,31 +20,31 @@ module Im where
   -- (this may also be read as axiomatizing a general modality)
 
   postulate
-    ℑ : ∀ {i} → U i → U i
-    ℑ-unit : ∀ {i} {A : U i} → A → ℑ A
+    ℑ : ∀ {i} → 𝒰 i → 𝒰 i
+    ℑ-unit : ∀ {i} {A : 𝒰 i} → A → ℑ A
 
 
   ℑ-unit-at :
-    ∀ {i} → (A : U i)
+    ∀ {i} → (A : 𝒰 i)
     → (A → ℑ A)
   ℑ-unit-at A = ℑ-unit {_} {A}
 
-  ι : ∀ {i} {A : U i}
+  ι : ∀ {i} {A : 𝒰 i}
     → A → ℑ A
   ι = ℑ-unit
 
-  _is-coreduced : ∀ {i} → U i → U i
+  _is-coreduced : ∀ {i} → 𝒰 i → 𝒰 i
   A is-coreduced = ℑ-unit {_} {A} is-an-equivalence
 
-  ℑ𝒰 : 𝒰₁
-  ℑ𝒰 = ∑ λ (A : 𝒰₀) → A is-coreduced
+  ℑ𝒰₀ : 𝒰₁
+  ℑ𝒰₀ = ∑ λ (A : 𝒰₀) → A is-coreduced
 
-  ι-ℑ𝒰 : ℑ𝒰 → 𝒰₀
-  ι-ℑ𝒰 (A , _) = A
+  ι-ℑ𝒰₀ : ℑ𝒰₀ → 𝒰₀
+  ι-ℑ𝒰₀ (A , _) = A
 
   postulate
     -- ℑ is idempotent
-    ℑ-is-coreduced : ∀ {i} → (A : U i) → (ℑ A) is-coreduced
+    ℑ-is-coreduced : ∀ {i} → (A : 𝒰 i) → (ℑ A) is-coreduced
 
     ℑ-induction :  
       ∀ {i} {A : 𝒰₀} {B : ℑ A → 𝒰 i}
@@ -64,7 +65,7 @@ module Im where
     {- this is a way to state left exactness of ℑ 
        and for now, it is the only way we need left exactness -}
 
-    ℑ𝒰-is-coreduced : ℑ𝒰 is-coreduced
+    ℑ𝒰₀-is-coreduced : ℑ𝒰₀ is-coreduced
 
   -- End Axioms
 
@@ -126,11 +127,19 @@ module Im where
     → 𝒰₀ 
   _is-ℑ-connected {_} {B} f  = ∀ (b : B) → ℑ (fiber-of f at b) is-contractible
 
-
+  ℑ-induction-as-equivalence :
+      ∀ {A : 𝒰₀} {B : ℑ A → 𝒰₀}
+      → (∀ (a : ℑ A) → B(a) is-coreduced)
+      → ((a : ℑ A) → B(a)) ≃ ((a : A) → B(ι a))
+  ℑ-induction-as-equivalence B-is-coreduced = (λ s → λ x → s (ι x))
+    is-an-equivalence-because
+      (has-left-inverse (λ s → ℑ-induction B-is-coreduced s)
+        by (λ s → fun-ext
+          (ℑ-induction (λ a → coreduced-types-have-coreduced-identity-types _ (B-is-coreduced _) _ _)
+          (λ a → ℑ-compute-induction B-is-coreduced (λ x → s (ι x)) a)))
+       and-right-inverse (λ s → ℑ-induction B-is-coreduced s)
+         by (λ s → fun-ext (λ a → ℑ-compute-induction B-is-coreduced s a ⁻¹)))
     
-    
-
-
   ℑ-recursion-is-unique : 
     ∀ {A B : 𝒰₀} (f : A → B) (coreducedness : B is-coreduced)
     → (φ : ℑ A → B) → f ⇒ φ ∘ ℑ-unit 
@@ -305,6 +314,61 @@ module Im where
     conclusion : f is-ℑ-connected
     conclusion = {!!}
 -}
+
+
+  {-
+    This helps to compute ℑA.
+    For example when A is ∑P
+  -}
+  ℑ-yoneda :
+    ∀ {A B : 𝒰₀} (f : A → B)
+    → B is-coreduced
+    → ((C : 𝒰₀) (p : C is-coreduced) → (λ (h : B → C) → h ∘ f) is-an-equivalence)   -- (B → C) ≃ (A → C)
+    → ℑ A ≃ B
+  ℑ-yoneda {A} {B} f B-is-coreduced B-has-the-universal-property-of-ℑ =
+    let {- do what you learn in ct textbooks -}
+        -∘f : (B → ℑ A) → (A → ℑ A) 
+        -∘f = (λ (h : B → ℑ A) → h ∘ f)
+
+        -∘f⁻¹-is-an-equivalence = (B-has-the-universal-property-of-ℑ (ℑ A) (ℑ-is-coreduced A))
+        -∘f⁻¹ : (A → ℑ A) → (B → ℑ A)
+        -∘f⁻¹ = right-inverse-of -∘f given-by -∘f⁻¹-is-an-equivalence
+        
+        φ : B → ℑ A
+        φ = (right-inverse-of -∘f given-by -∘f⁻¹-is-an-equivalence) ι
+
+        uniqueness-from-universal-property :
+          ∀ (h : B → B)
+          → h ∘ f ⇒ f
+          → id ⇒ h
+        uniqueness-from-universal-property h H x =
+          (λ z → z x) ⁎ equivalences-are-injective (B-has-the-universal-property-of-ℑ B B-is-coreduced) (fun-ext H) ⁻¹
+
+        ψ : ℑ A → B
+        ψ = ℑ-recursion B-is-coreduced f
+
+        ι⇒φ∘ψ∘ι : ι ⇒ φ ∘ ψ ∘ ι
+        ι⇒φ∘ψ∘ι a = ι a
+                  ≈⟨ (λ z → z a) ⁎ (counit-of -∘f given-by -∘f⁻¹-is-an-equivalence) ι  ⟩
+                   φ (f a)
+                  ≈⟨ φ ⁎ ℑ-compute-recursion B-is-coreduced f a ⁻¹ ⟩
+                   φ (ψ (ι a))
+                  ≈∎ 
+        
+        φ∘ψ⇒id : φ ∘ ψ ⇒ id
+        φ∘ψ⇒id = ℑ-recursion-is-unique ι (ℑ-is-coreduced A) (φ ∘ ψ) ι⇒φ∘ψ∘ι ⁻¹⇒  •⇒ applying-ℑ-preserves-id A
+
+        id⇒ψ∘φ : id ⇒ ψ ∘ φ
+        id⇒ψ∘φ = uniqueness-from-universal-property (ψ ∘ φ)
+          (λ a →   ψ (φ (f a))
+                 ≈⟨ ψ ⁎ ((λ z → z a) ⁎ (counit-of -∘f given-by -∘f⁻¹-is-an-equivalence) ι ⁻¹) ⟩
+                   ψ (ι a)
+                 ≈⟨ ℑ-compute-recursion B-is-coreduced f a ⟩ 
+                   f a
+                 ≈∎)
+        
+    in ψ is-an-equivalence-because
+      (has-left-inverse φ by φ∘ψ⇒id and-right-inverse φ by id⇒ψ∘φ)
 
   types-equivalent-to-their-coreduction-are-coreduced :
     ∀ {A : 𝒰₀} (f : A ≃ ℑ A)
@@ -661,6 +725,75 @@ module Im where
       → (π₂ (φ⁻¹ (ι x)) ≈ ι (π₂ x))
     φ⁻¹-commutes-with-π₂ (a , b) =
       π₂ ⁎ ℑ-compute-recursion (×-coreduced _ _) (ι ×→ ι) (a , b)
+
+  {-
+    General modalities are not left exact but there is a
+    special kind of pullback that any modality preserves.
+    Let A be some type, and B a coreduced type and φ : B → ℑA.
+    Then the following pullback square is preserved by ℑ:
+
+      PB ──→ B
+       |     |
+       ↓     ↓
+       A ──→ ℑA
+      
+    We will write B as a ∑ over a coreduced dependent type.
+    So below we start with a B : ℑA → ℑ𝒰₀ and show the theorem 
+    for the square
+
+      ∑B∘ι ──→ ∑B
+       |       |
+       ↓       ↓
+       A ───→ ℑA
+    
+    As a byproduct, we will show that this is the naturality square 
+    for the projection PB ─→ A.
+    But in fact, we will start with a dependent version close to this 
+    statement, i.e. 
+      
+      ℑ(∑ (x : A) ↦ B(ι(x))) ≃ (∑ (x : ℑA) ↦ B(x))
+  -}
+  module ℑ-preserves-special-pullbacks (A : 𝒰₀) (B : ℑ A → ℑ𝒰₀) where
+    B′ = λ (x : ℑ A) → ∑π₁ (B x)
+
+    B∘ι : A → 𝒰₀
+    B∘ι a = B′ (ι a)
+
+    φ : ℑ (∑ B∘ι) → ∑ B′
+    φ = ℑ-recursion
+          (∑-of-coreduced-types-is-coreduced (ℑ A) (ℑ-is-coreduced _) B′ (λ x → ∑π₂ (B x)))
+          (λ {(x , bₓ) → (ι x) , bₓ})
+
+    f : ∑ B∘ι → ∑ B′
+    f (x , bₓ) = ((ι x) , bₓ)
+
+    ∑B′-is-universal :
+      ∀ (C : 𝒰₀) (p : C is-coreduced)
+      → (λ (h : ∑ B′ → C) → h ∘ f) is-an-equivalence
+    ∑B′-is-universal C p = proof-of-equivalency (
+                       (∑ B′ → C) 
+                     ≃⟨ dependent-curry C ⟩
+                       (Π λ (x : ℑ A) → (B′ x → C))
+                     ≃⟨ ℑ-induction-as-equivalence (λ a → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ x → p)) ⟩
+                       Π (λ (x : A) → (B∘ι x → C))
+                     ≃⟨ dependent-curry C ⁻¹≃ ⟩
+                       (∑ B∘ι → C)
+                     ≃∎)
+
+    result : ℑ (∑ B∘ι) ≃ ∑ B′
+    result = ℑ-yoneda
+               f (∑-of-coreduced-types-is-coreduced (ℑ A) (ℑ-is-coreduced _) B′ (λ x → ∑π₂ (B x)))
+               ∑B′-is-universal
+
+
+    PB : pullback-square-with-right (∑π₁-from B′)
+             bottom ι
+             top _
+             left _ 
+    PB = complete-to-pullback-square (∑π₁-from B′) ι
+
+    {- ... -}
+
 {-
     ℑ×-induction : 
         (P : (ℑ (A × B)) → 𝒰)
@@ -690,14 +823,17 @@ module Im where
 
   {- this should work essentially the same way as 
      for ×, with the only difference, that coreducedness
-     of ℑ𝒰 and therefore left exactness is needed once in 
+     of ℑ𝒰₀ and therefore left exactness is needed once in 
      the beginning of the contruction -}
+
+  {-
   module ℑ-commutes-with-∑ {A : 𝒰₀} (P : A → 𝒰₀) where
     ℑA = ℑ A
 
-    ℑP : ℑA → ℑ𝒰
-    ℑP = ℑ-recursion ℑ𝒰-is-coreduced λ (a : A) → (ℑ (P a) , ℑ-is-coreduced (P a))
+    ℑP : ℑA → ℑ𝒰₀
+    ℑP = ℑ-recursion ℑ𝒰₀-is-coreduced λ (a : A) → (ℑ (P a) , ℑ-is-coreduced (P a))
 
     {- -}
 
 
+  -}

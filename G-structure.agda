@@ -16,12 +16,6 @@ module G-structure where
   open import FormalDisk
   open import HomogeneousType
 
-  formal-disk-of :
-    ∀ {V : 𝒰₀}
-    → (structure-on-V : homogeneous-structure-on V)
-    → 𝒰₀
-  formal-disk-of structure-on-V =
-    formal-disk-at (homogeneous-structure-on_.e structure-on-V)
   
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
@@ -73,8 +67,9 @@ module G-structure where
   {-
       on a left invertible H-space V,
       there is always a 1-structure (for the trivial group 1)
+      and by composing, a G-structure
   -}
-  module trivial-structure-on-left-homogeneous-types
+  module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}
     (V : homogeneous-structure-on V′) 
     (group-over-BAutD : groups-over-structure-group-of V)
@@ -133,7 +128,7 @@ module G-structure where
     {-
       now, for a general V-manifold
     -}
-    module general-manifolds
+    module torsion-free-structures
       (M′ : V -manifold)
                  where
 
@@ -157,7 +152,7 @@ module G-structure where
          V group-over-BAutD M′
 
       _is-torsion-free :
-        G-structures-on-M → U₁
+        G-structures-on-M → 𝒰₁
       (lift-of-g , homotopy) is-torsion-free =
         {- 
           to decide if a G-structure is torsion free,
@@ -170,15 +165,15 @@ module G-structure where
                /   |                      φ   |       
               /   Bφ         ≈           /   Bφ       
              /     ↓                    /     ↓       
-          D x ──→ BAut(De)     D x ──→ M ──→ BAut(De) 
+          𝔻ₓ ──→ BAut(𝔻ₑ)      𝔻ₓ ──→ M ──→ BAut(𝔻ₑ) 
 
-          to the De-triangle of the trivial G-Structure 
+          to the 𝔻ₑ-triangle of the trivial G-Structure 
 
                 ↗ BG       
               B1   |       
               /   Bφ       
              /     ↓       
-          D e ──→ BAut(De) 
+          𝔻ₑ ──→ BAut(𝔻ₑ) 
 
         -}
         let
@@ -215,3 +210,18 @@ module G-structure where
               ≈ triangle-of-the-trivial-G-structure ∥ 
 
 
+    {-
+      Show that the trivial structure on V is torision free.
+    -} {-
+    module basic-calculations where
+      open torsion-free-structures (homogeneous-space-as-manifold V)
+
+      calculate-triangle-transport :
+        ∀ {𝔻′ : BAut 𝔻ₑ} -- (Δ : triangles-at 𝔻′)
+       →  {!!} -- → transport triangles-at Δ ≈ ?
+        
+      calculate-triangle-transport = {!!}
+      
+      result : trivial-structure is-torsion-free
+      result x y = ∣ {!!} ∣ 
+  -}
