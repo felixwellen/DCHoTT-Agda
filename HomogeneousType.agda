@@ -125,7 +125,7 @@ module HomogeneousType where
       is-an-equivalence-because
       induced-map-is-an-equivalence (ψ A′ x) (ψ-K′ (x , γ))
 
--- discontinued - reasons are at the morphism definition
+{- discontinued - reasons are at the morphism definition
     𝒯 :
       ∀ (x : A)
       → K′ (ψ A′ x $≃ e A′) ≃ K′ x
@@ -150,3 +150,4 @@ module HomogeneousType where
                ψ = ψ-K ;
                is-translation-to = {!!} } 
 --
+-}

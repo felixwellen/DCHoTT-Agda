@@ -72,7 +72,7 @@ module G-structure where
   module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}
     (V : homogeneous-structure-on V′) 
-    (group-over-BAutD : groups-over-structure-group-of V)
+    (group-over-BAut𝔻ₑ : groups-over-structure-group-of V)
     where
 
     open homogeneous-structure-on_ V
@@ -83,7 +83,7 @@ module G-structure where
     G-structures-on-V =
       G-structures-on-V-manifolds.G-structures
       V
-      group-over-BAutD
+      group-over-BAut𝔻ₑ
       (homogeneous-space-as-manifold V)
 
     φ : (x : V′) → 𝔻ₑ ≃ 𝔻 _ x
@@ -93,11 +93,11 @@ module G-structure where
     φ-as-homotopy x = univalence (φ x)
 
 
-    open groups-over-structure-group-of_ group-over-BAutD
+    open groups-over-structure-group-of_ group-over-BAut𝔻ₑ
 
 
     χ′ = G-structures-on-V-manifolds.χ 
-              V group-over-BAutD
+              V group-over-BAut𝔻ₑ
               (homogeneous-space-as-manifold V)
               
     trivial-structure : G-structures-on-V
@@ -149,7 +149,7 @@ module G-structure where
       
       G-structures-on-M =
         G-structures-on-V-manifolds.G-structures
-         V group-over-BAutD M′
+         V group-over-BAut𝔻ₑ M′
 
       _is-torsion-free :
         G-structures-on-M → 𝒰₁
@@ -179,7 +179,7 @@ module G-structure where
         let
           -- classifying map of T∞V
           ξ = G-structures-on-V-manifolds.χ 
-              V group-over-BAutD
+              V group-over-BAut𝔻ₑ
               (homogeneous-space-as-manifold V)
 
           -- the triangle type discussed above
