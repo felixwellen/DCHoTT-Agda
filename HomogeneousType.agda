@@ -100,27 +100,17 @@ module HomogeneousType where
         ψ-φ⟨x⟩ = ψ B′ (φ x)
         ψ-φ⟨x⟩′ = underlying-map-of ψ-φ⟨x⟩
         
-      in  K′ a
-      
+      in  (K′ a)
         ≃⟨ equivalent-by-definition ⟩
-        
-          φ a  ≈  e B′
-        ≃⟨ ψ-φ⟨x⟩ ∗≃ ⟩
-        
-          ψ-φ⟨x⟩′ (φ a)  ≈  ψ-φ⟨x⟩′ (e B′)
-          
-        ≃⟨ is-translation-to B′ (φ x) •r≃ ⟩
-        
-          ψ-φ⟨x⟩′ (φ a)  ≈  φ(x)
-          
-        ≃⟨ γ •r≃ ⟩
-        
-          ψ-φ⟨x⟩′ (φ a)  ≈  e B′
-          
+          (φ a  ≈  e B′)
+        ≃⟨ ψ-φ⟨x⟩ ∗≃ ⟩ 
+          (ψ-φ⟨x⟩′ (φ a)  ≈  ψ-φ⟨x⟩′ (e B′))
+        ≃⟨ is-translation-to B′ (φ x) •r≃ ⟩ 
+          (ψ-φ⟨x⟩′ (φ a)  ≈  φ(x))
+        ≃⟨ γ •r≃ ⟩ 
+          (ψ-φ⟨x⟩′ (φ a)  ≈  e B′)
         ≃⟨ (φ-respects-translations x a •l≃) ⁻¹≃ ⟩
-        
-          φ (ψ A′ x $≃ a)  ≈  e B′
-          
+          (φ (ψ A′ x $≃ a)  ≈  e B′)
         ≃⟨ equivalent-by-definition ⟩
         
           K′ (ψ A′ x $≃ a)

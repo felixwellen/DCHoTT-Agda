@@ -41,7 +41,14 @@ module Sums where
   the-equivalence-of-sums-given-by e being-fiberwise-an-equivalence-by e-is-an-equivalence =
      (λ {(a , pₐ) → (a , (e a) pₐ)}) is-an-equivalence-because
       (the-map-of-sums-given-by e is-an-equivalence-since-it-is-fiberwise-an-equivalence-by e-is-an-equivalence)
-    
+
+  dependent-curry :
+    ∀ {A : 𝒰₀} {P : A → 𝒰₀} (B : 𝒰₀)
+    → ((∑ P) → B) ≃ Π λ (x : A) → (P x → B)
+  dependent-curry B = (λ f → λ x pₓ → f (x , pₓ)) is-an-equivalence-because
+                        (has-left-inverse (λ g → λ {(x , pₓ) → g x pₓ}) by (λ _ → refl)
+                         and-right-inverse (λ g → λ {(x , pₓ) → g x pₓ}) by (λ _ → refl))
+
   module iterated-sums-over-independent-bases (A B : 𝒰₀) (P : A → B → 𝒰₀) where
     iterated-sum = ∑ (λ (a : A) → ∑ λ (b : B) → P a b)
     switched-iterated-sum = ∑ (λ (b : B) → ∑ λ (a : A) → P a b)

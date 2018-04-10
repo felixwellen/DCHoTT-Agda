@@ -124,7 +124,6 @@ module Equivalences where
     (has-left-inverse _ by _ and-right-inverse _ by counit) = 
      counit
 
-
   equivalence-proposition-as-sum-type :
     ∀ {A B : 𝒰₀} (f : A → B)
     → f is-an-equivalence ≃ ∑ (λ {(g , h) → (g ∘ f ⇒ id) × (id ⇒ f ∘ h)})
@@ -454,8 +453,8 @@ module Equivalences where
 
 
   -- reasoning
-  infix 3 _≃∎
-  infixr 2 _≃⟨_⟩_
+  infix 9 _≃∎
+  infixr 8 _≃⟨_⟩_
 
   _≃∎ : ∀ {i} (A : U i) 
       → A ≃ A
@@ -487,3 +486,5 @@ module Equivalences where
   (f is-an-equivalence-because pf) ×≃ (g is-an-equivalence-because pg)
     = (f ×→ g) is-an-equivalence-because (pf ×≃p pg)
 
+
+  

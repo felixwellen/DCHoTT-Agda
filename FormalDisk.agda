@@ -175,3 +175,13 @@ module FormalDisk where
 
 
     {- ... -}
+
+
+
+
+  formal-disk-of :
+    ∀ {V : 𝒰₀}
+    → (structure-on-V : homogeneous-structure-on V)
+    → 𝒰₀
+  formal-disk-of structure-on-V =
+    formal-disk-at (homogeneous-structure-on_.e structure-on-V)
