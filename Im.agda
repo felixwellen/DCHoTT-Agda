@@ -7,6 +7,7 @@ module Im where
   open import Contractibility
   open import Equivalences
   open import Sums using (dependent-curry)
+  open import DependentTypes
   open import CommonEquivalences
   open import InfinityGroups
   open import FunctionExtensionality
@@ -753,45 +754,46 @@ module Im where
       
       ℑ(∑ (x : A) ↦ B(ι(x))) ≃ (∑ (x : ℑA) ↦ B(x))
   -}
-  module ℑ-preserves-special-pullbacks (A : 𝒰₀) (B : ℑ A → ℑ𝒰₀) where
-    B′ = λ (x : ℑ A) → ∑π₁ (B x)
-
-    B∘ι : A → 𝒰₀
-    B∘ι a = B′ (ι a)
-
-    φ : ℑ (∑ B∘ι) → ∑ B′
+  module ℑ-preserves-special-pullbacks (A : 𝒰₀) (B : ℑ A → 𝒰₀) where
+    ℑB = (λ x → ℑ (B x))
+    
+    φ : ℑ (∑ (B ∘ ι)) → ∑ ℑB
     φ = ℑ-recursion
-          (∑-of-coreduced-types-is-coreduced (ℑ A) (ℑ-is-coreduced _) B′ (λ x → ∑π₂ (B x)))
-          (λ {(x , bₓ) → (ι x) , bₓ})
+          (∑-of-coreduced-types-is-coreduced (ℑ A) (ℑ-is-coreduced _) ℑB (λ x → ℑ-is-coreduced _))
+          (λ {(x , bₓ) → (ι x) , ι bₓ})
 
-    f : ∑ B∘ι → ∑ B′
-    f (x , bₓ) = ((ι x) , bₓ)
+    f : ∑ (B ∘ ι) → ∑ ℑB
+    f (x , bₓ) = ((ι x) , ι bₓ)
 
-    ∑B′-is-universal :
+    ∑ℑB-is-universal :
       ∀ (C : 𝒰₀) (p : C is-coreduced)
-      → (λ (h : ∑ B′ → C) → h ∘ f) is-an-equivalence
-    ∑B′-is-universal C p = proof-of-equivalency (
-                       (∑ B′ → C) 
+      → (λ (h : ∑ ℑB → C) → h ∘ f) is-an-equivalence
+    ∑ℑB-is-universal C p = proof-of-equivalency (
+                       (∑ ℑB → C) 
                      ≃⟨ dependent-curry C ⟩
-                       (Π λ (x : ℑ A) → (B′ x → C))
+                       (Π λ (x : ℑ A) → (ℑB x → C))
                      ≃⟨ ℑ-induction-as-equivalence (λ a → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ x → p)) ⟩
-                       Π (λ (x : A) → (B∘ι x → C))
+                       Π (λ (x : A) → (ℑB (ι x) → C))
+                     ≃⟨ applying-equivalences-to-codomain.induced-equivalence
+                          (λ x → (ℑB (ι x) → C)) (λ x → (B (ι x) → C))
+                          (λ x → ℑ-induction-as-equivalence (λ _ → p)) ⟩
+                       Π (λ (x : A) → (B (ι x) → C))
                      ≃⟨ dependent-curry C ⁻¹≃ ⟩
-                       (∑ B∘ι → C)
+                       (∑ (B ∘ ι) → C)
                      ≃∎)
 
-    result : ℑ (∑ B∘ι) ≃ ∑ B′
-    result = ℑ-yoneda
-               f (∑-of-coreduced-types-is-coreduced (ℑ A) (ℑ-is-coreduced _) B′ (λ x → ∑π₂ (B x)))
-               ∑B′-is-universal
+    compute-∑ : ℑ (∑ (B ∘ ι)) ≃ ∑ ℑB
+    compute-∑ = ℑ-yoneda
+               f (∑-of-coreduced-types-is-coreduced (ℑ A) (ℑ-is-coreduced _) ℑB (λ x → ℑ-is-coreduced _))
+               ∑ℑB-is-universal
 
-
+{-
     PB : pullback-square-with-right (∑π₁-from B′)
              bottom ι
              top _
              left _ 
     PB = complete-to-pullback-square (∑π₁-from B′) ι
-
+-}
     {- ... -}
 
 {-

@@ -404,18 +404,18 @@ module CommonEquivalences where
             and-right-inverse (λ γ → γ ⁻¹) by (λ γ → ⁻¹-is-selfinverse γ ⁻¹) 
                              
 
-{-
 
-  homotopies-between-constant-functions : 
-    ∀ {A B : 𝒰₀} {x y : B} 
-    → (const {A} {B} x ≈ const {A} {B} y) ≃ (x ≈ y)
-  homotopies-between-constant-functions = {!!}
-    is-an-equivalence-because {!!}
+  module applying-equivalences-to-codomain {A : 𝒰₀} (B B′ : A → 𝒰₀) (e : (x : A) → B x ≃ B′ x) where
+    φ : Π B → Π B′
+    φ s = λ (x : A) → e x $≃ s x
 
-  homotopies-between-constant-functions : 
-    ∀ {A B : 𝒰₀} {x y : B} 
-    → (const {A} {B} x ≈ const {A} {B} y) ≃ (A → (x ≈ y))
-  homotopies-between-constant-functions = (λ H a → (λ f → f a) ⁎ H)
-    is-an-equivalence-because
-      (has-left-inverse (λ f → fun-ext f) by (λ p → {!cancel-fun-ext (equality-to-homotopy p)!}) and-right-inverse {!!} by {!!})
--}
+    φ⁻¹l : Π B′ → Π B
+    φ⁻¹l s = λ (x : A) → (left-inverse-of-the-equivalence (e x)) (s x)
+    
+    φ⁻¹r : Π B′ → Π B
+    φ⁻¹r s = λ (x : A) → (right-inverse-of-the-equivalence (e x)) (s x)
+    
+    induced-equivalence : Π B ≃ Π B′
+    induced-equivalence = φ is-an-equivalence-because
+      (has-left-inverse φ⁻¹l by (λ s → fun-ext (λ x → unit-of-the-equivalence (e x) (s x)))
+      and-right-inverse φ⁻¹r by (λ s → fun-ext (λ x → counit-of-the-equivalence (e x) (s x))))

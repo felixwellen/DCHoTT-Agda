@@ -453,7 +453,7 @@ module DependentTypes where
 
     if f is an equivalence and the fiber over a and f(a) are equivalent,
     there is an equivalence on the total spaces.
-    (This turned out to be proven also in HoTT-Book, Thm 4.7.7)
+    (This turned out to be proven also in HoTT-Book, Thm 4.7.7  (for f=id))
   -}
   module fiber-equivalences-along-an-equivalence-on-the-base
     {A B : 𝒰₀} (P : A → 𝒰₀) (Q : B → 𝒰₀)
@@ -528,6 +528,9 @@ module DependentTypes where
         φ = underlying-map-of φ≃
       in the-map induced-map is-an-equivalence-since-it-is-homotopic-to f′ ∘ φ by
          (λ _ → refl) which-is-an-equivalence-by proof-of-equivalency (f′≃ ∘≃ φ≃)
+
+    induced-map-as-equivalence : ∑ P ≃ ∑ Q
+    induced-map-as-equivalence = induced-map is-an-equivalence-because induced-map-is-an-equivalence
 
   module equivalence-from-equivalence-on-sums
     {A : 𝒰₀} {P Q : A → 𝒰₀} (f : (x : A) → P x → Q x)

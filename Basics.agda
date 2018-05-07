@@ -37,6 +37,7 @@ U₁ = U (lsuc lzero)
 
 𝒰 = U
 
+Type = 𝒰
 
 {- 
 from HoTT-Agda (including following comment)
@@ -89,6 +90,8 @@ record ∑ {i j} {A : 𝒰 i} (P : A → 𝒰 j) : 𝒰 (i ⊔ j) where
       → (a : A) → P a → ∑ P
 ι-∑ a p = (a , p)
 
+Σ : ∀ {i j} → (A : Type i) (P : A → Type j) → Type _
+Σ _ P = ∑ P
 
 ∑π₁ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j} 
   → ∑ P → A
