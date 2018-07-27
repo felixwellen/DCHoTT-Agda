@@ -107,7 +107,7 @@ module Im where
   naturality-of-ℑ-unit : 
     ∀ {A B : 𝒰₀}
     → (f : A → B)
-    → (a : A) → (ℑ→ f(ℑ-unit-at A a) ≈ ℑ-unit-at B (f a))
+    → (ℑ→ f) ∘ ι  ⇒ ι ∘ f 
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z)) 
 
   ℑ⇒ : ∀ {A B : 𝒰₀} {f g : A → B}
@@ -119,7 +119,8 @@ module Im where
   ℑ⁎_⁎_ :
     ∀ {A B : 𝒰₀} {x y : A}
     → (f : A → B)
-    → ((ℑ-unit x ≈ ℑ-unit y) → (ℑ-unit (f(x)) ≈ ℑ-unit (f(y))))
+    → ι x ≈ ι y
+    → ι (f x) ≈ ι (f y)
   ℑ⁎ f ⁎ γ = naturality-square-for-ℑ f _ ⁻¹ • ℑ→ f ⁎ γ • naturality-square-for-ℑ f _
 
   -- define coreduced connectedness

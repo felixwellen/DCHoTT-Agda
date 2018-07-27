@@ -10,6 +10,11 @@
   inspired by mike shulmans real-cohesion paper
 
   Starting with a 'let'-notation I learnd from Ian
+
+  References to Lemmata and Theorems refer to Mike Shulman's Article
+
+  https://arxiv.org/abs/1509.07584
+
 -}
 
 
@@ -22,30 +27,17 @@ module Flat where
   open import DependentTypes
 
   data ♭ {l :{♭} Level} (A :{♭} 𝒰 l) : 𝒰 l where
-    con : (a :{♭} A) → ♭ A
+    _^♭ : (a :{♭} A) → ♭ A
 
   ♭-induction : ∀ {c : Level} {l :{♭} Level}{A :{♭} 𝒰 l}
          → (C : ♭ A → 𝒰 c)
-         → ((u :{♭} A) → C (con u))
+         → ((u :{♭} A) → C (u ^♭))
          → (x : ♭ A) → C x
-  ♭-induction C f (con x) = f x
-
-  let♭ :
-    {A :{♭} Set}
-    {C : ♭ A → Set}
-    (s : ♭ A)
-    (t : (u :{♭} A) → C (con u))
-    → -------------
-    C s
-  let♭ (con a) t = t a
-
---  syntax let♭ s (λ u → t) = let♭ u := s in♭ t
-  
-  syntax let♭ {C = C} s (λ u → t) = let♭ u := s in♭ t in-family C
+  ♭-induction C f (x ^♭) = f x
 
   ♭-counit : ∀ {l :{♭} Level} {A :{♭} 𝒰 l}
     → (♭ A → A)
-  ♭-counit (con x) = x
+  ♭-counit (x ^♭) = x
 
   ♭-counit-at : 
       ∀ (A :{♭} 𝒰₀)
@@ -59,40 +51,45 @@ module Flat where
     → (♭ A) is-discrete
   ♭-idempotent A =
     has-left-inverse
-      (λ {(con x) → con (con x)})
-      by (λ {(con (con x)) → refl})
+      (λ {(x ^♭) → (x ^♭) ^♭})
+      by (λ {((x ^♭) ^♭) → refl})
     and-right-inverse
-      (λ {(con x) → con (con x)})
-      by (λ {(con x) → refl})
+      (λ {(x ^♭) → x ^♭ ^♭})
+      by (λ {(x ^♭) → refl})
 
-  ♭-uniqueness :
-    ∀ {A :{♭} 𝒰₀}
-      {C : ♭ A → 𝒰₀}
-      (f : (x : ♭ A) → C x)
-    → 
-      (x : ♭ A) → (let♭ u := x in♭ f (con u) in-family C)  ≈ f(x)
-  ♭-uniqueness f (con a) = refl
+  let♭ :
+    {l l' :{♭} Level}
+    {A :{♭} 𝒰 l}
+    {C : ♭ A → 𝒰 l'}
+    (s : ♭ A)
+    (t : (u :{♭} A) → C (u ^♭))
+    → -------------
+    C s
+  let♭ (a ^♭) t = t a
+
+  let♭' :
+    {l l' :{♭} Level}
+    {A :{♭} 𝒰 l}
+    {C : ♭ A → 𝒰 l'}
+    (s : ♭ A)
+    (t : (u :{♭} A) → C (u ^♭))
+    → -------------
+    C s
+  let♭' {C = C} x t = let♭ {C = C} x t
+
+  syntax let♭ s (λ u → t) = let♭ u ^♭:= s in♭ t
+  syntax let♭' {C = C} s (λ u → t) = let♭' u ^♭:= s in♭ t in-family C
 
 
-  ♭→′ : ∀ {A B :{♭} 𝒰₀}
-    → (f :{♭} A → B)
-    → (♭ A → ♭ B)
-  ♭→′ {_} {B} f x = let♭ u := x in♭ con (f u) in-family (λ _ → ♭ B)
-  
   ♭→ : ∀ {A B :{♭} 𝒰₀}
     → (f :{♭} A → B)
     → (♭ A → ♭ B)
-  ♭→ f (con a) = con (f a)
-
-  ♭→≈♭→′ : ∀ {A B :{♭} 𝒰₀}
-    → (f :{♭} A → B)
-    → (x : ♭ A) → (♭→ f) x ≈ (♭→′ f) x
-  ♭→≈♭→′ f (con a) = refl
+  ♭→ f (a ^♭) = (f a) ^♭
 
   ♭→-commutes-with-∘ : ∀ {A B C :{♭} 𝒰₀}
     → (f :{♭} A → B) (g :{♭} B → C)
     → (♭→ g) ∘ (♭→ f) ⇒ ♭→ (g ∘ f)
-  ♭→-commutes-with-∘ f g (con a) = refl
+  ♭→-commutes-with-∘ f g (a ^♭) = refl
 
 
   ♭-identity-induction :
@@ -106,14 +103,14 @@ module Flat where
   ♭-preserves-identity-types :
     ∀ {A :{♭} 𝒰₀}
     → (x y :{♭} A)
-    → ♭(con x ≈ con y) ≃ x ≈ y
+    → ♭(x ^♭ ≈ y ^♭) ≃ x ≈ y
   ♭-preserves-identity-types x y =
-    (λ {(con refl) → refl})
+    (λ {(refl ^♭) → refl})
     is-an-equivalence-because
       (has-left-inverse
-        (λ {refl → con refl}) by (λ {(con refl)  → refl})
+        (λ {refl → refl ^♭}) by (λ {(refl ^♭)  → refl})
        and-right-inverse
-        (λ {refl → con refl}) by (λ {refl → refl})) 
+        (λ {refl → refl ^♭}) by (λ {refl → refl})) 
 
   ♭-encode-decode-is-enough :
     ∀ {A :{♭} 𝒰₀} (code : ♭ A → ♭ A → 𝒰₀)
@@ -145,26 +142,83 @@ module Flat where
   ♭-commutes-with-identity-types :
     ∀ {A :{♭} 𝒰₀}
     → (x y :{♭} A)
-    → ♭ (x ≈ y) ≃ con x ≈ con y 
+    → ♭ (x ≈ y) ≃ x ^♭ ≈ y ^♭
   ♭-commutes-with-identity-types {A} x y =
     let
-      -- from Mike's Real-Cohesion Article, section 6
+      {- from Mike's Real-Cohesion Article, section 6 -}
       code : ♭ A → ♭ A → 𝒰₀
-      code = λ {(con z) → λ {(con w) → ♭ (z ≈ w) }}
+      code = λ {(z ^♭) → λ {(w ^♭) → ♭ (z ≈ w) }}
 
-      step1 : code (con x) (con y) ≃ ♭ (x ≈ y)
+      step1 : code (x ^♭) (y ^♭) ≃ ♭ (x ≈ y)
       step1 = id-as-equivalence
 
       encode : (u v : ♭ A) → u ≈ v → code u v
       encode u v γ = transport (λ v′ → code u v′)  γ
-             ((λ (u : ♭ A) → let♭ x := u in♭ (con refl) in-family (λ u′ → code u′ u′)) u)
+             ((λ (u : ♭ A) → let♭' x ^♭:= u in♭ (refl ^♭) in-family (λ u′ → code u′ u′)) u)
 
       decode : (u v : ♭ A) → code u v → u ≈ v
-      decode = λ {(con x) (con y) (con refl) → refl }
+      decode = λ {(x ^♭) (y ^♭) (refl ^♭) → refl }
 
-      step2 : code (con x) (con y) ≃ (con x) ≈ (con y)
-      step2 = (decode (con x) (con y))
+      step2 : code (x ^♭) (y ^♭) ≃ (x ^♭) ≈ (y ^♭)
+      step2 = (decode (x ^♭) (y ^♭))
         is-an-equivalence-because
-        ♭-encode-decode-is-enough code encode decode (λ {(con x′) (con y′) (con refl) → refl}) (con x) (con y)
+        ♭-encode-decode-is-enough code encode decode (λ {(x′ ^♭) (y′ ^♭) (refl ^♭) → refl}) (x ^♭) (y ^♭)
     in
       step2 ∘≃ step1
+
+
+  {- Lemma 6.8 -}
+
+  ♭-commutes-with-Σ :
+    ∀ (A :{♭} 𝒰₀) (B :{♭} A → 𝒰₀)
+    → ♭ (Σ A B) ≃ Σ (♭ A) (λ x → let♭ u ^♭:= x in♭ ♭ (B u))
+  ♭-commutes-with-Σ A B = (λ {((a , b) ^♭) → (a ^♭) , (b ^♭)})
+    is-an-equivalence-because
+      (has-left-inverse (λ {((a ^♭) , (b ^♭)) → (a , b) ^♭})
+         by (λ { ((a , b) ^♭) → refl })
+       and-right-inverse (λ {((a ^♭) , (b ^♭)) → (a , b) ^♭})
+         by (λ {((a ^♭) , (b ^♭)) → refl }))
+
+
+  ♭-apply :
+    {l :{♭} Level}
+    {A B :{♭} 𝒰 l}
+    (f :{♭} A → B)
+    {x y :{♭} A}
+    (p :{♭} x ≈ y)
+    → f(x) ≈ f(y)
+  ♭-apply f refl = refl
+
+
+  {- Theorem 6.10 -}
+
+  private 
+    glue-equivalences :
+      {A : 𝒰₀}
+      {P Q : A → 𝒰₀}
+      (p : (x : A) → P x ≃ Q x)
+      → Σ A P ≃ Σ A Q
+    glue-equivalences e =
+      fiber-equivalences-along-an-equivalence-on-the-base.induced-map-as-equivalence
+        _ _ id-as-equivalence e
+    
+  ♭-preserves-pullbacks :
+    ∀ (A B C :{♭} 𝒰₀) (f :{♭} A → C) (g :{♭} B → C)
+    → ♭ (Σ A (λ x → Σ B (λ y → f(x) ≈ g(y))))
+      ≃ Σ (♭ A) (λ x → Σ (♭ B) (λ y → (♭→ f)(x) ≈ (♭→ g)(y)))
+  ♭-preserves-pullbacks A B C f g =
+      ♭ (Σ A (λ x → Σ B (λ y → f(x) ≈ g(y))))
+    ≃⟨ ♭-commutes-with-Σ A (λ x → ∑ (λ y → f(x) ≈ g(y))) ⟩
+      Σ (♭ A) (λ x → let♭ u ^♭:= x in♭ ♭(Σ B (λ y → f u ≈ g y)))
+    ≃⟨ glue-equivalences (λ {(u ^♭) → ♭-commutes-with-Σ B  (λ y → f u ≈ g y)}) ⟩
+      Σ (♭ A) (λ x → let♭ u ^♭:= x in♭ (Σ (♭ B) (λ y → let♭ v ^♭:= y in♭ ♭ (f u ≈ g v))))
+    ≃⟨ glue-equivalences
+         (λ {(u ^♭) → glue-equivalences
+           (λ {(v ^♭) → ♭-commutes-with-identity-types (f u) (g v)}) }) ⟩
+      Σ (♭ A) (λ x → let♭ u ^♭:= x in♭ (Σ (♭ B) (λ y → let♭ v ^♭:= y in♭ ((f u) ^♭ ≈ (g v) ^♭))))
+    ≃⟨ glue-equivalences (λ {(u ^♭) → glue-equivalences (λ {(v ^♭) → id-as-equivalence})}) ⟩
+      Σ (♭ A) (λ x → let♭ u ^♭:= x in♭ (Σ (♭ B) (λ y → (f u) ^♭ ≈ (♭→ g) y)))
+    ≃⟨ glue-equivalences (λ {(u ^♭) → id-as-equivalence}) ⟩
+      Σ (♭ A) (λ x → Σ (♭ B) (λ y → (♭→ f)(x) ≈ (♭→ g)(y)))
+    ≃∎
+
