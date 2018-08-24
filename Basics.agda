@@ -173,7 +173,6 @@ id a = a
 identity-on : (A : 𝒰₀) → A → A
 identity-on A = (λ (x : A) → x)
 
-
 infixr 70 _∘_
 _∘_ : ∀ {i j k} {A : 𝒰 i} {B : 𝒰 j} {C : 𝒰 k} → (B → C) → (A → B) → (A → C)
 g ∘ f = λ x → g(f(x))

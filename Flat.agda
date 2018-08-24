@@ -99,19 +99,7 @@ module Flat where
     → (x y :{♭} A) → (p :{♭} x ≈ y) → C x y p
   ♭-identity-induction C d x .x refl = d x
 
-
-  ♭-preserves-identity-types :
-    ∀ {A :{♭} 𝒰₀}
-    → (x y :{♭} A)
-    → ♭(x ^♭ ≈ y ^♭) ≃ x ≈ y
-  ♭-preserves-identity-types x y =
-    (λ {(refl ^♭) → refl})
-    is-an-equivalence-because
-      (has-left-inverse
-        (λ {refl → refl ^♭}) by (λ {(refl ^♭)  → refl})
-       and-right-inverse
-        (λ {refl → refl ^♭}) by (λ {refl → refl})) 
-
+  -- setup for thm 6.1
   ♭-encode-decode-is-enough :
     ∀ {A :{♭} 𝒰₀} (code : ♭ A → ♭ A → 𝒰₀)
     → (encode : (x y : ♭ A) → x ≈ y → code x y)
