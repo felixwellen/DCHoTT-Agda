@@ -2,6 +2,7 @@
 
 {-
   Learnt about agda-flat from Ian Orton:
+  (also Dan helped somewhere along the way)
 
   There is a branch of agda called flat, 
   which supports a comonadic modality called flat or ♭
@@ -46,7 +47,7 @@ module Flat where
 
   _is-discrete : ∀ (A :{♭} 𝒰₀) → 𝒰₀
   A is-discrete = (♭-counit-at A) is-an-equivalence
-
+  
   ♭-idempotent : ∀ (A :{♭} 𝒰₀)
     → (♭ A) is-discrete
   ♭-idempotent A =
@@ -91,6 +92,13 @@ module Flat where
     → (♭→ g) ∘ (♭→ f) ⇒ ♭→ (g ∘ f)
   ♭→-commutes-with-∘ f g (a ^♭) = refl
 
+  ♭-recursion :
+    ∀ {A B :{♭} 𝒰₀} 
+    → (f :{♭} B → A)
+    → (p : B is-discrete)
+    → (B → ♭ A)
+  ♭-recursion {B = B} f p = ♭→ f ∘ φ
+    where φ = left-inverse-of (♭-counit-at B) given-by p
 
   ♭-identity-induction :
     ∀ {A :{♭} 𝒰₀}
@@ -99,61 +107,22 @@ module Flat where
     → (x y :{♭} A) → (p :{♭} x ≈ y) → C x y p
   ♭-identity-induction C d x .x refl = d x
 
-  -- setup for thm 6.1
-  ♭-encode-decode-is-enough :
-    ∀ {A :{♭} 𝒰₀} (code : ♭ A → ♭ A → 𝒰₀)
-    → (encode : (x y : ♭ A) → x ≈ y → code x y)
-    → (decode : (x y : ♭ A) → code x y → x ≈ y)
-    → (retract : (x y : ♭ A) → (encode x y) ∘ (decode x y) ⇒ id)
-    → (x y : ♭ A) → (decode x y) is-an-equivalence
-  ♭-encode-decode-is-enough {A} code encode decode retract x y =
-    let
-      step1 : (z : ♭ A) → (∑ (λ w → code z w)) is-contractible
-      step1 z = retracts-of-contractibles-are-contractible
-        (λ {(w , c) → (w , decode z w c)})
-        (λ {(w , γ) → (w , encode z w γ)})
-        (λ {(w , c) → (inclusion-of-the-fiber-of _ over w) ⁎ retract z w c})
-        (J-in-terms-of-contractibility′ (♭ A) z)
 
-      step2 : (z : ♭ A) → (λ {(w , c) → (w , decode z w c)}) is-an-equivalence
-      step2 z = the-map (λ {(w , c) → (w , decode z w c)}) is-an-equivalence-since-it-is-homotopic-to
-        _ by
-             maps-into-a-contractible-type-are-homotopic
-               _ _ ((J-in-terms-of-contractibility′ (♭ A) z))
-          which-is-an-equivalence-by
-          (proof-of-equivalency (two-contractible-types-are-equivalent
-            (step1 z) (J-in-terms-of-contractibility′ (♭ A) z) ))
-
-
-    in equivalence-from-equivalence-on-sums.conclusion (decode x) (step2 x) y
-
+  {- this can be done simpler that what is in Mike's article
+      (thanks to Dan Licata for pointing this out to me)
+     a proof close to what Mike did is further to the bottom 
+     of this file -}
   ♭-commutes-with-identity-types :
     ∀ {A :{♭} 𝒰₀}
     → (x y :{♭} A)
     → ♭ (x ≈ y) ≃ x ^♭ ≈ y ^♭
-  ♭-commutes-with-identity-types {A} x y =
-    let
-      {- from Mike's Real-Cohesion Article, section 6 -}
-      code : ♭ A → ♭ A → 𝒰₀
-      code = λ {(z ^♭) → λ {(w ^♭) → ♭ (z ≈ w) }}
-
-      step1 : code (x ^♭) (y ^♭) ≃ ♭ (x ≈ y)
-      step1 = id-as-equivalence
-
-      encode : (u v : ♭ A) → u ≈ v → code u v
-      encode u v γ = transport (λ v′ → code u v′)  γ
-             ((λ (u : ♭ A) → let♭' x ^♭:= u in♭ (refl ^♭) in-family (λ u′ → code u′ u′)) u)
-
-      decode : (u v : ♭ A) → code u v → u ≈ v
-      decode = λ {(x ^♭) (y ^♭) (refl ^♭) → refl }
-
-      step2 : code (x ^♭) (y ^♭) ≃ (x ^♭) ≈ (y ^♭)
-      step2 = (decode (x ^♭) (y ^♭))
-        is-an-equivalence-because
-        ♭-encode-decode-is-enough code encode decode (λ {(x′ ^♭) (y′ ^♭) (refl ^♭) → refl}) (x ^♭) (y ^♭)
-    in
-      step2 ∘≃ step1
-
+  ♭-commutes-with-identity-types x _ =
+     (λ {(refl ^♭) → refl})
+    is-an-equivalence-because
+      (has-left-inverse (λ {refl → refl ^♭})
+         by (λ {(refl ^♭) → refl})
+       and-right-inverse (λ {refl → refl ^♭})
+         by (λ {refl → refl}))
 
   {- Lemma 6.8 -}
 
@@ -210,3 +179,64 @@ module Flat where
       Σ (♭ A) (λ x → Σ (♭ B) (λ y → (♭→ f)(x) ≈ (♭→ g)(y)))
     ≃∎
 
+
+
+
+
+
+
+
+  -- setup for thm 6.1 and '♭-commutes-with-identity-types'
+  ♭-encode-decode-is-enough :
+    ∀ {A :{♭} 𝒰₀} (code : ♭ A → ♭ A → 𝒰₀)
+    → (encode : (x y : ♭ A) → x ≈ y → code x y)
+    → (decode : (x y : ♭ A) → code x y → x ≈ y)
+    → (retract : (x y : ♭ A) → (encode x y) ∘ (decode x y) ⇒ id)
+    → (x y : ♭ A) → (decode x y) is-an-equivalence
+  ♭-encode-decode-is-enough {A} code encode decode retract x y =
+    let
+      step1 : (z : ♭ A) → (Σ _ (λ w → code z w)) is-contractible
+      step1 z = retracts-of-contractibles-are-contractible
+        (λ {(w , c) → (w , decode z w c)})
+        (λ {(w , γ) → (w , encode z w γ)})
+        (λ {(w , c) → (inclusion-of-the-fiber-of _ over w) ⁎ retract z w c})
+        (J-in-terms-of-contractibility′ (♭ A) z)
+
+      step2 : (z : ♭ A) → (λ {(w , c) → (w , decode z w c)}) is-an-equivalence
+      step2 z = the-map (λ {(w , c) → (w , decode z w c)}) is-an-equivalence-since-it-is-homotopic-to
+        _ by
+             maps-into-a-contractible-type-are-homotopic
+               _ _ ((J-in-terms-of-contractibility′ (♭ A) z))
+          which-is-an-equivalence-by
+          (proof-of-equivalency (two-contractible-types-are-equivalent
+            (step1 z) (J-in-terms-of-contractibility′ (♭ A) z) ))
+
+
+    in equivalence-from-equivalence-on-sums.conclusion (decode x) (step2 x) y
+
+  ♭-commutes-with-identity-types' :
+    ∀ {A :{♭} 𝒰₀}
+    → (x y :{♭} A)
+    → ♭ (x ≈ y) ≃ x ^♭ ≈ y ^♭
+  ♭-commutes-with-identity-types' {A} x y =
+    let
+      {- from Mike's Real-Cohesion Article, section 6 -}
+      code : ♭ A → ♭ A → 𝒰₀
+      code = λ {(z ^♭) → λ {(w ^♭) → ♭ (z ≈ w) }}
+
+      step1 : code (x ^♭) (y ^♭) ≃ ♭ (x ≈ y)
+      step1 = id-as-equivalence
+
+      encode : (u v : ♭ A) → u ≈ v → code u v
+      encode u v γ = transport (λ v′ → code u v′)  γ
+             ((λ (u : ♭ A) → let♭' x ^♭:= u in♭ (refl ^♭) in-family (λ u′ → code u′ u′)) u)
+
+      decode : (u v : ♭ A) → code u v → u ≈ v
+      decode = λ {(x ^♭) (y ^♭) (refl ^♭) → refl }
+
+      step2 : code (x ^♭) (y ^♭) ≃ (x ^♭) ≈ (y ^♭)
+      step2 = (decode (x ^♭) (y ^♭))
+        is-an-equivalence-because
+        ♭-encode-decode-is-enough code encode decode (λ {(x′ ^♭) (y′ ^♭) (refl ^♭) → refl}) (x ^♭) (y ^♭)
+    in
+      step2 ∘≃ step1
