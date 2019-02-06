@@ -1,14 +1,12 @@
 {-# OPTIONS --without-K #-}
 
 module DependentTypes where 
-  open import Basics 
-  open import EqualityAndPaths
   open import Homotopies
   open import Fiber
-  open import Equivalences
+  open import Equivalences 
   open import HalfAdjointEquivalences
-  open import Pullback
-  open import PullbackSquare
+  open import Pullback 
+  open import PullbackSquare 
   -- univalence is needed to transform pullback-squares to
   -- morphisms over 𝒰₀
   open import Univalence

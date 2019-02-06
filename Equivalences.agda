@@ -1,11 +1,10 @@
 {-# OPTIONS --without-K #-}
 
 module Equivalences where 
-
-  open import Basics 
-  open import EqualityAndPaths
+  open import Basics public
+  open import EqualityAndPaths 
   open import Language 
-  open import Homotopies
+  open import Homotopies 
   
   _left-inverse-of_ : ∀ {i j} {A : U i} {B : U j} → (f : A → B) → (g : B → A) → U j
   f left-inverse-of g =  (f ∘ g) ∼ id

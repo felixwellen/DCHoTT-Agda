@@ -1,7 +1,6 @@
 {-# OPTIONS --without-K #-}
 
 module G-structure where
-  open import Basics
   open import EqualityAndPaths
   open import Equivalences renaming (underlying-map-of to as-plain-map)
   open import Homotopies

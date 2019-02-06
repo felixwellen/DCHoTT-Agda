@@ -1,7 +1,6 @@
 {-# OPTIONS --without-K #-}
 
 module Manifolds where 
-  open import Basics 
   open import EqualityAndPaths
   open import PropositionalTruncation
   open import DependentTypes

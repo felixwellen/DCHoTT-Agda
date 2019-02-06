@@ -15,7 +15,7 @@ module Sums where
   the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ :
     ∀ {A : 𝒰₀} {P Q : A → 𝒰₀}
     → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
-    → (λ {(a , pₐ) → (a , ((e a) pₐ))}) is-an-equivalence
+    → _is-an-equivalence {A = ∑ P} (λ {(a , pₐ) → (a , ((e a) pₐ))}) 
   the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ {A} {P} {Q} e e-is-an-equivalence
     =
     let
@@ -61,7 +61,8 @@ module Sums where
       has-left-inverse (λ {(b , (a , p)) → (a , (b , p))}) by (λ _ → refl)
       and-right-inverse ((λ {(b , (a , p)) → (a , (b , p))})) by (λ _ → refl)
 
-    as-sum-over-product = ∑ (λ {(a , b) → P a b})
+    as-sum-over-product : 𝒰₀
+    as-sum-over-product = ∑ {A = A × B} (λ {(a , b) → P a b})
 
     curry : as-sum-over-product → iterated-sum
     curry ((a , b) , p) = (a , (b , p))

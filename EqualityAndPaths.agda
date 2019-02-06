@@ -1,15 +1,14 @@
 {-# OPTIONS --without-K #-}
 
 module EqualityAndPaths where
-  
   open import Basics 
   
   
   infix 5 _≈_                                         -- \approx
   data _≈_ {i} {A : U i} (a : A) : A → U i where  
     refl : a ≈ a
-  
-  
+
+
   𝟙-contraction : (x : 𝟙) → x ≈ ∗
   𝟙-contraction ∗ = refl
   

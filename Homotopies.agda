@@ -96,7 +96,7 @@ pre-whisker_to_ = _left-whisker_
 
 post-whisker_to_ :
   ∀ {i} {A B C : U i} {f g : A → B} 
-  → f ∼ g → (h : B → C) → h ∘ f ⇒ h ∘ g
+  → f ⇒ g → (h : B → C) → h ∘ f ⇒ h ∘ g
 post-whisker_to_ = _right-whisker_
 
 
