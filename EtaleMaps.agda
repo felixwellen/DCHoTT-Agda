@@ -1,12 +1,14 @@
 {-# OPTIONS --without-K #-}
 
-
-
 module EtaleMaps where 
+  open import Basics
+  open import EqualityAndPaths
+  open import Homotopies
   open import Equivalences renaming (underlying-map-of to underlying-map-of-the-equivalence)
+  open import Pullback
   open import PullbackSquare
-  open import Im public
   open import DependentTypes
+  open import Im
   open import Language
 
   _as-plain-map :
