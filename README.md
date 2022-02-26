@@ -1,3 +1,7 @@
+This was the code for my [thesis](https://ncatlab.org/schreiber/show/thesis+Wellen).
+It is pretty outdated now and I didn't type check it with recent Agda versions.
+I am not planning to maintain this code as is, but I have plans to rewrite it for a library.
+
 # DCHoTT-Agda
 Differential cohesion in Homotopy Type Theory by an axiomatized coreduction modality.
 The following is proved and could also be interpreted as theorems about general modalities:
