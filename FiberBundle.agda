@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 
-module FiberBundle where 
-  open import Basics 
+module FiberBundle where
+  open import Basics
   open import EqualityAndPaths
   open import PropositionalTruncation
   open import PullbackSquare
@@ -14,15 +14,15 @@ module FiberBundle where
   open import InfinityGroups
 
 
-  {- 
+  {-
     we start with the most natural definition
-    in a type theoretic setting 
-  
-    everything else in this file, 
-    is about linking this definition 
+    in a type theoretic setting
+
+    everything else in this file,
+    is about linking this definition
     with definitions looking more like
     what is common in pure mathematics
-    
+
   -}
 
   record _is-a_-fiber-bundle {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where
@@ -39,7 +39,7 @@ module FiberBundle where
     field
       χ : B → BAut F
       classyfies : equivalence-of (λ b → fiber-of p at b) and (universal-family-over-BAut′ F) over χ
-      
+
   -- product property expressed by pullback square
   _is-a-product-with-projections_and_ :
     ∀ {A B : 𝒰₀} (Z : 𝒰₀) (z₁ : Z → A) (z₂ : Z → B)
@@ -59,7 +59,7 @@ module FiberBundle where
   _*_ : ∀ {E B B′ : 𝒰₀}
     → (f : B′ → B) → (φ : E → B) → 𝒰₀
   f * φ = upper-left-vertex-of (complete-to-pullback-square φ f)
-  
+
   _*→_ : ∀ {E B B′ : 𝒰₀}
     → (f : B′ → B) → (φ : E → B) → ((f * φ) → B′)
   f *→ φ = left-map-of (complete-to-pullback-square φ f)
@@ -67,10 +67,10 @@ module FiberBundle where
   ^ = underlying-map-of-the-surjection
 
 
-  {- 
+  {-
     A more standard-mathematical way:
 
-    a fiber bundle φ : E → B is required to be locally trivial, 
+    a fiber bundle φ : E → B is required to be locally trivial,
     which might be witnessed by a pullback square like this:
 
     V×F ───→ E
@@ -78,7 +78,7 @@ module FiberBundle where
     v*φ      φ
      ↓       ↓
      V ──v─↠ B
-     
+
   -}
 
   record _is-a‴_-fiber-bundle‴ {E B : 𝒰₀} (φ : E → B) (F : 𝒰₀) : 𝒰₁ where
@@ -96,7 +96,7 @@ module FiberBundle where
     a dependent version of the above
   -}
 
-  record _is-a″_-fiber-bundle″ {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where 
+  record _is-a″_-fiber-bundle″ {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where
     field
       V : 𝒰₀
       v : V ↠ B
@@ -181,8 +181,12 @@ module FiberBundle where
       specialize-image-to-BAut : ∀ (φ : B → 𝒰₀)
         → (x : B) → ∥ (φ x ≃ F) ∥ → the-image-of (λ ∗ → F) contains (φ x)
       specialize-image-to-BAut φ x = ∥→ (λ e → (∗ , univalence (e ⁻¹≃))) ∥→
+
+      point-to-F : 𝟙 → 𝒰₀
+      point-to-F _ = F
+
       specialize-image-to-BAut′ : ∀ (φ : B → 𝒰₀)
-        → (x : B) → the-image-of (λ ∗ → F) contains (φ x) → ∥ (φ x ≃ F) ∥ 
+        → (x : B) → the-image-of point-to-F contains (φ x) → ∥ (φ x ≃ F) ∥
       specialize-image-to-BAut′ φ x = ∥→ (λ {(∗ , p) → U-transport p ⁻¹≃}) ∥→
 
     def-to-def′ :
