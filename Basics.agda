@@ -3,18 +3,18 @@
 module Basics where
 
 -- if your agda version is < 2.4 you might have to use the following:
--- 
+--
 -- postulate  -- Universe levels
 --   Level : Set
 --   lzero : Level
 --   lsuc : Level → Level
 --   _⊔_ : Level → Level → Level
--- 
+--
 -- {-# BUILTIN LEVEL Level #-}
 -- {-# BUILTIN LEVELZERO lzero #-}
 -- {-# BUILTIN LEVELSUC lsuc #-}
 -- {-# BUILTIN LEVELMAX _⊔_ #-}
--- 
+--
 -- instead of this line:
 open import Agda.Primitive using (Level; lzero; lsuc; _⊔_) public
 
@@ -27,8 +27,8 @@ U₁ = U (lsuc lzero)
 
 
 
-{- 
-  
+{-
+
   supposed to be standard names in the future:
   (one advantage is, that coverings may be called 'U'...)
 -}
@@ -39,7 +39,7 @@ U₁ = U (lsuc lzero)
 
 Type = 𝒰
 
-{- 
+{-
 from HoTT-Agda (including following comment)
 
 Lifting to a higher universe level
@@ -49,7 +49,7 @@ It’s a bit annoying to use, but it’s not used much (for now).
 -}
 
 record Lift {i j} (A : 𝒰 i) : 𝒰 (i ⊔ j) where
-  instance constructor lift
+  constructor lift
   field
     lower : A
 open Lift public
@@ -72,7 +72,7 @@ data Bool : 𝒰₀ where
 
 π-Π : ∀ {A : 𝒰₀} {P : A → 𝒰₀}
       → (a : A) → Π P → P a
-π-Π a = λ s → s a      
+π-Π a = λ s → s a
 
 _∘Π_ : ∀ {X : 𝒰₀} {A B C : X → 𝒰₀}
   → Π (λ x → B x → C x) → Π (λ x → A x → B x) → Π (λ x → A x → C x)
@@ -90,7 +90,7 @@ record ∑ {i j} {A : 𝒰 i} (P : A → 𝒰 j) : 𝒰 (i ⊔ j) where
       → (a : A) → P a → ∑ P
 ι-∑ a p = (a , p)
 
-∑π₁ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j} 
+∑π₁ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j}
   → ∑ P → A
 ∑π₁ (a , _) = a
 
@@ -101,7 +101,7 @@ record ∑ {i j} {A : 𝒰 i} (P : A → 𝒰 j) : 𝒰 (i ⊔ j) where
 
 ∑π₂ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j}
   → (x : ∑ P) → P (∑π₁ x)
-∑π₂ (a , p) = p  
+∑π₂ (a , p) = p
 
 ∑π₂-from_ :
   ∀ {i} {j} {A : 𝒰 i} (P : A → 𝒰 j)
@@ -112,13 +112,13 @@ record ∑ {i j} {A : 𝒰 i} (P : A → 𝒰 j) : 𝒰 (i ⊔ j) where
 Σ : ∀ {i j} → (A : Type i) (P : A → Type j) → Type _
 Σ _ P = ∑ P
 
-Σπ₁ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j} 
+Σπ₁ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j}
   → Σ A P → A
 Σπ₁ (a , _) = a
 
 Σπ₂ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j}
   → (x : Σ A P) → P (Σπ₁ x)
-Σπ₂ (a , p) = p  
+Σπ₂ (a , p) = p
 
 Π-to-∑ : ∀ {A : 𝒰₀} {P : A → 𝒰₀}
          → Π P → A → ∑ P
@@ -126,8 +126,8 @@ record ∑ {i j} {A : 𝒰 i} (P : A → 𝒰 j) : 𝒰 (i ⊔ j) where
 
 infix 60 _×_
 
-_×_ : 
-  ∀ {i j} 
+_×_ :
+  ∀ {i j}
   → (A : 𝒰 i) → (B : 𝒰 j) → 𝒰 (i ⊔ j)
 A × B = ∑ (λ (a : A) → B)
 
@@ -141,7 +141,7 @@ f ,→ g = λ x → (f x , g x)
 π₁ (a , b) = a
 
 π₂ : ∀ {i} {A : 𝒰 i} {B : 𝒰 i} → A × B → B
-π₂ (a , b) = b 
+π₂ (a , b) = b
 
 
 π₁-from_×_ : ∀ {i} (A : 𝒰 i) (B : 𝒰 i) → A × B → A
@@ -160,7 +160,7 @@ swap (a , b) = (b , a)
 
 data Zero : 𝒰₀ where
 
-data 𝟙 : 𝒰₀ where 
+data 𝟙 : 𝒰₀ where
   ∗ : 𝟙
 
 
@@ -184,5 +184,3 @@ data Two : 𝒰₀ where
 
 ¬_ : 𝒰₀ → 𝒰₀
 ¬ A = A → Zero
-
-

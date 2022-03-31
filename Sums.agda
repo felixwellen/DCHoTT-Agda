@@ -11,11 +11,16 @@ module Sums where
   open import Equivalences
   open import Contractibility
 
+  private
+    map-on-sums-given-by_ :{A : 𝒰₀} {P Q : A → 𝒰₀}
+        → (e : (a : A) → ((P a) → (Q a)))
+        → ∑ P → ∑ Q
+    map-on-sums-given-by_ e (a , pₐ) = (a , ((e a) pₐ))
 
   the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ :
     ∀ {A : 𝒰₀} {P Q : A → 𝒰₀}
     → (e : (a : A) → ((P a) → (Q a))) → ((a : A) → (e a) is-an-equivalence)
-    → (λ {(a , pₐ) → (a , ((e a) pₐ))}) is-an-equivalence
+    → (map-on-sums-given-by e) is-an-equivalence
   the-map-of-sums-given-by_is-an-equivalence-since-it-is-fiberwise-an-equivalence-by_ {A} {P} {Q} e e-is-an-equivalence
     =
     let
@@ -24,9 +29,9 @@ module Sums where
       e⁻¹l = λ a → left-inverse (e-is-an-equivalence a)
       e⁻¹r : (a : A) → (Q a → P a)
       e⁻¹r = λ a → right-inverse (e-is-an-equivalence a)
-      unit : (a : A) → (e⁻¹l a) ∘ e a ⇒ id 
+      unit : (a : A) → (e⁻¹l a) ∘ e a ⇒ id
       unit = λ a → unit (e-is-an-equivalence a)
-      counit : (a : A) → id ⇒ e a ∘ (e⁻¹r a) 
+      counit : (a : A) → id ⇒ e a ∘ (e⁻¹r a)
       counit = λ a → counit (e-is-an-equivalence a)
     in has-left-inverse (λ {(a , qₐ) → (a , (e⁻¹l a) qₐ)})
           by (λ {(a , pₐ) → construct-path-in-∑ a a _ _ refl (unit a pₐ)})
@@ -61,12 +66,13 @@ module Sums where
       has-left-inverse (λ {(b , (a , p)) → (a , (b , p))}) by (λ _ → refl)
       and-right-inverse ((λ {(b , (a , p)) → (a , (b , p))})) by (λ _ → refl)
 
-    as-sum-over-product = ∑ (λ {(a , b) → P a b})
+    as-sum-over-product : 𝒰₀
+    as-sum-over-product = ∑ {A = A × B} (λ {(a , b) → P a b})
 
     curry : as-sum-over-product → iterated-sum
     curry ((a , b) , p) = (a , (b , p))
 
-    uncurry : iterated-sum → as-sum-over-product 
+    uncurry : iterated-sum → as-sum-over-product
     uncurry (a , (b , p)) = ((a , b) , p)
 
     currying-is-an-equivalence : curry is-an-equivalence
@@ -83,7 +89,7 @@ module Sums where
     (A : 𝒰₀) (P : A → 𝒰₀) (all-contractible : (a : A) → (P a) is-contractible) where
 
     open _is-contractible
-    
+
     section : A → ∑ P
     section a = (a , center (all-contractible a))
 
@@ -98,7 +104,7 @@ module Sums where
     section-is-an-equivalence : section is-an-equivalence
     section-is-an-equivalence =
       the-inverse-of ∑π₁ which-is-an-equivalence-by
-      (proof-of-invertibility equivalence-to-base) is-again-an-equivalence 
+      (proof-of-invertibility equivalence-to-base) is-again-an-equivalence
 
   module sum-of-free-path-at-a-point-is-contractible (A : 𝒰₀) (a₀ : A) where
 
