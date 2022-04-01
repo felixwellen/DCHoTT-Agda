@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
-module formal-D-space where
+module Formal-D-space where
   open import Basics
   open import EqualityAndPaths
   open import Equivalences
