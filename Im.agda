@@ -63,14 +63,6 @@ module Im where
       → (b ≈ b′) is-coreduced
 
 
-    {- this is a way to state left exactness of ℑ
-       and for now, it is the only way we need left exactness -}
-
-    ℑ𝒰₀-is-coreduced : ℑ𝒰₀ is-coreduced
-
-  -- End Axioms
-
-
   ℑ-recursion :
     ∀ {i} {A : 𝒰₀} {B : 𝒰 i}
     → B is-coreduced
