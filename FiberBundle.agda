@@ -25,7 +25,7 @@ module FiberBundle where
 
   -}
 
-  record _is-a_-fiber-bundle {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₁ where
+  record _is-a_-fiber-bundle {B : 𝒰₀} (φ : B → 𝒰₀) (F : 𝒰₀) : 𝒰₀ where
     field
       all-fibers-are-merely-equivalent : ∀ (b : B) → ∥ φ b ≃ F ∥
 
