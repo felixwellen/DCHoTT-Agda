@@ -770,18 +770,16 @@ module Im where
       ∀ (C : 𝒰₀) (p : C is-coreduced)
       → (λ (h : ∑ ℑB → C) → h ∘ f) is-an-equivalence
     ∑ℑB-is-universal C p = proof-of-equivalency (
-                       (∑ ℑB → C)
-                     ≃⟨ dependent-curry C ⟩
-                       (Π λ (x : ℑ A) → (ℑB x → C))
-                     ≃⟨ ℑ-induction-as-equivalence (λ a → Π-of-coreduced-types-is-coreduced.coreducedness _ (λ x → p)) ⟩
-                       Π (λ (x : A) → (ℑB (ι x) → C))
-                     ≃⟨ applying-equivalences-to-codomain.induced-equivalence
-                          (λ x → (ℑB (ι x) → C)) (λ x → (B (ι x) → C))
-                          (λ x → ℑ-induction-as-equivalence (λ _ → p)) ⟩
-                       Π (λ (x : A) → (B (ι x) → C))
-                     ≃⟨ dependent-curry C ⁻¹≃ ⟩
-                       (∑ (B ∘ ι) → C)
-                     ≃∎)
+         (∑ ℑB → C)                        ≃⟨ dependent-curry C ⟩
+         (Π λ (x : ℑ A) → (ℑB x → C))      ≃⟨ ℑ-induction-as-equivalence
+                                               (λ a → Π-of-coreduced-types-is-coreduced.coreducedness
+                                                 _ (λ x → p)) ⟩
+         Π (λ (x : A) → (ℑB (ι x) → C))    ≃⟨ applying-equivalences-to-codomain.induced-equivalence
+                                                (λ x → (ℑB (ι x) → C)) (λ x → (B (ι x) → C))
+                                                (λ x → ℑ-induction-as-equivalence (λ _ → p)) ⟩
+         Π (λ (x : A) → (B (ι x) → C))      ≃⟨ dependent-curry C ⁻¹≃ ⟩
+         (∑ (B ∘ ι) → C)
+       ≃∎)
 
     compute-∑ : ℑ (∑ (B ∘ ι)) ≃ ∑ ℑB
     compute-∑ = ℑ-yoneda
