@@ -44,7 +44,7 @@ module G-structure where
 
     {-
       Let BG be a delooping of a group G
-      together with an 'inclusion' Bι : BG → BAut(𝔻ₑ)
+      together with a pointed map Bι : BG → BAut(𝔻ₑ)
       into the Automorphisms of the formal disk
       at the unit of V.
       A G-structure on a V-manifold M is given by a
