@@ -16,7 +16,7 @@ module G-structure where
   open import FormalDisk
   open import HomogeneousType
 
-  
+
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
     field
@@ -31,7 +31,7 @@ module G-structure where
     (V : homogeneous-structure-on V′)
     (reduction : groups-over-structure-group-of V)
     (M′ : V -manifold) where
-    
+
 
     open homogeneous-structure-on_ V
     open groups-over-structure-group-of_ reduction
@@ -45,25 +45,25 @@ module G-structure where
     {-
       Let BG be a delooping of a group G
       together with an 'inclusion' Bι : BG → BAut(𝔻ₑ)
-      into the Automorphisms of the formal disk 
+      into the Automorphisms of the formal disk
       at the unit of V.
       A G-structure on a V-manifold M is given by a
       lift of the classifying morphism of T∞ V
       along Bι:
-  
-         ↗ BG 
+
+         ↗ BG
         φ   |
        /   Bφ
-      /     ↓ 
+      /     ↓
       M ─→ BAut(𝔻ₑ)
-  
+
       We do not claim, that the type of those lifts
       is the correct moduli type of G-structures on M.
     -}
 
     G-structures : U₁
     G-structures = ∑ (λ (φ : M → BG) → Bφ ∘ φ ⇒ χ)
-    
+
   {-
       on a left invertible H-space V,
       there is always a 1-structure (for the trivial group 1)
@@ -71,7 +71,7 @@ module G-structure where
   -}
   module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}
-    (V : homogeneous-structure-on V′) 
+    (V : homogeneous-structure-on V′)
     (group-over-BAut𝔻ₑ : groups-over-structure-group-of V)
     where
 
@@ -88,7 +88,7 @@ module G-structure where
 
     φ : (x : V′) → 𝔻ₑ ≃ 𝔻 _ x
     φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.identifications-of-all-formal-disks V
-    
+
     φ-as-homotopy : (λ _ → 𝔻ₑ) ⇒ 𝔻 V′
     φ-as-homotopy x = univalence (φ x)
 
@@ -96,10 +96,10 @@ module G-structure where
     open groups-over-structure-group-of_ group-over-BAut𝔻ₑ
 
 
-    χ′ = G-structures-on-V-manifolds.χ 
+    χ′ = G-structures-on-V-manifolds.χ
               V group-over-BAut𝔻ₑ
               (homogeneous-space-as-manifold V)
-              
+
     trivial-structure : G-structures-on-V
     trivial-structure =
       ((λ _ → Be) ,
@@ -107,7 +107,7 @@ module G-structure where
              (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x))
 
   {-
-    We will now work towards the definition of 
+    We will now work towards the definition of
     torision-free G-structures.
     For this, we need to be able to compare
     G-structures on formal disks
@@ -135,18 +135,18 @@ module G-structure where
       open _-manifold M′
 
       ∗𝔻 : (x₀ : M) → formal-disk-at x₀
-      ∗𝔻 x₀ = (x₀ , refl) 
+      ∗𝔻 x₀ = (x₀ , refl)
 
       χ-M : M → BAut 𝔻ₑ
       χ-M =
         the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.classifying-morphism V M′
-      
+
       all-𝔻s-are-merely-equivalent :
         ∀ (x : M)
         → ∥  𝔻-at x ≃ 𝔻ₑ ∥
       all-𝔻s-are-merely-equivalent x =
-        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent V M′ x 
-      
+        the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle.all-formal-disks-are-merely-equivalent V M′ x
+
       G-structures-on-M =
         G-structures-on-V-manifolds.G-structures
          V group-over-BAut𝔻ₑ M′
@@ -154,37 +154,37 @@ module G-structure where
       _is-torsion-free :
         G-structures-on-M → 𝒰₁
       (lift-of-g , homotopy) is-torsion-free =
-        {- 
+        {-
           to decide if a G-structure is torsion free,
           we have to compare it locally to the trivial G-structure.
           This means comparing all triangles obtained by restricting the
           G-Structure to the formal disk at some point x
-          
-  
-                ↗ BG                       ↗ BG       
-               /   |                      φ   |       
-              /   Bφ         ≈           /   Bφ       
-             /     ↓                    /     ↓       
-          𝔻ₓ ──→ BAut(𝔻ₑ)      𝔻ₓ ──→ M ──→ BAut(𝔻ₑ) 
 
-          to the 𝔻ₑ-triangle of the trivial G-Structure 
 
-                ↗ BG       
-              B1   |       
-              /   Bφ       
-             /     ↓       
-          𝔻ₑ ──→ BAut(𝔻ₑ) 
+                ↗ BG                       ↗ BG
+               /   |                      φ   |
+              /   Bφ         ≈           /   Bφ
+             /     ↓                    /     ↓
+          𝔻ₓ ──→ BAut(𝔻ₑ)      𝔻ₓ ──→ M ──→ BAut(𝔻ₑ)
+
+          to the 𝔻ₑ-triangle of the trivial G-Structure
+
+                ↗ BG
+              B1   |
+              /   Bφ
+             /     ↓
+          𝔻ₑ ──→ BAut(𝔻ₑ)
 
         -}
         let
           -- classifying map of T∞V
-          ξ = G-structures-on-V-manifolds.χ 
+          ξ = G-structures-on-V-manifolds.χ
               V group-over-BAut𝔻ₑ
               (homogeneous-space-as-manifold V)
 
           -- the triangle type discussed above
           triangles-at : BAut 𝔻ₑ → 𝒰₁
-          triangles-at = λ {(Dx , _) → ∑ λ (f : Dx →  BG) 
+          triangles-at = λ {(Dx , _) → ∑ λ (f : Dx →  BG)
                                      → ∑ λ (g : Dx →  BAut 𝔻ₑ)
                                            → Bφ ∘ f ⇒ g}
 
@@ -207,7 +207,7 @@ module G-structure where
         in  ∀ (x : M)
           → ∀ (γ : 𝔻-at x as-point-in-BAut-𝔻ₑ ≈ e-BAut 𝔻ₑ)
           → ∥ transport triangles-at γ (triangle-from-the-G-structure-at x)
-              ≈ triangle-of-the-trivial-G-structure ∥ 
+              ≈ triangle-of-the-trivial-G-structure ∥
 
 
     {-
@@ -219,9 +219,9 @@ module G-structure where
       calculate-triangle-transport :
         ∀ {𝔻′ : BAut 𝔻ₑ} -- (Δ : triangles-at 𝔻′)
        →  {!!} -- → transport triangles-at Δ ≈ ?
-        
+
       calculate-triangle-transport = {!!}
-      
+
       result : trivial-structure is-torsion-free
-      result x y = ∣ {!!} ∣ 
+      result x y = ∣ {!!} ∣
   -}
