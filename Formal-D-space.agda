@@ -2,11 +2,7 @@
 
 module Formal-D-space where
   open import Basics
-  open import EqualityAndPaths
-  open import Equivalences
-  open import Homotopies
   open import FormalDisk
-  open import FormalDiskBundle
   open import FiberBundle
   open import HomogeneousType
   open import Manifolds
