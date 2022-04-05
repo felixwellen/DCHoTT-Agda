@@ -4,6 +4,7 @@ module Formal-D-space where
   open import Basics
   open import FormalDisk
   open import FiberBundle
+  open import InfinityGroups
   open import HomogeneousType
   open import Manifolds
 
@@ -12,6 +13,18 @@ module Formal-D-space where
 
   formal_-spaces : (D : 𝒰₀) → 𝒰₁
   formal D -spaces = ∑ (λ (M : 𝒰₀) → M is-a-formal D -space)
+
+  underlying-type-of : {D : 𝒰₀} → formal D -spaces → 𝒰₀
+  underlying-type-of (M , _) = M
+
+  classifying-map-of-the-formal_-space_ :
+      (D : 𝒰₀) (M : formal D -spaces)
+    → (underlying-type-of M → BAut D)
+  classifying-map-of-the-formal D -space (M , M-is-D-space) =
+    let T∞-is-classified =
+          logical-equivalences-between-the-four-definitions-of-fiber-bundles.def-to-def′
+            (𝔻 M) M-is-D-space
+    in _is-a′_-fiber-bundle′.χ T∞-is-classified
 
   the_-manifold_is-a-formal-𝔻ₑ-space :
       {V′ : 𝒰₀}
