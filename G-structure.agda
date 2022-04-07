@@ -15,7 +15,92 @@ module G-structure where
   open import Manifolds
   open import FormalDisk
   open import HomogeneousType
+  open import Formal-D-space
 
+
+  record groups-over-automorphismgroup-of_ (D : 𝒰₀) : 𝒰₁ where
+    field
+      BG : 𝒰₀
+      Be : BG
+      Bι : BG → BAut D
+      path-between-units : Bι(Be) ≈ e-BAut D
+
+  module G-structures-on-𝔻ₑ-spaces
+    {D : 𝒰₀} (M : 𝒰₀)
+    (M-is-D-space : M is-a-formal D -space)
+    (group-over-BAutD : groups-over-automorphismgroup-of D)
+    where
+    open groups-over-automorphismgroup-of_ group-over-BAutD
+    {-
+      Let BG be a delooping of a group G
+      together with a pointed map Bι : BG → BAut(D)
+      into the Automorphisms of the model formal disk in M.
+      A G-structure on a V-manifold M is given by a
+      lift of the witness χ : M → BAut(D),
+      that M is a formal D-space,
+      along Bι:
+
+         ↗ BG
+        ϕ   |
+       /   Bι
+      /     ↓
+      M ─→ BAut(D)
+
+    -}
+
+    χ : M → BAut D
+    χ = classifying-map-of-the-formal D -space (M , M-is-D-space)
+
+    G-structures : U₁
+    G-structures = ∑ (λ (ϕ : M → BG) → Bι ∘ ϕ ⇒ χ)
+
+
+  module trivial-structure-on-homogeneous-types2
+    {V′ : 𝒰₀}
+    (V : homogeneous-structure-on V′)
+    (group-over-BAut𝔻ₑ : groups-over-automorphismgroup-of (formal-disk-of V))
+    where
+
+    open homogeneous-structure-on_ V
+
+    𝔻ₑ = formal-disk-at e
+
+    V-is-a-𝔻ₑ-space = the V -manifold (homogeneous-space-as-manifold V) is-a-formal-𝔻ₑ-space
+
+    G-structures-on-V : 𝒰₁
+    G-structures-on-V =
+      G-structures-on-𝔻ₑ-spaces.G-structures
+      V′
+      V-is-a-𝔻ₑ-space
+      group-over-BAut𝔻ₑ
+
+    φ : (x : V′) → 𝔻ₑ ≃ 𝔻 _ x
+    φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.identifications-of-all-formal-disks V
+
+    φ-as-homotopy : (λ _ → 𝔻ₑ) ⇒ 𝔻 V′
+    φ-as-homotopy x = univalence (φ x)
+
+    open groups-over-automorphismgroup-of_ group-over-BAut𝔻ₑ
+
+--    χ′ : V′ → BAut 𝔻ₑ
+--    χ′ = G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ
+
+    trivial-structure : G-structures-on-V
+    trivial-structure =
+      ((λ _ → Be) ,
+        (λ (x : V′) → path-between-units • injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ) (G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ) (ι-BAut 𝔻ₑ)
+             (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x))
+{-      (λ _ → Be) ,
+      λ (x : V′) →
+        Bι Be         ≈⟨ path-between-units ⟩
+        e-BAut 𝔻ₑ     ≈⟨ injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ)
+                                             (G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ) (ι-BAut 𝔻ₑ)
+                         (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x ⟩
+        G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ x ≈∎   -- replacing this by χ′ leads to slow tc
+-}
+{-
+path-between-units •
+-}
 
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
@@ -24,7 +109,6 @@ module G-structure where
       Be : BG
       Bφ : BG → BAut (formal-disk-of structure-on-V)
       path-between-units : Bφ(Be) ≈ e-BAut (formal-disk-of structure-on-V)
-
 
   module G-structures-on-V-manifolds
     {V′ : 𝒰₀} -- (w : U ─ét→ M) (v : U ─ét→ V′)
