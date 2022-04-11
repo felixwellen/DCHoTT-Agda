@@ -101,11 +101,6 @@ module G-structure where
                                                           (formal 𝔻ₑ -spaces-are-fiber-bundles V-is-a-𝔻ₑ-space) x ⁻¹ ⟩
                                (ι-BAut 𝔻ₑ ∘ χ′) x     ≈∎
 
-{-
-injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ)
-                                             χ′ (ι-BAut 𝔻ₑ)
-                         (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x
--}
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
     field
