@@ -101,6 +101,23 @@ module G-structure where
                                                           (formal 𝔻ₑ -spaces-are-fiber-bundles V-is-a-𝔻ₑ-space) x ⁻¹ ⟩
                                (ι-BAut 𝔻ₑ ∘ χ′) x     ≈∎
 
+    {-
+      We will now work towards the definition of
+      torision-free G-structures.
+      For this, we need to be able to compare
+      G-structures on formal disks
+    -}
+    ι-𝔻ₑ : 𝔻ₑ → V′
+    ι-𝔻ₑ = inclusion-of-formal-disk-at e
+
+    trivial-structure-restricted-to-𝔻ₑ :
+      𝔻ₑ → BG
+    trivial-structure-restricted-to-𝔻ₑ =
+      let
+        ψ : V′ → BG
+        ψ = (∑π₁ trivial-structure)
+      in ψ ∘ ι-𝔻ₑ
+{-
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
     field
@@ -182,7 +199,7 @@ module G-structure where
     χ′ = G-structures-on-V-manifolds.χ
               V group-over-BAut𝔻ₑ
               (homogeneous-space-as-manifold V)
-{-
+
     trivial-structure : G-structures-on-V
     trivial-structure =
       ((λ _ → Be) ,
@@ -206,6 +223,7 @@ module G-structure where
         ψ = (∑π₁ trivial-structure)
       in ψ ∘ ι-𝔻ₑ
 
+------------ continue here -------------------------
 
 
     {-
