@@ -26,6 +26,13 @@ module Formal-D-space where
             (𝔻 M) M-is-D-space
     in _is-a′_-fiber-bundle′.χ T∞-is-classified
 
+  formal_-spaces-are-fiber-bundles :
+     {M : 𝒰₀}
+     (D : 𝒰₀)
+     → M is-a-formal D -space
+     → (𝔻 M) is-a D -fiber-bundle
+  formal D -spaces-are-fiber-bundles x = x
+
   the_-manifold_is-a-formal-𝔻ₑ-space :
       {V′ : 𝒰₀}
       (V : homogeneous-structure-on V′)

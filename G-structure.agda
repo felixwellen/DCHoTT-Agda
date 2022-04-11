@@ -82,26 +82,30 @@ module G-structure where
 
     open groups-over-automorphismgroup-of_ group-over-BAut𝔻ₑ
 
---    χ′ : V′ → BAut 𝔻ₑ
---    χ′ = G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ
+    χ′ : V′ → BAut 𝔻ₑ
+    χ′ = G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ
 
     trivial-structure : G-structures-on-V
     trivial-structure =
-      ((λ _ → Be) ,
-        (λ (x : V′) → path-between-units • injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ) (G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ) (ι-BAut 𝔻ₑ)
-             (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x))
-{-      (λ _ → Be) ,
+      (λ _ → Be) ,
       λ (x : V′) →
         Bι Be         ≈⟨ path-between-units ⟩
-        e-BAut 𝔻ₑ     ≈⟨ injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ)
-                                             (G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ) (ι-BAut 𝔻ₑ)
-                         (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x ⟩
-        G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ x ≈∎   -- replacing this by χ′ leads to slow tc
--}
-{-
-path-between-units •
--}
+        e-BAut 𝔻ₑ     ≈⟨ injectives-are-monos
+                           (λ (x : V′) → e-BAut 𝔻ₑ) χ′
+                           (ι-BAut 𝔻ₑ) (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy′ x ⟩
+        χ′ x          ≈∎
+      where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
+            φ-as-homotopy′ : (λ _ → 𝔻ₑ) ⇒ (ι-BAut 𝔻ₑ ∘ χ′)
+            φ-as-homotopy′ x = 𝔻ₑ                      ≈⟨  φ-as-homotopy x ⟩
+                               𝔻 V′ x                 ≈⟨ compute-classifying-morphism
+                                                          (formal 𝔻ₑ -spaces-are-fiber-bundles V-is-a-𝔻ₑ-space) x ⁻¹ ⟩
+                               (ι-BAut 𝔻ₑ ∘ χ′) x     ≈∎
 
+{-
+injectives-are-monos (λ (x : V′) → e-BAut 𝔻ₑ)
+                                             χ′ (ι-BAut 𝔻ₑ)
+                         (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy x
+-}
   record groups-over-structure-group-of_ {V : 𝒰₀}
     (structure-on-V : homogeneous-structure-on V) : 𝒰₁ where
     field
@@ -183,7 +187,7 @@ path-between-units •
     χ′ = G-structures-on-V-manifolds.χ
               V group-over-BAut𝔻ₑ
               (homogeneous-space-as-manifold V)
-
+{-
     trivial-structure : G-structures-on-V
     trivial-structure =
       ((λ _ → Be) ,
@@ -309,3 +313,4 @@ path-between-units •
       result : trivial-structure is-torsion-free
       result x y = ∣ {!!} ∣
   -}
+-}

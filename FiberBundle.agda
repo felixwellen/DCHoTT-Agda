@@ -21,7 +21,7 @@ module FiberBundle where
     everything else in this file,
     is about linking this definition
     with definitions looking more like
-    what is common in pure mathematics
+    what is common in mathematics
 
   -}
 
@@ -42,11 +42,12 @@ module FiberBundle where
 
 
   classifying-morphism′ : {E B : 𝒰₀} {p : E → B} {F : 𝒰₀}
-    →  p is-a′ F -fiber-bundle′
+    → p is-a′ F -fiber-bundle′
     → B → BAut F
   classifying-morphism′ is-fiber-bundle =
     let open _is-a′_-fiber-bundle′ is-fiber-bundle
     in χ
+
 
   -- product property expressed by pullback square
   _is-a-product-with-projections_and_ :
@@ -223,3 +224,10 @@ module FiberBundle where
           specialize-image-to-BAut′ (λ x → fiber-of p at x) b
             (U-transport ((λ z → the-image-of _ contains z) ⁎ univalence (classyfies b) ) ⁻¹≃ $≃ (∑π₂ (χ b)))
         }
+
+      compute-classifying-morphism :
+        {ϕ : B → 𝒰₀}
+        → (ϕ-is-fiber-bundle : ϕ is-a F -fiber-bundle)
+        → let is-fiber-bundle′ = def-to-def′ ϕ ϕ-is-fiber-bundle
+          in ι-BAut F ∘ classifying-morphism′ is-fiber-bundle′ ⇒ ϕ
+      compute-classifying-morphism ϕ-is-fiber-bundle x = refl
