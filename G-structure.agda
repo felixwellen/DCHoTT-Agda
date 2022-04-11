@@ -55,7 +55,7 @@ module G-structure where
     G-structures = ∑ (λ (ϕ : M → BG) → Bι ∘ ϕ ⇒ χ)
 
 
-  module trivial-structure-on-homogeneous-types2
+  module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}
     (V : homogeneous-structure-on V′)
     (group-over-BAut𝔻ₑ : groups-over-automorphismgroup-of (formal-disk-of V))
