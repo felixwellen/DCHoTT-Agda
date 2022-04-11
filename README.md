@@ -1,9 +1,13 @@
-This was the code for my [thesis](https://ncatlab.org/schreiber/show/thesis+Wellen).
-The file G-structures.agda should checked with the release candidate of Agda-2.6.2.2
-and contains or refers to everything from my thesis that was formalized.
+This is the formalization of my [article on cartan geometry in modal hott](https://arxiv.org/abs/1806.05966). 
+The basis was the formalization of my [thesis](https://ncatlab.org/schreiber/show/thesis+Wellen).
+If you want to look at a state compatible with the latter or see other things that have been here earlier,
+you can check out the tag 'compatible_with_thesis'.
+Everything should check with Agda-2.6.2.2.
 
 # DCHoTT-Agda
 Differential cohesion in Homotopy Type Theory by an axiomatized coreduction modality.
+This doesn't really require a modal type theory in sense that the rules are different from book-hott, since the coreduction is a monadic modality.
+
 The following is proved and could also be interpreted as theorems about general modalities:
 
 - The formal disk bundle over a group is trivial.
