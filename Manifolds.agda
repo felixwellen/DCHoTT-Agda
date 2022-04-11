@@ -106,24 +106,3 @@ module Manifolds where
          commutes-with-the-dependent-replacement-of-T∞′′ :
            𝔻 M ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism
          commutes-with-the-dependent-replacement-of-T∞′′ x = classifying-morphism-is-natural x ⁻¹
-
-
-  {-
-    Let V be homogeneous, and 𝔻ₑ its unit disk.
-    Then the formal disk bundle T∞M of a V-manifold M
-    is a 𝔻ₑ×V-manifold.
-  -}
-  module the-formal-disk-bundle-of-a-manifold-is-a-manifold
-         {V′ : 𝒰₀}
-         (V : homogeneous-structure-on V′)
-         (M′ : V -manifold)
-         where
-
-         open homogeneous-structure-on_ V
-         𝔻ₑ′ = 𝔻 V′ e
-         𝔻ₑ : homogeneous-structure-on 𝔻ₑ′
-         𝔻ₑ = ℑ-homogene-sequence.homogeneous-structure V
-         open _-manifold M′
-
-         T∞M : 𝒰₀
-         T∞M = ∑ (𝔻 M)
