@@ -12,6 +12,7 @@ module G-structure where
   open import PropositionalTruncation
   open import Image
   open import EtaleMaps
+  open import PropertiesOfEtaleMaps
   open import Manifolds
   open import FormalDisk
   open import HomogeneousType
@@ -26,7 +27,7 @@ module G-structure where
       path-between-units : Bι(Be) ≈ e-BAut D
 
   module G-structures-on-𝔻ₑ-spaces
-    {D : 𝒰₀} (M : 𝒰₀)
+    {D : 𝒰₀} {M : 𝒰₀}
     (M-is-D-space : M is-a-formal D -space)
     (group-over-BAutD : groups-over-automorphismgroup-of D)
     where
@@ -48,12 +49,47 @@ module G-structure where
 
     -}
 
-    χ : M → BAut D
-    χ = classifying-map-of-the-formal D -space (M , M-is-D-space)
+    χ𝔻 : M → BAut D
+    χ𝔻 = classifying-map-of-the-formal D -space (M , M-is-D-space)
 
     G-structures : U₁
-    G-structures = ∑ (λ (ϕ : M → BG) → Bι ∘ ϕ ⇒ χ)
+    G-structures = ∑ (λ (ϕ : M → BG) → Bι ∘ ϕ ⇒ χ𝔻)
 
+  module formally-étale-base-change
+    {M N D : 𝒰₀}
+    (M-is-D-space : M is-a-formal D -space)
+    (N-is-D-space : N is-a-formal D -space)
+    (f : M ─ét→ N) where
+
+    open G-structures-on-𝔻ₑ-spaces
+
+    private
+      f' = Σπ₁ f
+
+    𝔻-homotopy : 𝔻 N ∘ f' ⇒ 𝔻 M
+    𝔻-homotopy x = univalence (d⁻¹≃ f x)
+
+    module _ (G : groups-over-automorphismgroup-of D) where
+      open groups-over-automorphismgroup-of_ G
+      private
+        G-str-M = G-structures M-is-D-space G
+        G-str-N = G-structures N-is-D-space G
+        χ𝔻-M = χ𝔻 M-is-D-space G
+        χ𝔻-N = χ𝔻 N-is-D-space G
+
+      map-G-structure : G-str-N → G-str-M
+      map-G-structure (χ , η) =
+        χ ∘ f' ,
+        λ x → (Bι ∘ χ ∘ f') x  ≈⟨ η (f' x) ⟩
+              (χ𝔻-N ∘ f') x   ≈⟨ prove-equality-of-classifying-maps
+                                   (χ𝔻-N ∘ f') χ𝔻-M
+                                   (λ x → ι-BAut D ((χ𝔻-N ∘ f') x) ≈⟨ compute-classifying-morphism N-is-D-space (f' x) ⟩
+                                          (𝔻 N ∘ f') x             ≈⟨ 𝔻-homotopy x ⟩
+                                          (𝔻 M) x                  ≈⟨ compute-classifying-morphism M-is-D-space x ⁻¹ ⟩
+                                          ι-BAut D (χ𝔻-M x) ≈∎)
+                                   x  ⟩
+              χ𝔻-M x          ≈∎
+        where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
 
   module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}
@@ -70,7 +106,6 @@ module G-structure where
     G-structures-on-V : 𝒰₁
     G-structures-on-V =
       G-structures-on-𝔻ₑ-spaces.G-structures
-      V′
       V-is-a-𝔻ₑ-space
       group-over-BAut𝔻ₑ
 
@@ -83,16 +118,14 @@ module G-structure where
     open groups-over-automorphismgroup-of_ group-over-BAut𝔻ₑ
 
     χ′ : V′ → BAut 𝔻ₑ
-    χ′ = G-structures-on-𝔻ₑ-spaces.χ V′ V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ
+    χ′ = G-structures-on-𝔻ₑ-spaces.χ𝔻 V-is-a-𝔻ₑ-space group-over-BAut𝔻ₑ
 
     trivial-structure : G-structures-on-V
     trivial-structure =
       (λ _ → Be) ,
       λ (x : V′) →
         Bι Be         ≈⟨ path-between-units ⟩
-        e-BAut 𝔻ₑ     ≈⟨ injectives-are-monos
-                           (λ (x : V′) → e-BAut 𝔻ₑ) χ′
-                           (ι-BAut 𝔻ₑ) (ι-im₁-is-injective (λ ∗₃ → 𝔻ₑ)) φ-as-homotopy′ x ⟩
+        e-BAut 𝔻ₑ     ≈⟨ prove-equality-of-classifying-maps (λ (x : V′) → e-BAut 𝔻ₑ) χ′ φ-as-homotopy′ x ⟩
         χ′ x          ≈∎
       where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
             φ-as-homotopy′ : (λ _ → 𝔻ₑ) ⇒ (ι-BAut 𝔻ₑ ∘ χ′)
