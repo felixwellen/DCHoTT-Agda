@@ -231,3 +231,10 @@ module FiberBundle where
         → let is-fiber-bundle′ = def-to-def′ ϕ ϕ-is-fiber-bundle
           in ι-BAut F ∘ classifying-morphism′ is-fiber-bundle′ ⇒ ϕ
       compute-classifying-morphism ϕ-is-fiber-bundle x = refl
+
+      prove-equality-of-classifying-maps :
+          (ϕ ψ : B → BAut F)
+        → ((x : B) → ι-BAut F (ϕ x) ≈ ι-BAut F (ψ x))
+        → ϕ ⇒ ψ
+      prove-equality-of-classifying-maps ϕ ψ η =
+        injectives-are-monos ϕ ψ (ι-BAut F) (ι-im₁-is-injective _) η
