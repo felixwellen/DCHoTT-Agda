@@ -127,32 +127,3 @@ module Manifolds where
 
          T∞M : 𝒰₀
          T∞M = ∑ (𝔻 M)
-
-       {-
-
-         T∞M-is-a-manifold : (V ×ₕ 𝔻ₑ) -manifold
-         T∞M-is-a-manifold =
-           let
-             φ : ∑ (𝔻 V′) → V′ × 𝔻ₑ′
-             φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.trivialize V
-
-             dv : (x : W) → 𝔻 M (w $ét x) → 𝔻 V′ (v $ét x)
-             dv x = d (underlying-map-of v) x ∘ d⁻¹ w x
-           in record
-           {
-             M = T∞M ;
-             W = ∑ (λ (x : W) → 𝔻 M (w $ét x)) ;
-             w = ((λ {(x , (y , d)) → ((w $ét x) , (y , d))})
-                 is-étale-because {!!}) ;
-             w-covers = λ {(x , (y , d))
-               → ∥→
-                   (λ {(x′ is-in-the-fiber-by γ)
-                    → ((x′ , transport (𝔻 M) (γ ⁻¹) (y , d))
-                      is-in-the-fiber-by (equality-action-on-∑ _ _ (γ ⁻¹) (y , d) ⁻¹))})
-                 ∥→
-                 (w-covers x)} ;
-             v = (λ {(x , d) → φ ((v $ét x) , dv x d)})
-                 is-étale-because {!!}
-           }
-           -}
-         {- ... -}
