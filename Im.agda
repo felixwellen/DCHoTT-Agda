@@ -90,6 +90,23 @@ module Im where
 
   ℑ→ = apply-ℑ
 
+  ℑ-is-functorial :
+     ∀ {A B C : 𝒰₀}
+     → (f : A → B) (g : (B → C))
+     → ℑ→ (g ∘ f) ⇒ ℑ→ g ∘ ℑ→ f
+  ℑ-is-functorial {A = A} {C = C} f g =
+    ℑ-induction {B = P}
+      (λ x → coreduced-types-have-coreduced-identity-types (ℑ C) (ℑ-is-coreduced C) _ _)
+      λ a → ℑ→ (g ∘ f) (ι a)    ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced C) (ι ∘ g ∘ f) a   ⟩
+            (ι ∘ g ∘ f) a       ≈⟨ refl ⟩
+            (ι ∘ g) (f a)       ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced C) (ι ∘ g) (f a) ⁻¹ ⟩
+            (ℑ→ g) (ι (f a))    ≈⟨ (λ y → (ℑ→ g) y)
+                                   ⁎ (ℑ-compute-recursion (ℑ-is-coreduced _) (ι ∘ f) a ⁻¹) ⟩
+            (ℑ→ g ∘ ℑ→ f) (ι a) ≈∎
+    where P : (x : ℑ A) → _
+          P x = ℑ→ (g ∘ f) x ≈ (ℑ→ g ∘ ℑ→ f) x
+
+
   naturality-square-for-ℑ :
     ∀ {A B : 𝒰₀}
     → (f : A → B)
