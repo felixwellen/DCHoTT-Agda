@@ -77,18 +77,21 @@ module G-structure where
         χ𝔻-M = χ𝔻 M-is-D-space G
         χ𝔻-N = χ𝔻 N-is-D-space G
 
-      map-G-structure : G-str-N → G-str-M
-      map-G-structure (χ , η) =
+      G-str→ : G-str-N → G-str-M
+      G-str→ (χ , η) =
         χ ∘ f' ,
-        λ x → (Bι ∘ χ ∘ f') x  ≈⟨ η (f' x) ⟩
-              (χ𝔻-N ∘ f') x   ≈⟨ prove-equality-of-classifying-maps
-                                   (χ𝔻-N ∘ f') χ𝔻-M
-                                   (λ x → ι-BAut D ((χ𝔻-N ∘ f') x) ≈⟨ compute-classifying-morphism N-is-D-space (f' x) ⟩
-                                          (𝔻 N ∘ f') x             ≈⟨ 𝔻-homotopy x ⟩
-                                          (𝔻 M) x                  ≈⟨ compute-classifying-morphism M-is-D-space x ⁻¹ ⟩
-                                          ι-BAut D (χ𝔻-M x) ≈∎)
-                                   x  ⟩
-              χ𝔻-M x          ≈∎
+        λ x →
+        (Bι ∘ χ ∘ f') x  ≈⟨ η (f' x) ⟩
+        (χ𝔻-N ∘ f') x   ≈⟨ prove-equality-of-classifying-maps
+                           (χ𝔻-N ∘ f') χ𝔻-M
+                           (λ x → ι-BAut D ((χ𝔻-N ∘ f') x) ≈⟨ compute-classifying-morphism
+                                                              N-is-D-space (f' x) ⟩
+                           (𝔻 N ∘ f') x             ≈⟨ 𝔻-homotopy x ⟩
+                           (𝔻 M) x                  ≈⟨ compute-classifying-morphism
+                                                       M-is-D-space x ⁻¹ ⟩
+                           ι-BAut D (χ𝔻-M x) ≈∎)
+                           x  ⟩
+        χ𝔻-M x          ≈∎
         where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
 
   module trivial-structure-on-homogeneous-types
@@ -125,14 +128,18 @@ module G-structure where
       (λ _ → Be) ,
       λ (x : V′) →
         Bι Be         ≈⟨ path-between-units ⟩
-        e-BAut 𝔻ₑ     ≈⟨ prove-equality-of-classifying-maps (λ (x : V′) → e-BAut 𝔻ₑ) χ′ φ-as-homotopy′ x ⟩
+        e-BAut 𝔻ₑ     ≈⟨ prove-equality-of-classifying-maps
+                         (λ (x : V′) → e-BAut 𝔻ₑ) χ′ φ-as-homotopy′ x ⟩
         χ′ x          ≈∎
       where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
             φ-as-homotopy′ : (λ _ → 𝔻ₑ) ⇒ (ι-BAut 𝔻ₑ ∘ χ′)
-            φ-as-homotopy′ x = 𝔻ₑ                      ≈⟨  φ-as-homotopy x ⟩
-                               𝔻 V′ x                 ≈⟨ compute-classifying-morphism
-                                                          (formal 𝔻ₑ -spaces-are-fiber-bundles V-is-a-𝔻ₑ-space) x ⁻¹ ⟩
-                               (ι-BAut 𝔻ₑ ∘ χ′) x     ≈∎
+            φ-as-homotopy′ x =
+              𝔻ₑ                      ≈⟨  φ-as-homotopy x ⟩
+              𝔻 V′ x                 ≈⟨ compute-classifying-morphism
+                                        (formal
+                                          𝔻ₑ -spaces-are-fiber-bundles V-is-a-𝔻ₑ-space)
+                                         x ⁻¹ ⟩
+              (ι-BAut 𝔻ₑ ∘ χ′) x     ≈∎
 
     {-
       We will now work towards the definition of
