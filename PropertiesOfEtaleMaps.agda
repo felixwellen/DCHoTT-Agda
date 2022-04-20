@@ -14,6 +14,37 @@ module PropertiesOfEtaleMaps where
   open import FormalDisk
   open import FormalDiskBundle
 
+  module composition-of-formally-étale-maps
+    {A B C : 𝒰₀} (f : A ─ét→ B) (g : B ─ét→ C) where
+
+    □f = the-square-commuting-by _ and-inducing-an-equivalence-by
+          (is-a-pullback-square.proof (∑π₂ f))
+    □g = the-square-commuting-by _ and-inducing-an-equivalence-by
+          (is-a-pullback-square.proof (∑π₂ g))
+
+    _∘ét_ : A ─ét→ C
+    _∘ét_ = ((∑π₁ g) ∘ (∑π₁ f)) , is-pullback-with-ℑg∘ℑf
+      where pasted-square =
+              rotate-cospan
+                (pasting-of-pullback-squares
+                  (rotate-cospan □f)
+                  (rotate-cospan □g))
+
+            pasted-square-with-ℑg∘f =
+              substitute-homotopic-right-map
+                pasted-square
+                (ℑ→ ((∑π₁ g) ∘ (∑π₁ f)))
+                (ℑ-is-functorial (∑π₁ f) (∑π₁ g) ⁻¹⇒)
+
+            is-pullback-with-ℑg∘ℑf =
+              substitute-2-cell
+                (λ x → a-calculation-for-functorial-G-strs
+                         (ℑ→ (∑π₁ g)) _ _ (naturality-of-ℑ-unit (∑π₁ f) x) _
+                         (compute-naturality-on-∘ (∑π₁ f) (∑π₁ g) x))
+              (the-induced-map-is-an-equivalence-by
+                (pullback-square.proof pasted-square-with-ℑg∘f))
+
+
   module formal-disk-bundles-are-preserved-by-étale-base-change {A B : 𝒰₀} (f́ : A ─ét→ B) where
 
     f = underlying-map-of f́

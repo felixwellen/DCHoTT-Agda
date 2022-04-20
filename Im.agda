@@ -121,7 +121,7 @@ module Im where
     ∀ {A B C : 𝒰₀}
     → (f : A → B) (g : B → C)
     → (x : A)
-    → μ f g (ι x) • η (g ∘ f) x ≈  ℑ→ g ⁎ (η f x) • η g (f x)
+    → μ f g (ι x) • η (g ∘ f) x ≈ ℑ→ g ⁎ (η f x) • η g (f x)
   compute-naturality-on-∘ f g x =
     μ f g (ι x) • η (g ∘ f) x                                                         ≈⟨ step1 ⟩
     (ℑ→ g ⁎ cr (ι ∘ f) x • cr (ι ∘ g) (f x) • cr (ι ∘ g ∘ f) x ⁻¹) • cr (ι ∘ g ∘ f) x  ≈⟨ step2 ⟩

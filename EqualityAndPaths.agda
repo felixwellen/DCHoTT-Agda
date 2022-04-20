@@ -306,6 +306,14 @@ module EqualityAndPaths where
     γ • refl • refl • ψ ≈⟨ (λ ζ → ζ • refl • ψ) ⁎ (refl-is-right-neutral _ ⁻¹) ⟩
     γ • refl • ψ ≈∎
 
+  a-calculation-for-functorial-G-strs :
+    ∀ {A B : 𝒰₀} {y z : A} {u v : B}
+    → (f : B → A)
+    → (γ : f u ≈ y) (η : y ≈ z) (ζ : u ≈ v) (ϕ : f v ≈ z)
+    → γ • η ≈ (f ⁎ ζ) • ϕ
+    → η ≈ γ ⁻¹ • (ϕ ⁻¹ • f ⁎ (ζ ⁻¹)) ⁻¹
+  a-calculation-for-functorial-G-strs f refl ϕ refl refl H = H
+
   J-right :
     ∀ {A : 𝒰₀} {a : A} (C : (x : A) → a ≈ x → 𝒰₀)
     → (r : C a refl) → ((y : A) (γ : a ≈ y) → C y γ)
