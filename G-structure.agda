@@ -94,6 +94,22 @@ module G-structure where
         χ𝔻-M x          ≈∎
         where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
 
+  module G-str-functorial
+    {M N O D : 𝒰₀}
+    (M-is-D-space : M is-a-formal D -space)
+    (N-is-D-space : N is-a-formal D -space)
+    (O-is-D-space : O is-a-formal D -space)
+    (G : groups-over-automorphismgroup-of D)
+    (f : M ─ét→ N) (g : N ─ét→ O) where
+    open composition-of-formally-étale-maps
+
+    G-str-f = formally-étale-base-change.G-str→ M-is-D-space N-is-D-space f G
+    G-str-g = formally-étale-base-change.G-str→ N-is-D-space O-is-D-space g G
+    G-str-g∘f = formally-étale-base-change.G-str→ M-is-D-space O-is-D-space (f ∘ét g) G
+
+    →∘-comm : G-str-g∘f ⇒ G-str-f ∘ G-str-g
+    →∘-comm (ϕ , η) = {!!}
+
   module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}
     (V : homogeneous-structure-on V′)
@@ -165,7 +181,7 @@ module G-structure where
       Be : BG
       Bφ : BG → BAut (formal-disk-of structure-on-V)
       path-between-units : Bφ(Be) ≈ e-BAut (formal-disk-of structure-on-V)
-
+-
   module G-structures-on-V-manifolds
     {V′ : 𝒰₀} -- (w : U ─ét→ M) (v : U ─ét→ V′)
     (V : homogeneous-structure-on V′)
