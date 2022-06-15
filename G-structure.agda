@@ -17,7 +17,7 @@ module G-structure where
   open import FormalDisk
   open import HomogeneousType
   open import Formal-D-space
-
+  open import FunctionExtensionality
 
   record groups-over-automorphismgroup-of_ (D : 𝒰₀) : 𝒰₁ where
     field
@@ -77,24 +77,26 @@ module G-structure where
         χ𝔻-M = χ𝔻 M-is-D-space G
         χ𝔻-N = χ𝔻 N-is-D-space G
 
+
+      χ𝔻-N∘f'⇒χ𝔻-M : χ𝔻-N ∘ f' ⇒ χ𝔻-M
+      χ𝔻-N∘f'⇒χ𝔻-M x =
+        prove-equality-of-classifying-maps
+           (χ𝔻-N ∘ f') χ𝔻-M
+           (λ x → ι-BAut D ((χ𝔻-N ∘ f') x) ≈⟨ compute-classifying-morphism
+                                               N-is-D-space (f' x) ⟩
+                  (𝔻 N ∘ f') x             ≈⟨ 𝔻-homotopy x ⟩
+                  (𝔻 M) x                  ≈⟨ compute-classifying-morphism
+                                               M-is-D-space x ⁻¹ ⟩
+                  ι-BAut D (χ𝔻-M x) ≈∎)
+           x
+        where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
+
       G-str→ : G-str-N → G-str-M
       G-str→ (χ , η) =
         χ ∘ f' ,
-        λ x →
-        (Bι ∘ χ ∘ f') x  ≈⟨ η (f' x) ⟩
-        (χ𝔻-N ∘ f') x   ≈⟨ prove-equality-of-classifying-maps
-                           (χ𝔻-N ∘ f') χ𝔻-M
-                           (λ x → ι-BAut D ((χ𝔻-N ∘ f') x) ≈⟨ compute-classifying-morphism
-                                                              N-is-D-space (f' x) ⟩
-                           (𝔻 N ∘ f') x             ≈⟨ 𝔻-homotopy x ⟩
-                           (𝔻 M) x                  ≈⟨ compute-classifying-morphism
-                                                       M-is-D-space x ⁻¹ ⟩
-                           ι-BAut D (χ𝔻-M x) ≈∎)
-                           x  ⟩
-        χ𝔻-M x          ≈∎
-        where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
+        λ x → η (f' x) • χ𝔻-N∘f'⇒χ𝔻-M x
 
-  module G-str-functorial
+  module G-str-functorial𝔻-homotopy
     {M N O D : 𝒰₀}
     (M-is-D-space : M is-a-formal D -space)
     (N-is-D-space : N is-a-formal D -space)
@@ -102,13 +104,26 @@ module G-structure where
     (G : groups-over-automorphismgroup-of D)
     (f : M ─ét→ N) (g : N ─ét→ O) where
     open composition-of-formally-étale-maps
+    f' = ∑π₁ f
+    g' = ∑π₁ g
 
     G-str-f = formally-étale-base-change.G-str→ M-is-D-space N-is-D-space f G
     G-str-g = formally-étale-base-change.G-str→ N-is-D-space O-is-D-space g G
     G-str-g∘f = formally-étale-base-change.G-str→ M-is-D-space O-is-D-space (f ∘ét g) G
 
     →∘-comm : G-str-g∘f ⇒ G-str-f ∘ G-str-g
-    →∘-comm (ϕ , η) = {!!}
+    →∘-comm (ϕ , η) =
+      construct-path-in-∑
+        (ϕ ∘ g' ∘ f') (ϕ ∘ g' ∘ f')
+        (∑π₂ (G-str-g∘f (ϕ , η))) (∑π₂ (G-str-f (G-str-g (ϕ , η))))
+        refl
+        eq
+      where
+        eq : ∑π₂ (G-str-g∘f (ϕ , η)) ≈ ∑π₂ (G-str-f (G-str-g (ϕ , η)))
+        eq =
+          fun-ext
+            λ (x : M)
+             → {!!}
 
   module trivial-structure-on-homogeneous-types
     {V′ : 𝒰₀}

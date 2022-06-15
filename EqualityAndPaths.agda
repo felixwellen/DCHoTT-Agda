@@ -115,7 +115,7 @@ module EqualityAndPaths where
 
 
   -- calculate with equalities
-  construct-path-in-∑ : ∀ {A : 𝒰₀} {P : A → 𝒰₀} (a a′ : A) (p : P a) (p′ : P a′)
+  construct-path-in-∑ : ∀ {i j} {A : 𝒰 i} {P : A → 𝒰 j} (a a′ : A) (p : P a) (p′ : P a′)
                         → (γ : a ≈ a′) (η : transport P γ p ≈ p′)
                         → (a , p) ≈ (a′ , p′)
   construct-path-in-∑ a .a _ _ refl η = (λ q → (a , q)) ⁎ η
