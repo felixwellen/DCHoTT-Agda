@@ -31,7 +31,7 @@ module G-structure where
        → (M : formal D -space) → (∑π₁ M) → BAut D
   χ𝔻 (M , M-is-D-space) = classifying-map-of-the-formal _ -space (M , M-is-D-space)
 
-  module G-structures-on-𝔻ₑ-spaces
+  module _
     {D : 𝒰₀}
     (M : formal D -space)
     (group-over-BAutD : groups-over-automorphismgroup-of D)
@@ -57,19 +57,18 @@ module G-structure where
     G-structures : U₁
     G-structures = ∑ (λ (ϕ : ∑π₁ M → BG) → Bι ∘ ϕ ⇒ χ𝔻 M)
 
-  module formally-étale-base-change
-    {D : 𝒰₀}
-    (M : formal D -space)
-    (N : formal D -space)
-    (f : (∑π₁ M) ─ét→ (∑π₁ N)) where
-
-    open G-structures-on-𝔻ₑ-spaces
+  module _
+      {D : 𝒰₀}
+      (M : formal D -space)
+      (N : formal D -space)
+      (f : (∑π₁ M) ─ét→ (∑π₁ N))
+    where
 
     private
       f' = Σπ₁ f
 
-    𝔻-homotopy : 𝔻 (∑π₁ N) ∘ f' ⇒ 𝔻 (∑π₁ M)
-    𝔻-homotopy x = univalence (d⁻¹≃ f x)
+      𝔻-homotopy : 𝔻 (∑π₁ N) ∘ f' ⇒ 𝔻 (∑π₁ M)
+      𝔻-homotopy x = univalence (d⁻¹≃ f x)
 
     χ𝔻→ : χ𝔻 N ∘ f' ⇒ χ𝔻 M
     χ𝔻→ x =
@@ -85,16 +84,22 @@ module G-structure where
       where open logical-equivalences-between-the-four-definitions-of-fiber-bundles
 
 
-    module _ (G : groups-over-automorphismgroup-of D) where
-      open groups-over-automorphismgroup-of_ G
-      private
-        G-str-M = G-structures M G
-        G-str-N = G-structures N G
+  module _
+      {D : 𝒰₀}
+      (M : formal D -space)
+      (N : formal D -space)
+      (f : (∑π₁ M) ─ét→ (∑π₁ N))
+      (G : groups-over-automorphismgroup-of D)
+    where
+    open groups-over-automorphismgroup-of_ G
+    private
+      G-str-M = G-structures M G
+      G-str-N = G-structures N G
 
-      G-str→ : G-str-N → G-str-M
-      G-str→ (χ , η) =
-        χ ∘ f' ,
-        λ x → η (f' x) • χ𝔻→ x
+    G-str→ : G-str-N → G-str-M
+    G-str→ (χ , η) =
+      χ ∘ (∑π₁ f) ,
+      λ x → η (∑π₁ f x) • χ𝔻→ M N f x
 
   module G-str-functorial𝔻-homotopy
     {D : 𝒰₀}
@@ -106,9 +111,9 @@ module G-structure where
     f' = ∑π₁ f
     g' = ∑π₁ g
 
-    G-str-f = formally-étale-base-change.G-str→   M N f G
-    G-str-g = formally-étale-base-change.G-str→   N O g G
-    G-str-g∘f = formally-étale-base-change.G-str→ M O (f ∘ét g) G
+    G-str-f   = G-str→   M N f G
+    G-str-g   = G-str→   N O g G
+    G-str-g∘f = G-str→ M O (f ∘ét g) G
 
     →∘-comm : G-str-g∘f ⇒ G-str-f ∘ G-str-g
     →∘-comm (ϕ , η) =
@@ -138,7 +143,7 @@ module G-structure where
 
     G-structures-on-V : 𝒰₁
     G-structures-on-V =
-      G-structures-on-𝔻ₑ-spaces.G-structures
+      G-structures
       (_ , V-is-a-𝔻ₑ-space)
       group-over-BAut𝔻ₑ
 
