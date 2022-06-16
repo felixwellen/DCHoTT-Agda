@@ -67,8 +67,6 @@ module G-structure where
 
     private
       f' = Σπ₁ f
-      χ𝔻-M = χ𝔻 M
-      χ𝔻-N = χ𝔻 N
 
     𝔻-homotopy : 𝔻 (∑π₁ N) ∘ f' ⇒ 𝔻 (∑π₁ M)
     𝔻-homotopy x = univalence (d⁻¹≃ f x)
@@ -79,8 +77,8 @@ module G-structure where
          (χ𝔻 N ∘ f') (χ𝔻 M)
          (λ x → ι-BAut D ((χ𝔻 N ∘ f') x) ≈⟨ compute-classifying-morphism
                                              (∑π₂ N) (f' x) ⟩
-                (𝔻 (∑π₁ N) ∘ f') x             ≈⟨ 𝔻-homotopy x ⟩
-                (𝔻 (∑π₁ M)) x                  ≈⟨ compute-classifying-morphism
+                (𝔻 (∑π₁ N) ∘ f') x       ≈⟨ 𝔻-homotopy x ⟩
+                (𝔻 (∑π₁ M)) x            ≈⟨ compute-classifying-morphism
                                              (∑π₂ M) x ⁻¹ ⟩
                 ι-BAut D (χ𝔻 M x) ≈∎)
          x
@@ -102,7 +100,8 @@ module G-structure where
     {D : 𝒰₀}
     (M N O : formal D -space)
     (G : groups-over-automorphismgroup-of D)
-    (f : (∑π₁ M) ─ét→ (∑π₁ N)) (g : (∑π₁ N) ─ét→ (∑π₁ O)) where
+    (f : (∑π₁ M) ─ét→ (∑π₁ N))
+    (g : (∑π₁ N) ─ét→ (∑π₁ O)) where
     open composition-of-formally-étale-maps
     f' = ∑π₁ f
     g' = ∑π₁ g
