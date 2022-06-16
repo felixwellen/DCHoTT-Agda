@@ -102,18 +102,19 @@ module G-structure where
       λ x → η (∑π₁ f x) • χ𝔻→ M N f x
 
   module G-str-functorial𝔻-homotopy
-    {D : 𝒰₀}
-    (M N O : formal D -space)
-    (G : groups-over-automorphismgroup-of D)
-    (f : (∑π₁ M) ─ét→ (∑π₁ N))
-    (g : (∑π₁ N) ─ét→ (∑π₁ O)) where
-    open composition-of-formally-étale-maps
-    f' = ∑π₁ f
-    g' = ∑π₁ g
+      {D : 𝒰₀}
+      (M N O : formal D -space)
+      (G : groups-over-automorphismgroup-of D)
+      (f : (∑π₁ M) ─ét→ (∑π₁ N))
+      (g : (∑π₁ N) ─ét→ (∑π₁ O))
+    where
+    private
+      f' = ∑π₁ f
+      g' = ∑π₁ g
 
     G-str-f   = G-str→   M N f G
     G-str-g   = G-str→   N O g G
-    G-str-g∘f = G-str→ M O (f ∘ét g) G
+    G-str-g∘f = G-str→ M O (g ∘ét f) G
 
     →∘-comm : G-str-g∘f ⇒ G-str-f ∘ G-str-g
     →∘-comm (ϕ , η) =

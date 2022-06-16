@@ -15,7 +15,7 @@ module PropertiesOfEtaleMaps where
   open import FormalDiskBundle
 
   module composition-of-formally-étale-maps
-    {A B C : 𝒰₀} (f : A ─ét→ B) (g : B ─ét→ C) where
+    {A B C : 𝒰₀} (g : B ─ét→ C) (f : A ─ét→ B) where
 
     □f = the-square-commuting-by _ and-inducing-an-equivalence-by
           (is-a-pullback-square.proof (∑π₂ f))
@@ -44,10 +44,11 @@ module PropertiesOfEtaleMaps where
               (the-induced-map-is-an-equivalence-by
                 (pullback-square.proof pasted-square-with-ℑg∘f))
 
+  _∘ét_ = composition-of-formally-étale-maps._∘ét_
 
   module formal-disk-bundles-are-preserved-by-étale-base-change {A B : 𝒰₀} (f́ : A ─ét→ B) where
-
-    f = underlying-map-of f́
+    private
+      f = underlying-map-of f́
 
     {-
     Step 1a: formal disk bundle on the codomain as a pullback square
@@ -154,7 +155,6 @@ module PropertiesOfEtaleMaps where
   d⁻¹ (f , p) x =
     let
       open formal-disk-bundles-are-preserved-by-étale-base-change (f , p)
-        renaming (f to f′)
       e : equivalence-of (𝔻 _) and (𝔻 _) over f
       e = conclusion-as-equivalence-above-the-map
     in underlying-map-of-the-equivalence (e x ⁻¹≃)
@@ -164,7 +164,6 @@ module PropertiesOfEtaleMaps where
   d⁻¹≃ (f , p) x =
     let
       open formal-disk-bundles-are-preserved-by-étale-base-change (f , p)
-        renaming (f to f′)
       e : equivalence-of (𝔻 _) and (𝔻 _) over f
       e = conclusion-as-equivalence-above-the-map
     in (e x ⁻¹≃)
