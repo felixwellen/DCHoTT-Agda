@@ -11,14 +11,14 @@ module Formal-D-space where
   _is-a-formal_-space : (M : 𝒰₀) (D : 𝒰₀) → 𝒰₀
   M is-a-formal D -space = (𝔻 M) is-a D -fiber-bundle
 
-  formal_-spaces : (D : 𝒰₀) → 𝒰₁
-  formal D -spaces = ∑ (λ (M : 𝒰₀) → M is-a-formal D -space)
+  formal_-space : (D : 𝒰₀) → 𝒰₁
+  formal D -space = ∑ (λ (M : 𝒰₀) → M is-a-formal D -space)
 
-  underlying-type-of : {D : 𝒰₀} → formal D -spaces → 𝒰₀
+  underlying-type-of : {D : 𝒰₀} → formal D -space → 𝒰₀
   underlying-type-of (M , _) = M
 
   classifying-map-of-the-formal_-space_ :
-      (D : 𝒰₀) (M : formal D -spaces)
+      (D : 𝒰₀) (M : formal D -space)
     → (underlying-type-of M → BAut D)
   classifying-map-of-the-formal D -space (M , M-is-D-space) =
     let T∞-is-classified =
