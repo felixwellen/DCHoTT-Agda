@@ -11,7 +11,7 @@ module G-structure where
   open import InfinityGroups
   open import PropositionalTruncation
   open import Image
-  open import EtaleMaps
+  open import FormallyEtaleMaps
   open import PropertiesOfEtaleMaps
   open import Manifolds
   open import FormalDisk

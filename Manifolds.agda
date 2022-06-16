@@ -12,7 +12,7 @@ module Manifolds where
   open import Homotopies
   open import Im
   open import FormalDiskBundle
-  open import EtaleMaps
+  open import FormallyEtaleMaps
   open import Language
   open import Image
   open import FiberBundle

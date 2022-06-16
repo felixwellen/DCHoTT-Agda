@@ -10,7 +10,7 @@ module PropertiesOfEtaleMaps where
   open import DependentTypes
   open import Im
   open import Language
-  open import EtaleMaps
+  open import FormallyEtaleMaps
   open import FormalDisk
   open import FormalDiskBundle
 
