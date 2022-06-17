@@ -3,21 +3,17 @@
 module G-structure where
   open import Basics
   open import EqualityAndPaths
-  open import Equivalences renaming (underlying-map-of to as-plain-map)
   open import Homotopies
   open import Univalence
   open import FormalDiskBundle
   open import FiberBundle
   open import InfinityGroups
-  open import PropositionalTruncation
-  open import Image
   open import FormallyEtaleMaps
   open import PropertiesOfEtaleMaps
   open import Manifolds
   open import FormalDisk
   open import HomogeneousType
   open import Formal-D-space
-  open import FunctionExtensionality
 
   record groups-over-automorphismgroup-of_ (D : 𝒰₀) : 𝒰₁ where
     field
