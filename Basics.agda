@@ -83,8 +83,8 @@ infix 20 _,_
 record ∑ {i j} {A : 𝒰 i} (P : A → 𝒰 j) : 𝒰 (i ⊔ j) where
   constructor _,_
   field
-    a : A
-    p : P a
+    π₁ : A
+    π₂ : P π₁
 
 ι-∑ : ∀ {i} {j} {A : 𝒰 i} {P : A → 𝒰 j}
       → (a : A) → P a → ∑ P

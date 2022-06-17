@@ -21,7 +21,7 @@ module FiberBundle where
     everything else in this file,
     is about linking this definition
     with definitions looking more like
-    what is common in pure mathematics
+    what is common in mathematics
 
   -}
 
@@ -39,6 +39,15 @@ module FiberBundle where
     field
       χ : B → BAut F
       classyfies : equivalence-of (λ b → fiber-of p at b) and (universal-family-over-BAut′ F) over χ
+
+
+  classifying-morphism′ : {E B : 𝒰₀} {p : E → B} {F : 𝒰₀}
+    → p is-a′ F -fiber-bundle′
+    → B → BAut F
+  classifying-morphism′ is-fiber-bundle =
+    let open _is-a′_-fiber-bundle′ is-fiber-bundle
+    in χ
+
 
   -- product property expressed by pullback square
   _is-a-product-with-projections_and_ :
@@ -189,28 +198,43 @@ module FiberBundle where
         → (x : B) → the-image-of point-to-F contains (φ x) → ∥ (φ x ≃ F) ∥
       specialize-image-to-BAut′ φ x = ∥→ (λ {(∗ , p) → U-transport p ⁻¹≃}) ∥→
 
-    def-to-def′ :
-      ∀ (φ : B → 𝒰₀)
-      → φ is-a F -fiber-bundle
-      → (∑π₁-from φ) is-a′ F -fiber-bundle′
-    def-to-def′ φ
-      record { all-fibers-are-merely-equivalent = all-fibers-are-merely-equivalent } =
-      record
-      {
-        χ = λ x → ((φ x) , specialize-image-to-BAut φ x (all-fibers-are-merely-equivalent x)) ;
-        classyfies = λ x → fiber-of-a-∑ x
-      }
+    abstract
+      def-to-def′ :
+        ∀ (φ : B → 𝒰₀)
+        → φ is-a F -fiber-bundle
+        → (∑π₁-from φ) is-a′ F -fiber-bundle′
+      def-to-def′ φ
+        record { all-fibers-are-merely-equivalent = all-fibers-are-merely-equivalent } =
+        record
+        {
+          χ = λ x → ((φ x) , specialize-image-to-BAut φ x (all-fibers-are-merely-equivalent x)) ;
+          classyfies = λ x → fiber-of-a-∑ x
+        }
 
 
-    def′-to-def :
-      ∀ {E : 𝒰₀} (p : E → B)
-      → p is-a′ F -fiber-bundle′
-      → (λ x → fiber-of p at x) is-a F -fiber-bundle
-    def′-to-def p
-      record { χ = χ ; classyfies = classyfies } =
-      record
-      {
-        all-fibers-are-merely-equivalent = λ b →
-        specialize-image-to-BAut′ (λ x → fiber-of p at x) b
-          (U-transport ((λ z → the-image-of _ contains z) ⁎ univalence (classyfies b) ) ⁻¹≃ $≃ (∑π₂ (χ b)))
-      }
+      def′-to-def :
+        ∀ {E : 𝒰₀} (p : E → B)
+        → p is-a′ F -fiber-bundle′
+        → (λ x → fiber-of p at x) is-a F -fiber-bundle
+      def′-to-def p
+        record { χ = χ ; classyfies = classyfies } =
+        record
+        {
+          all-fibers-are-merely-equivalent = λ b →
+          specialize-image-to-BAut′ (λ x → fiber-of p at x) b
+            (U-transport ((λ z → the-image-of _ contains z) ⁎ univalence (classyfies b) ) ⁻¹≃ $≃ (∑π₂ (χ b)))
+        }
+
+      compute-classifying-morphism :
+        {ϕ : B → 𝒰₀}
+        → (ϕ-is-fiber-bundle : ϕ is-a F -fiber-bundle)
+        → let is-fiber-bundle′ = def-to-def′ ϕ ϕ-is-fiber-bundle
+          in ι-BAut F ∘ classifying-morphism′ is-fiber-bundle′ ⇒ ϕ
+      compute-classifying-morphism ϕ-is-fiber-bundle x = refl
+
+      prove-equality-of-classifying-maps :
+          (ϕ ψ : B → BAut F)
+        → ((x : B) → ι-BAut F (ϕ x) ≈ ι-BAut F (ψ x))
+        → ϕ ⇒ ψ
+      prove-equality-of-classifying-maps ϕ ψ η =
+        injectives-are-monos ϕ ψ (ι-BAut F) (ι-im₁-is-injective _) η

@@ -90,11 +90,22 @@ module Im where
 
   ℑ→ = apply-ℑ
 
-  naturality-square-for-ℑ :
-    ∀ {A B : 𝒰₀}
-    → (f : A → B)
-    → (a : A) → (apply-ℑ-to-map f(ℑ-unit {_} {A} a) ≈ ℑ-unit {_} {B}(f a))
-  naturality-square-for-ℑ {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z))
+  ℑ-is-functorial :
+     ∀ {A B C : 𝒰₀}
+     → (f : A → B) (g : (B → C))
+     → ℑ→ g ∘ ℑ→ f ⇒ ℑ→ (g ∘ f)
+  ℑ-is-functorial {A = A} {C = C} f g =
+    ℑ-induction
+      (λ x → coreduced-types-have-coreduced-identity-types (ℑ C) (ℑ-is-coreduced C) _ _)
+      λ a → (ℑ→ g) ⁎ (ℑ-compute-recursion (ℑ-is-coreduced _) (ι ∘ f) a)
+            • ℑ-compute-recursion (ℑ-is-coreduced C) (ι ∘ g) (f a)
+            • ℑ-compute-recursion (ℑ-is-coreduced C) (ι ∘ g ∘ f) a ⁻¹
+{-            (ℑ→ g ∘ ℑ→ f) (ι a) ≈⟨ (ℑ→ g)
+                                   ⁎ (ℑ-compute-recursion (ℑ-is-coreduced _) (ι ∘ f) a) ⟩
+            (ℑ→ g) (ι (f a))    ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced C) (ι ∘ g) (f a) ⟩
+            (ι ∘ g) (f a)       ≈⟨ refl ⟩
+            (ι ∘ g ∘ f) a       ≈⟨ ℑ-compute-recursion (ℑ-is-coreduced C) (ι ∘ g ∘ f) a ⁻¹  ⟩
+            ℑ→ (g ∘ f) (ι a)    ≈∎ -}
 
   naturality-of-ℑ-unit :
     ∀ {A B : 𝒰₀}
@@ -102,18 +113,108 @@ module Im where
     → (ℑ→ f) ∘ ι  ⇒ ι ∘ f
   naturality-of-ℑ-unit {_} {B} f = ℑ-compute-recursion (ℑ-is-coreduced B) (λ z → ℑ-unit (f z))
 
+  private
+    η = naturality-of-ℑ-unit
+    μ = ℑ-is-functorial
+
+  compute-naturality-on-∘ :
+    ∀ {A B C : 𝒰₀}
+    → (f : A → B) (g : B → C)
+    → (x : A)
+    → μ f g (ι x) • η (g ∘ f) x ≈ ℑ→ g ⁎ (η f x) • η g (f x)
+  compute-naturality-on-∘ f g x =
+    μ f g (ι x) • η (g ∘ f) x                                                         ≈⟨ step1 ⟩
+    (ℑ→ g ⁎ cr (ι ∘ f) x • cr (ι ∘ g) (f x) • cr (ι ∘ g ∘ f) x ⁻¹) • cr (ι ∘ g ∘ f) x  ≈⟨ step2 ⟩
+    ℑ→ g ⁎ cr (ι ∘ f) x • cr (ι ∘ g) (f x)                                            ≈⟨ refl ⟩
+    ℑ→ g ⁎ (η f x) • η g (f x) ≈∎
+    where
+      cr : {X Y : 𝒰₀} → _
+      cr {X} {Y} = ℑ-compute-recursion {A = X} (ℑ-is-coreduced Y)
+
+      step1 : _ ≈ _
+      step1 = (λ u → u • cr (ι ∘ g ∘ f) x)
+        ⁎ (ℑ-compute-induction
+          (λ x →
+             coreduced-types-have-coreduced-identity-types (ℑ _)
+             (ℑ-is-coreduced _) _ _)
+          (λ a →
+             ℑ→ g ⁎ cr (ι ∘ f) a • cr (ι ∘ g) (f a) • cr (ι ∘ g ∘ f) a ⁻¹))
+         x
+
+      step2 = a-calculation-for-the-chain-rule
+                (ℑ→ g ⁎ cr (ι ∘ f) x)
+                (cr (ι ∘ g) (f x))
+                (cr (ι ∘ g ∘ f) x)
+
   ℑ⇒ : ∀ {A B : 𝒰₀} {f g : A → B}
        → (f ⇒ g) → (ℑ→ f ⇒ ℑ→ g)
-  ℑ⇒ H = ℑ-induction
-         (λ a → coreduced-types-have-coreduced-identity-types (ℑ _) (ℑ-is-coreduced _) (ℑ→ _ a) (ℑ→ _ a))
-         (λ a → naturality-square-for-ℑ _ a • ℑ-unit ⁎ (H a) • naturality-square-for-ℑ _ a ⁻¹)
+  ℑ⇒ H =
+    ℑ-induction
+      (λ a → coreduced-types-have-coreduced-identity-types
+        (ℑ _)
+        (ℑ-is-coreduced _)
+        (ℑ→ _ a)
+        (ℑ→ _ a))
+      (λ a → η _ a • ℑ-unit ⁎ (H a) • η _ a ⁻¹)
 
   ℑ⁎_⁎_ :
     ∀ {A B : 𝒰₀} {x y : A}
     → (f : A → B)
     → ι x ≈ ι y
     → ι (f x) ≈ ι (f y)
-  ℑ⁎ f ⁎ γ = naturality-square-for-ℑ f _ ⁻¹ • ℑ→ f ⁎ γ • naturality-square-for-ℑ f _
+  ℑ⁎ f ⁎ γ = η f _ ⁻¹ • ℑ→ f ⁎ γ • η f _
+
+  ℑ⁎-commutes-with-∘ :
+    ∀ {A B C : 𝒰₀} {x y : A}
+    → (f : A → B) (g : B → C)
+    → (γ : ι x ≈ ι y)
+    → ℑ⁎ (g ∘ f) ⁎ γ ≈ ℑ⁎ g ⁎ (ℑ⁎ f ⁎ γ)
+  ℑ⁎-commutes-with-∘ f g γ =
+    ηg∘f _ ⁻¹ • ℑ→ (g ∘ f) ⁎ γ • ηg∘f _                                           ≈⟨ step1 ⟩
+    ηg∘f _ ⁻¹ • (μ' _ ⁻¹ • (ℑ→ g ∘ ℑ→ f) ⁎ γ • μ' _) • ηg∘f _                     ≈⟨ step2 ⟩
+    ηg∘f _ ⁻¹ • (μ' _ ⁻¹ • ℑ→ g ⁎ (ℑ→ f ⁎ γ) • μ' _) • ηg∘f _                     ≈⟨ step3 ⟩
+    (ηg∘f _ ⁻¹ • μ' _ ⁻¹)        • ℑ→ g ⁎ (ℑ→ f ⁎ γ) • (μ' _ • ηg∘f _)            ≈⟨ step4 ⟩
+    (ηg∘f _ ⁻¹ • μ' _ ⁻¹)        • ℑ→ g ⁎ (ℑ→ f ⁎ γ) • (ℑ→ g ⁎ (ηf _) • ηg (f _)) ≈⟨ step5 ⟩
+    (ηg _ ⁻¹ • ℑ→ g ⁎ (ηf _ ⁻¹)) • ℑ→ g ⁎ (ℑ→ f ⁎ γ) • (ℑ→ g ⁎ (ηf _) • ηg (f _)) ≈⟨ step6 ⟩
+    ηg _ ⁻¹ • ℑ→ g ⁎ (ηf _ ⁻¹    • ℑ→ f ⁎ γ • ηf _)                    • ηg (f _) ≈∎
+
+     where
+       ηf = η f
+       ηg = η g
+       ηg∘f = η (g ∘ f)
+       μ' = μ f g
+
+       step6 = a-calculation-for-the-chain-rule''' (ℑ→ g)
+         (ηg _ ⁻¹) (ηf _ ⁻¹) (ℑ→ f ⁎ γ) (ηf _) (ηg (f _))
+
+       compute : {u v : ℑ _} (γ : u ≈ v)
+               → ℑ→ (g ∘ f) ⁎ γ
+                 ≈ μ' u ⁻¹ • (ℑ→ g ∘ ℑ→ f) ⁎ γ • μ' v
+       compute refl =
+         refl                  ≈⟨ a-calculation-for-the-chain-rule' (μ' _) ⟩
+         μ' _ ⁻¹ • refl • μ' _ ≈∎
+
+       step1 : _ ≈ _
+       step1 = (λ ζ → ηg∘f _ ⁻¹ • ζ • ηg∘f _)
+               ⁎ compute γ
+
+
+       step2 : _ ≈ _
+       step2 = (λ ζ → ηg∘f _ ⁻¹ • (μ' _ ⁻¹ • ζ • μ' _) • ηg∘f _)
+               ⁎ (application-commutes-with-composition _ _ γ ⁻¹)
+
+       step3 = a-calculation-for-the-chain-rule'' (ηg∘f _ ⁻¹) _ _ _ (ηg∘f _)
+
+       step4 = (λ ζ → (ηg∘f _ ⁻¹ • μ' _ ⁻¹) • ℑ→ g ⁎ (ℑ→ f ⁎ γ) • ζ)
+               ⁎ compute-naturality-on-∘ f g _
+
+       step5 = (λ ζ → ζ • ℑ→ g ⁎ (ℑ→ f ⁎ γ) • (ℑ→ g ⁎ (ηf _) • ηg (f _)))
+               ⁎ (ηg∘f _ ⁻¹ • μ' _ ⁻¹        ≈⟨ ⁻¹-of-product _ (ηg∘f _) ⁻¹ ⟩
+                  (μ' _ • ηg∘f _) ⁻¹         ≈⟨ (λ ϕ → ϕ ⁻¹) ⁎ (compute-naturality-on-∘ f g _) ⟩
+                  (ℑ→ g ⁎ (ηf _) • ηg _) ⁻¹  ≈⟨ ⁻¹-of-product _ (ηg _) ⟩
+                  ηg _ ⁻¹ • ℑ→ g ⁎ (ηf _) ⁻¹ ≈⟨ (λ ζ → ηg _ ⁻¹ • ζ)
+                                       ⁎ application-commutes-with-inversion (ℑ→ g) (ηf _) ⁻¹ ⟩
+                  ηg _ ⁻¹ • ℑ→ g ⁎ (ηf _ ⁻¹) ≈∎ )
 
   -- define coreduced connectedness
   _is-ℑ-connected :
@@ -186,8 +287,8 @@ module Im where
            (ℑ-unit ∘ (g ∘ f))
            (ℑ-is-coreduced _)
            (apply-ℑ g ∘ apply-ℑ f)
-           (λ a → naturality-square-for-ℑ g (f a) ⁻¹
-                  • (λ x → apply-ℑ g x) ⁎ naturality-square-for-ℑ f a ⁻¹)
+           (λ a → naturality-of-ℑ-unit g (f a) ⁻¹
+                  • (λ x → apply-ℑ g x) ⁎ naturality-of-ℑ-unit f a ⁻¹)
 
   applying-ℑ-preserves-id : ∀ (A : 𝒰₀)
                             → apply-ℑ (id {_} {A}) ⇒ id {_} {ℑ A}
@@ -252,23 +353,23 @@ module Im where
     -}
 
     conjugate : ℑ→ f (ℑ-unit x) ≈ ℑ→ f (ℑ-unit y) → ℑ-unit(f x) ≈ ℑ-unit(f y)
-    conjugate γ = naturality-square-for-ℑ f _ ⁻¹ • γ • naturality-square-for-ℑ f _
+    conjugate γ = naturality-of-ℑ-unit f _ ⁻¹ • γ • naturality-of-ℑ-unit f _
 
     conjugate⁻¹ : ℑ-unit(f x) ≈ ℑ-unit(f y) → ℑ→ f (ℑ-unit x) ≈ ℑ→ f (ℑ-unit y)
-    conjugate⁻¹ γ = naturality-square-for-ℑ f _ • γ • naturality-square-for-ℑ f _ ⁻¹
+    conjugate⁻¹ γ = naturality-of-ℑ-unit f _ • γ • naturality-of-ℑ-unit f _ ⁻¹
 
     conjugate⁻¹∘conjugate⇒id : conjugate⁻¹ ∘ conjugate ⇒ id
     conjugate⁻¹∘conjugate⇒id γ =
-        (naturality-square-for-ℑ f _) • ((naturality-square-for-ℑ f _) ⁻¹ • γ • naturality-square-for-ℑ f _) • naturality-square-for-ℑ f _ ⁻¹
+        (naturality-of-ℑ-unit f _) • ((naturality-of-ℑ-unit f _) ⁻¹ • γ • naturality-of-ℑ-unit f _) • naturality-of-ℑ-unit f _ ⁻¹
       ≈⟨ stupid-but-necessary-calculation-with-associativity γ
-           (naturality-square-for-ℑ f _) (naturality-square-for-ℑ f _) ⟩
+           (naturality-of-ℑ-unit f _) (naturality-of-ℑ-unit f _) ⟩
         γ
       ≈∎
 
     conjugate∘conjugate⁻¹⇒id : conjugate ∘ conjugate⁻¹ ⇒ id
     conjugate∘conjugate⁻¹⇒id γ =
-        (naturality-square-for-ℑ f _ ⁻¹) • ((naturality-square-for-ℑ f _) • γ • naturality-square-for-ℑ f _ ⁻¹) • naturality-square-for-ℑ f _
-      ≈⟨ another-stupid-but-necessary-calculation-with-associativity γ  (naturality-square-for-ℑ f _) (naturality-square-for-ℑ f _) ⟩
+        (naturality-of-ℑ-unit f _ ⁻¹) • ((naturality-of-ℑ-unit f _) • γ • naturality-of-ℑ-unit f _ ⁻¹) • naturality-of-ℑ-unit f _
+      ≈⟨ another-stupid-but-necessary-calculation-with-associativity γ  (naturality-of-ℑ-unit f _) (naturality-of-ℑ-unit f _) ⟩
         γ
       ≈∎
 
@@ -379,7 +480,7 @@ module Im where
                                                (ℑ-unit is-an-equivalence-because (ℑ-is-coreduced _)) ∘≃ f)
 
         step1 : the-composition ∼ ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A)
-        step1 a = (λ x → ℑf⁻¹ x) ⁎ naturality-square-for-ℑ f-as-map a ⁻¹
+        step1 a = (λ x → ℑf⁻¹ x) ⁎ naturality-of-ℑ-unit f-as-map a ⁻¹
 
         step2 : ℑf⁻¹ ∘ (ℑf ∘ ℑ-unit-at A) ∼ ℑ-unit-at A
         step2 a = _is-an-equivalence.unit
@@ -440,11 +541,11 @@ module Im where
       l-inverse = r ∘ l-inverse′ ∘ ℑι
       r-inverse = r ∘ r-inverse′ ∘ ℑι
     in has-left-inverse l-inverse by
-         (λ a → (λ x → r (l-inverse′ x)) ⁎ naturality-square-for-ℑ ι a
+         (λ a → (λ x → r (l-inverse′ x)) ⁎ naturality-of-ℑ-unit ι a
            • ((λ x → r x) ⁎ unit′ (ι a) • R a))
        and-right-inverse r-inverse by
          (λ â → ℑR â ⁻¹ • ((λ x → ℑr x) ⁎ counit′ (ℑι â)
-           • naturality-square-for-ℑ r (r-inverse′ (ℑι â))))
+           • naturality-of-ℑ-unit r (r-inverse′ (ℑι â))))
 
 
   -- from the book "7.7 Modalities"
@@ -467,7 +568,7 @@ module Im where
                                    fun-ext
                                    (λ a →
                                       ℑ-is-idempotent.ℑ-unit⁻¹ (ℑ (P a)) (ℑ-is-coreduced (P a)) ⁎
-                                      naturality-square-for-ℑ (π-Π a) f
+                                      naturality-of-ℑ-unit (π-Π a) f
                                       • ℑ-is-idempotent.left-invertible (ℑ (P a)) (ℑ-is-coreduced (P a)) (f a)))
 
     coreducedness : Π(λ a → P a) is-coreduced
@@ -533,7 +634,7 @@ module Im where
 
         π-is-compatible-to-π′ : π ∼ π′ ∘ ℑ-unit
         π-is-compatible-to-π′ x = unit-of-the-equivalence ℑ-unit-E (π x) ⁻¹
-                                  • underlying-map-of ℑ-unit-E⁻¹ ⁎ naturality-square-for-ℑ π x ⁻¹
+                                  • underlying-map-of ℑ-unit-E⁻¹ ⁎ naturality-of-ℑ-unit π x ⁻¹
 
         P′ : ℑ (∑ P) → 𝒰₀
         P′ p̂ = P (π′ p̂)

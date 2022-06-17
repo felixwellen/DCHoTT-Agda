@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 
-module Manifolds where 
-  open import Basics 
+module Manifolds where
+  open import Basics
   open import EqualityAndPaths
   open import PropositionalTruncation
   open import DependentTypes
@@ -12,7 +12,7 @@ module Manifolds where
   open import Homotopies
   open import Im
   open import FormalDiskBundle
-  open import EtaleMaps
+  open import FormallyEtaleMaps
   open import Language
   open import Image
   open import FiberBundle
@@ -27,7 +27,7 @@ module Manifolds where
       M : 𝒰₀
       W : 𝒰₀
       w : W ─ét→ M
-      w-covers : (w ét→) is-surjective 
+      w-covers : (w ét→) is-surjective
       v : W ─ét→ V′
 
     cover-as-surjection : W ↠ M
@@ -45,15 +45,15 @@ module Manifolds where
         v = id-as-étale-map
       }
 
-  module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle 
-         {V′ : 𝒰₀} 
+  module the-formal-disk-bundle-on-a-manifold-is-a-fiber-bundle
+         {V′ : 𝒰₀}
          (V : homogeneous-structure-on V′)
          (M′ : V -manifold)
          where
 
          open homogeneous-structure-on_ V
          𝔻ₑ = 𝔻 V′ e
-         
+
          open _-manifold M′
 
          trivialization-of-𝔻U : (x : W) → 𝔻 W x ≃ 𝔻ₑ
@@ -84,79 +84,25 @@ module Manifolds where
 
          𝔻M-is-a-fiber-bundle : (𝔻 M) is-a 𝔻ₑ -fiber-bundle
          𝔻M-is-a-fiber-bundle = def″-to-def (𝔻 M) 𝔻M-is-a-fiber-bundle″
-            
+
          𝔻M-is-a-fiber-bundle⁗ : (∑π₁-from (𝔻 M)) is-a′ 𝔻ₑ -fiber-bundle′
          𝔻M-is-a-fiber-bundle⁗ = def-to-def′ (𝔻 M) 𝔻M-is-a-fiber-bundle
-         
-         classifying-morphism : M → BAut 𝔻ₑ
-         classifying-morphism =
-           let
-             open _is-a′_-fiber-bundle′ 𝔻M-is-a-fiber-bundle⁗
-           in χ
 
+         classifying-morphism : M → BAut 𝔻ₑ
+         classifying-morphism = classifying-morphism′ 𝔻M-is-a-fiber-bundle⁗
 
          classifying-morphism-is-natural :
            ι-BAut 𝔻ₑ ∘ classifying-morphism ⇒ (𝔻 M)
-         classifying-morphism-is-natural x = refl
-         
+         classifying-morphism-is-natural = compute-classifying-morphism 𝔻M-is-a-fiber-bundle
+
          all-formal-disks-are-merely-equivalent :
            ∀ (x : M)
            → ∥ formal-disk-at x ≃ 𝔻ₑ ∥
          all-formal-disks-are-merely-equivalent =
            let
              open _is-a_-fiber-bundle 𝔻M-is-a-fiber-bundle
-           in all-fibers-are-merely-equivalent 
+           in all-fibers-are-merely-equivalent
 
          commutes-with-the-dependent-replacement-of-T∞′′ :
-           (λ (x : M) → 𝔻 _ x) ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism
-         commutes-with-the-dependent-replacement-of-T∞′′ x = refl
-
-
-  {-
-    Let V be homogeneous, and 𝔻ₑ its unit disk.
-    Then the formal disk bundle T∞M of a V-manifold M
-    is a 𝔻ₑ×V-manifold.
-  -}
-  module the-formal-disk-bundle-of-a-manifold-is-a-manifold  
-         {V′ : 𝒰₀} 
-         (V : homogeneous-structure-on V′)
-         (M′ : V -manifold)
-         where
-
-         open homogeneous-structure-on_ V
-         𝔻ₑ′ = 𝔻 V′ e
-         𝔻ₑ : homogeneous-structure-on 𝔻ₑ′
-         𝔻ₑ = ℑ-homogene-sequence.homogeneous-structure V
-         open _-manifold M′
-
-         T∞M : 𝒰₀
-         T∞M = ∑ (𝔻 M)
-
-       {-
-
-         T∞M-is-a-manifold : (V ×ₕ 𝔻ₑ) -manifold
-         T∞M-is-a-manifold =
-           let
-             φ : ∑ (𝔻 V′) → V′ × 𝔻ₑ′
-             φ = triviality-of-the-formal-disk-bundle-over-homogeneous-types.trivialize V
-
-             dv : (x : W) → 𝔻 M (w $ét x) → 𝔻 V′ (v $ét x)
-             dv x = d (underlying-map-of v) x ∘ d⁻¹ w x
-           in record
-           {
-             M = T∞M ;
-             W = ∑ (λ (x : W) → 𝔻 M (w $ét x)) ;
-             w = ((λ {(x , (y , d)) → ((w $ét x) , (y , d))})
-                 is-étale-because {!!}) ;
-             w-covers = λ {(x , (y , d))
-               → ∥→
-                   (λ {(x′ is-in-the-fiber-by γ)
-                    → ((x′ , transport (𝔻 M) (γ ⁻¹) (y , d))
-                      is-in-the-fiber-by (equality-action-on-∑ _ _ (γ ⁻¹) (y , d) ⁻¹))})
-                 ∥→
-                 (w-covers x)} ;
-             v = (λ {(x , d) → φ ((v $ét x) , dv x d)})
-                 is-étale-because {!!}
-           }
-           -}
-         {- ... -}
+           𝔻 M ⇒ (ι-BAut 𝔻ₑ) ∘ classifying-morphism
+         commutes-with-the-dependent-replacement-of-T∞′′ x = classifying-morphism-is-natural x ⁻¹

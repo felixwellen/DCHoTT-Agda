@@ -1,25 +1,25 @@
 {-# OPTIONS --without-K #-}
 
-module FormalDiskBundle where 
+module FormalDiskBundle where
   open import Basics
   open import EqualityAndPaths
   open import Homotopies
   open import Language
   open import Equivalences
-  open import CommonEquivalences  
+  open import CommonEquivalences
   open import Pullback
   open import PullbackSquare
   open import Im
   open import InfinityGroups
-  open import EtaleMaps hiding (underlying-map-of)
+  open import FormallyEtaleMaps hiding (underlying-map-of)
   open import DependentTypes
   open import Fiber
   open import Contractibility
   open import HomogeneousType
   open import FormalDisk
-  
+
   -- formal disk at a point as pullback
-  --  
+  --
   -- D ---> ∗
   -- | ⌟    |
   -- |      x₀
@@ -60,7 +60,7 @@ module FormalDiskBundle where
     the relative formal disk bundle
   -}
 
-  T∞′ : 
+  T∞′ :
     ∀ {X : 𝒰₀}
     → (E : X → 𝒰₀)
     → (X → 𝒰₀)
@@ -123,8 +123,8 @@ module FormalDiskBundle where
 
   T∞-as-dependent-type :
     (X : 𝒰₀) → X → 𝒰₀
-  T∞-as-dependent-type X x = formal-disk-at x 
-  
+  T∞-as-dependent-type X x = formal-disk-at x
+
   p-of-T∞ : (X : 𝒰₀) → (T∞ X) → X
   p-of-T∞ X = p₁-of-pullback (ℑ-unit-at X) (ℑ-unit-at X)
 
@@ -133,7 +133,7 @@ module FormalDiskBundle where
   formal-disk-bundle-as-pullback-square X = complete-to-pullback-square (ℑ-unit-at X) (ℑ-unit-at X)
 
   {-
-    we have two versions of the disk bundle, 
+    we have two versions of the disk bundle,
     one constructed as a pullback, the other
     as the sum over the T∞-as-dependent-type
   -}
@@ -180,8 +180,8 @@ module FormalDiskBundle where
     open homogeneous-structure-on_ V′
 
     𝔻ₑ = formal-disk-at e
-    
-    identifications-of-all-formal-disks : (v : V) → 𝔻ₑ ≃ 𝔻 _ v 
+
+    identifications-of-all-formal-disks : (v : V) → 𝔻ₑ ≃ 𝔻 _ v
     identifications-of-all-formal-disks v =
         paths-induce-equivalences-of-formal-disks.conclusion (is-translation-to v)
       ∘≃
@@ -189,7 +189,7 @@ module FormalDiskBundle where
 
     as-equivalence-of-dependent-types : equivalence-of (λ _ → 𝔻ₑ) and (λ v → 𝔻 V v) over id
     as-equivalence-of-dependent-types x = identifications-of-all-formal-disks x
-    
+
     T∞V = ∑ (T∞-as-dependent-type V)
 
     open import HalfAdjointEquivalences
@@ -213,7 +213,7 @@ module FormalDiskBundle where
 
     trivialize⁻¹ : V × 𝔻ₑ → T∞V
     trivialize⁻¹ (v , dv) =
-      (v , equivalences-as-maps v dv) 
+      (v , equivalences-as-maps v dv)
 
     conclusion′ : T∞V ≃ V × 𝔻ₑ
     conclusion′ = trivialize is-an-equivalence-because
@@ -250,4 +250,3 @@ module FormalDiskBundle where
         (p-of-T∞ V) (π₂ ∘ φ) φ
         (φ-is-an-equivalence) (λ _ → refl) (λ _ → refl)
         (product-square V 𝔻ₑ))
-

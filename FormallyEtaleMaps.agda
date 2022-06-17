@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
-module EtaleMaps where 
+module FormallyEtaleMaps where
   open import Basics
   open import EqualityAndPaths
   open import Homotopies
@@ -14,27 +14,27 @@ module EtaleMaps where
   _as-plain-map :
     ∀ {A B : 𝒰₀}
     → (f : A ≃ B) → (A → B)
-  f as-plain-map = underlying-map-of-the-equivalence f 
+  f as-plain-map = underlying-map-of-the-equivalence f
 
   -- X --→ ℑ X
   -- |      |
   -- f      ℑf
   -- ↓      ↓
   -- Y --→ ℑ Y
-  
-  _is-an-étale-map : ∀ {X Y : 𝒰₀} (f : X → Y) → 𝒰₀ 
-  f is-an-étale-map = 
-    the-square-with-right (apply-ℑ-to-map f) 
-      bottom ℑ-unit 
-      top ℑ-unit 
-      left f 
+
+  _is-a-formally-étale-map : ∀ {X Y : 𝒰₀} (f : X → Y) → 𝒰₀
+  f is-a-formally-étale-map =
+    the-square-with-right (apply-ℑ-to-map f)
+      bottom ℑ-unit
+      top ℑ-unit
+      left f
       commuting-by (naturality-of-ℑ-unit f)
      is-a-pullback-square
 
   -- this also follows from stuff in the proof of the triviality theorem
   equivalences-are-étale :
     ∀ {A B : 𝒰₀} (f : A ≃ B)
-    → (f as-plain-map) is-an-étale-map
+    → (f as-plain-map) is-a-formally-étale-map
   equivalences-are-étale {A} {B} f =
     let
       □ : pullback-square-with-right ℑ→ (f as-plain-map)
@@ -52,10 +52,10 @@ module EtaleMaps where
 
 
   _─ét→_ : (A B : 𝒰₀) → 𝒰₀
-  A ─ét→ B = ∑ (λ (f : A → B) → f is-an-étale-map)
+  A ─ét→ B = ∑ (λ (f : A → B) → f is-a-formally-étale-map)
 
   _is-étale-because_ : {A B : U₀}
-    → (f : A → B) → f is-an-étale-map
+    → (f : A → B) → f is-a-formally-étale-map
     → (A ─ét→ B)
   f is-étale-because p = f , p
 
@@ -64,12 +64,12 @@ module EtaleMaps where
     → A ─ét→ A
   id-as-étale-map = (id , equivalences-are-étale id-as-equivalence)
 
-  underlying-map-of : 
+  underlying-map-of :
     ∀ {A B : 𝒰₀}
     → (A ─ét→ B) → (A → B)
   underlying-map-of (f , _) = f
 
-  _ét→ : 
+  _ét→ :
     ∀ {A B : 𝒰₀}
     → (A ─ét→ B) → (A → B)
   f ét→ = underlying-map-of f
@@ -78,12 +78,12 @@ module EtaleMaps where
     ∀ {A B : 𝒰₀}
     → (A ─ét→ B) → A → B
   f $ét x = (f ét→) x
-  
-  _is-étale = _is-an-étale-map
+
+  _is-étale = _is-a-formally-étale-map
 
   pullback-square-of :
     ∀ {A B : 𝒰₀}
-    → (f́ : A ─ét→ B) 
+    → (f́ : A ─ét→ B)
     → pullback-square-with-right (ℑ→ (underlying-map-of f́))
         bottom ℑ-unit
         top ℑ-unit
@@ -91,5 +91,3 @@ module EtaleMaps where
   pullback-square-of (f , (the-induced-map-is-an-equivalence-by pullback-property)) =
     the-square-commuting-by (naturality-of-ℑ-unit f)
       and-inducing-an-equivalence-by pullback-property
-
-
